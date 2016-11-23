@@ -1,0 +1,3229 @@
+State 0:
+file' -> . file [ # ]
+-- On WITH shift to state 1
+-- On file shift to state 208
+
+State 1:
+file -> WITH . ident DOT ident SEMICOLON USE ident DOT ident SEMICOLON PROC proc EOF [ # ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 4
+
+State 2:
+ident_desc -> IDENT . [ TIMES THEN SEMICOLON RPAREN RETURN REM PLUS OR NEQ MINUS LT LPAREN LOOP LEQ IS IN GT GEQ EQ DOTDOT DOT DIV COMMA COLON AND AFFECT ]
+-- On TIMES reduce production ident_desc -> IDENT 
+-- On THEN reduce production ident_desc -> IDENT 
+-- On SEMICOLON reduce production ident_desc -> IDENT 
+-- On RPAREN reduce production ident_desc -> IDENT 
+-- On RETURN reduce production ident_desc -> IDENT 
+-- On REM reduce production ident_desc -> IDENT 
+-- On PLUS reduce production ident_desc -> IDENT 
+-- On OR reduce production ident_desc -> IDENT 
+-- On NEQ reduce production ident_desc -> IDENT 
+-- On MINUS reduce production ident_desc -> IDENT 
+-- On LT reduce production ident_desc -> IDENT 
+-- On LPAREN reduce production ident_desc -> IDENT 
+-- On LOOP reduce production ident_desc -> IDENT 
+-- On LEQ reduce production ident_desc -> IDENT 
+-- On IS reduce production ident_desc -> IDENT 
+-- On IN reduce production ident_desc -> IDENT 
+-- On GT reduce production ident_desc -> IDENT 
+-- On GEQ reduce production ident_desc -> IDENT 
+-- On EQ reduce production ident_desc -> IDENT 
+-- On DOTDOT reduce production ident_desc -> IDENT 
+-- On DOT reduce production ident_desc -> IDENT 
+-- On DIV reduce production ident_desc -> IDENT 
+-- On COMMA reduce production ident_desc -> IDENT 
+-- On COLON reduce production ident_desc -> IDENT 
+-- On AND reduce production ident_desc -> IDENT 
+-- On AFFECT reduce production ident_desc -> IDENT 
+
+State 3:
+ident -> ident_desc . [ TIMES THEN SEMICOLON RPAREN RETURN REM PLUS OR NEQ MINUS LT LPAREN LOOP LEQ IS IN GT GEQ EQ DOTDOT DOT DIV COMMA COLON AND AFFECT ]
+-- On TIMES reduce production ident -> ident_desc 
+-- On THEN reduce production ident -> ident_desc 
+-- On SEMICOLON reduce production ident -> ident_desc 
+-- On RPAREN reduce production ident -> ident_desc 
+-- On RETURN reduce production ident -> ident_desc 
+-- On REM reduce production ident -> ident_desc 
+-- On PLUS reduce production ident -> ident_desc 
+-- On OR reduce production ident -> ident_desc 
+-- On NEQ reduce production ident -> ident_desc 
+-- On MINUS reduce production ident -> ident_desc 
+-- On LT reduce production ident -> ident_desc 
+-- On LPAREN reduce production ident -> ident_desc 
+-- On LOOP reduce production ident -> ident_desc 
+-- On LEQ reduce production ident -> ident_desc 
+-- On IS reduce production ident -> ident_desc 
+-- On IN reduce production ident -> ident_desc 
+-- On GT reduce production ident -> ident_desc 
+-- On GEQ reduce production ident -> ident_desc 
+-- On EQ reduce production ident -> ident_desc 
+-- On DOTDOT reduce production ident -> ident_desc 
+-- On DOT reduce production ident -> ident_desc 
+-- On DIV reduce production ident -> ident_desc 
+-- On COMMA reduce production ident -> ident_desc 
+-- On COLON reduce production ident -> ident_desc 
+-- On AND reduce production ident -> ident_desc 
+-- On AFFECT reduce production ident -> ident_desc 
+
+State 4:
+file -> WITH ident . DOT ident SEMICOLON USE ident DOT ident SEMICOLON PROC proc EOF [ # ]
+-- On DOT shift to state 5
+
+State 5:
+file -> WITH ident DOT . ident SEMICOLON USE ident DOT ident SEMICOLON PROC proc EOF [ # ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 6
+
+State 6:
+file -> WITH ident DOT ident . SEMICOLON USE ident DOT ident SEMICOLON PROC proc EOF [ # ]
+-- On SEMICOLON shift to state 7
+
+State 7:
+file -> WITH ident DOT ident SEMICOLON . USE ident DOT ident SEMICOLON PROC proc EOF [ # ]
+-- On USE shift to state 8
+
+State 8:
+file -> WITH ident DOT ident SEMICOLON USE . ident DOT ident SEMICOLON PROC proc EOF [ # ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 9
+
+State 9:
+file -> WITH ident DOT ident SEMICOLON USE ident . DOT ident SEMICOLON PROC proc EOF [ # ]
+-- On DOT shift to state 10
+
+State 10:
+file -> WITH ident DOT ident SEMICOLON USE ident DOT . ident SEMICOLON PROC proc EOF [ # ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 11
+
+State 11:
+file -> WITH ident DOT ident SEMICOLON USE ident DOT ident . SEMICOLON PROC proc EOF [ # ]
+-- On SEMICOLON shift to state 12
+
+State 12:
+file -> WITH ident DOT ident SEMICOLON USE ident DOT ident SEMICOLON . PROC proc EOF [ # ]
+-- On PROC shift to state 13
+
+State 13:
+file -> WITH ident DOT ident SEMICOLON USE ident DOT ident SEMICOLON PROC . proc EOF [ # ]
+-- On IDENT shift to state 2
+-- On proc_or_func shift to state 14
+-- On proc shift to state 15
+-- On ident_desc shift to state 3
+-- On ident shift to state 17
+
+State 14:
+proc -> proc_or_func . [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On TYPE reduce production proc -> proc_or_func 
+-- On PROC reduce production proc -> proc_or_func 
+-- On IDENT reduce production proc -> proc_or_func 
+-- On FUNC reduce production proc -> proc_or_func 
+-- On EOF reduce production proc -> proc_or_func 
+-- On BEGIN reduce production proc -> proc_or_func 
+
+State 15:
+file -> WITH ident DOT ident SEMICOLON USE ident DOT ident SEMICOLON PROC proc . EOF [ # ]
+-- On EOF shift to state 16
+
+State 16:
+file -> WITH ident DOT ident SEMICOLON USE ident DOT ident SEMICOLON PROC proc EOF . [ # ]
+-- On # reduce production file -> WITH ident DOT ident SEMICOLON USE ident DOT ident SEMICOLON PROC proc EOF 
+
+State 17:
+proc_or_func -> ident . option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On LPAREN shift to state 18
+-- On params shift to state 36
+-- On option(params) shift to state 37
+-- On RETURN reduce production option(params) -> 
+-- On IS reduce production option(params) -> 
+
+State 18:
+params -> LPAREN . separated_nonempty_list(SEMICOLON,param) RPAREN [ RETURN IS ]
+-- On IDENT shift to state 2
+-- On separated_nonempty_list(SEMICOLON,param) shift to state 19
+-- On separated_nonempty_list(COMMA,ident) shift to state 21
+-- On param shift to state 30
+-- On ident_desc shift to state 3
+-- On ident shift to state 33
+
+State 19:
+params -> LPAREN separated_nonempty_list(SEMICOLON,param) . RPAREN [ RETURN IS ]
+-- On RPAREN shift to state 20
+
+State 20:
+params -> LPAREN separated_nonempty_list(SEMICOLON,param) RPAREN . [ RETURN IS ]
+-- On RETURN reduce production params -> LPAREN separated_nonempty_list(SEMICOLON,param) RPAREN 
+-- On IS reduce production params -> LPAREN separated_nonempty_list(SEMICOLON,param) RPAREN 
+
+State 21:
+param -> separated_nonempty_list(COMMA,ident) . COLON mode type_annot [ SEMICOLON RPAREN ]
+-- On COLON shift to state 22
+
+State 22:
+param -> separated_nonempty_list(COMMA,ident) COLON . mode type_annot [ SEMICOLON RPAREN ]
+-- On IN shift to state 23
+-- On mode shift to state 25
+-- On IDENT reduce production mode -> 
+-- On ACCESS reduce production mode -> 
+
+State 23:
+mode -> IN . [ IDENT ACCESS ]
+mode -> IN . OUT [ IDENT ACCESS ]
+-- On OUT shift to state 24
+-- On IDENT reduce production mode -> IN 
+-- On ACCESS reduce production mode -> IN 
+
+State 24:
+mode -> IN OUT . [ IDENT ACCESS ]
+-- On IDENT reduce production mode -> IN OUT 
+-- On ACCESS reduce production mode -> IN OUT 
+
+State 25:
+param -> separated_nonempty_list(COMMA,ident) COLON mode . type_annot [ SEMICOLON RPAREN ]
+-- On IDENT shift to state 2
+-- On ACCESS shift to state 26
+-- On type_annot shift to state 28
+-- On ident_desc shift to state 3
+-- On ident shift to state 29
+
+State 26:
+type_annot -> ACCESS . ident [ SEMICOLON RPAREN IS AFFECT ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 27
+
+State 27:
+type_annot -> ACCESS ident . [ SEMICOLON RPAREN IS AFFECT ]
+-- On SEMICOLON reduce production type_annot -> ACCESS ident 
+-- On RPAREN reduce production type_annot -> ACCESS ident 
+-- On IS reduce production type_annot -> ACCESS ident 
+-- On AFFECT reduce production type_annot -> ACCESS ident 
+
+State 28:
+param -> separated_nonempty_list(COMMA,ident) COLON mode type_annot . [ SEMICOLON RPAREN ]
+-- On SEMICOLON reduce production param -> separated_nonempty_list(COMMA,ident) COLON mode type_annot 
+-- On RPAREN reduce production param -> separated_nonempty_list(COMMA,ident) COLON mode type_annot 
+
+State 29:
+type_annot -> ident . [ SEMICOLON RPAREN IS AFFECT ]
+-- On SEMICOLON reduce production type_annot -> ident 
+-- On RPAREN reduce production type_annot -> ident 
+-- On IS reduce production type_annot -> ident 
+-- On AFFECT reduce production type_annot -> ident 
+
+State 30:
+separated_nonempty_list(SEMICOLON,param) -> param . [ RPAREN ]
+separated_nonempty_list(SEMICOLON,param) -> param . SEMICOLON separated_nonempty_list(SEMICOLON,param) [ RPAREN ]
+-- On SEMICOLON shift to state 31
+-- On RPAREN reduce production separated_nonempty_list(SEMICOLON,param) -> param 
+
+State 31:
+separated_nonempty_list(SEMICOLON,param) -> param SEMICOLON . separated_nonempty_list(SEMICOLON,param) [ RPAREN ]
+-- On IDENT shift to state 2
+-- On separated_nonempty_list(SEMICOLON,param) shift to state 32
+-- On separated_nonempty_list(COMMA,ident) shift to state 21
+-- On param shift to state 30
+-- On ident_desc shift to state 3
+-- On ident shift to state 33
+
+State 32:
+separated_nonempty_list(SEMICOLON,param) -> param SEMICOLON separated_nonempty_list(SEMICOLON,param) . [ RPAREN ]
+-- On RPAREN reduce production separated_nonempty_list(SEMICOLON,param) -> param SEMICOLON separated_nonempty_list(SEMICOLON,param) 
+
+State 33:
+separated_nonempty_list(COMMA,ident) -> ident . [ COLON ]
+separated_nonempty_list(COMMA,ident) -> ident . COMMA separated_nonempty_list(COMMA,ident) [ COLON ]
+-- On COMMA shift to state 34
+-- On COLON reduce production separated_nonempty_list(COMMA,ident) -> ident 
+
+State 34:
+separated_nonempty_list(COMMA,ident) -> ident COMMA . separated_nonempty_list(COMMA,ident) [ COLON ]
+-- On IDENT shift to state 2
+-- On separated_nonempty_list(COMMA,ident) shift to state 35
+-- On ident_desc shift to state 3
+-- On ident shift to state 33
+
+State 35:
+separated_nonempty_list(COMMA,ident) -> ident COMMA separated_nonempty_list(COMMA,ident) . [ COLON ]
+-- On COLON reduce production separated_nonempty_list(COMMA,ident) -> ident COMMA separated_nonempty_list(COMMA,ident) 
+
+State 36:
+option(params) -> params . [ RETURN IS ]
+-- On RETURN reduce production option(params) -> params 
+-- On IS reduce production option(params) -> params 
+
+State 37:
+proc_or_func -> ident option(params) . option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On RETURN shift to state 38
+-- On option(preceded(RETURN,type_annot)) shift to state 40
+-- On IS reduce production option(preceded(RETURN,type_annot)) -> 
+
+State 38:
+option(preceded(RETURN,type_annot)) -> RETURN . type_annot [ IS ]
+-- On IDENT shift to state 2
+-- On ACCESS shift to state 26
+-- On type_annot shift to state 39
+-- On ident_desc shift to state 3
+-- On ident shift to state 29
+
+State 39:
+option(preceded(RETURN,type_annot)) -> RETURN type_annot . [ IS ]
+-- On IS reduce production option(preceded(RETURN,type_annot)) -> RETURN type_annot 
+
+State 40:
+proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) . IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On IS shift to state 41
+
+State 41:
+proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS . decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On TYPE shift to state 42
+-- On PROC shift to state 59
+-- On IDENT shift to state 2
+-- On FUNC shift to state 61
+-- On separated_nonempty_list(COMMA,ident) shift to state 64
+-- On list(decl) shift to state 129
+-- On ident_desc shift to state 3
+-- On ident shift to state 33
+-- On decls shift to state 130
+-- On decl shift to state 206
+-- On BEGIN reduce production list(decl) -> 
+
+State 42:
+decl -> TYPE . ident option(preceded(IS,type_annot)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> TYPE . ident IS RECORD nonempty_list(fields) END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 43
+
+State 43:
+decl -> TYPE ident . option(preceded(IS,type_annot)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> TYPE ident . IS RECORD nonempty_list(fields) END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On IS shift to state 44
+-- On option(preceded(IS,type_annot)) shift to state 57
+-- On SEMICOLON reduce production option(preceded(IS,type_annot)) -> 
+
+State 44:
+decl -> TYPE ident IS . RECORD nonempty_list(fields) END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+option(preceded(IS,type_annot)) -> IS . type_annot [ SEMICOLON ]
+-- On RECORD shift to state 45
+-- On IDENT shift to state 2
+-- On ACCESS shift to state 26
+-- On type_annot shift to state 56
+-- On ident_desc shift to state 3
+-- On ident shift to state 29
+
+State 45:
+decl -> TYPE ident IS RECORD . nonempty_list(fields) END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On IDENT shift to state 2
+-- On separated_nonempty_list(COMMA,ident) shift to state 46
+-- On nonempty_list(fields) shift to state 50
+-- On ident_desc shift to state 3
+-- On ident shift to state 33
+-- On fields shift to state 54
+
+State 46:
+fields -> separated_nonempty_list(COMMA,ident) . COLON type_annot SEMICOLON [ IDENT END ]
+-- On COLON shift to state 47
+
+State 47:
+fields -> separated_nonempty_list(COMMA,ident) COLON . type_annot SEMICOLON [ IDENT END ]
+-- On IDENT shift to state 2
+-- On ACCESS shift to state 26
+-- On type_annot shift to state 48
+-- On ident_desc shift to state 3
+-- On ident shift to state 29
+
+State 48:
+fields -> separated_nonempty_list(COMMA,ident) COLON type_annot . SEMICOLON [ IDENT END ]
+-- On SEMICOLON shift to state 49
+
+State 49:
+fields -> separated_nonempty_list(COMMA,ident) COLON type_annot SEMICOLON . [ IDENT END ]
+-- On IDENT reduce production fields -> separated_nonempty_list(COMMA,ident) COLON type_annot SEMICOLON 
+-- On END reduce production fields -> separated_nonempty_list(COMMA,ident) COLON type_annot SEMICOLON 
+
+State 50:
+decl -> TYPE ident IS RECORD nonempty_list(fields) . END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On END shift to state 51
+
+State 51:
+decl -> TYPE ident IS RECORD nonempty_list(fields) END . RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On RECORD shift to state 52
+
+State 52:
+decl -> TYPE ident IS RECORD nonempty_list(fields) END RECORD . SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On SEMICOLON shift to state 53
+
+State 53:
+decl -> TYPE ident IS RECORD nonempty_list(fields) END RECORD SEMICOLON . [ TYPE PROC IDENT FUNC BEGIN ]
+-- On TYPE reduce production decl -> TYPE ident IS RECORD nonempty_list(fields) END RECORD SEMICOLON 
+-- On PROC reduce production decl -> TYPE ident IS RECORD nonempty_list(fields) END RECORD SEMICOLON 
+-- On IDENT reduce production decl -> TYPE ident IS RECORD nonempty_list(fields) END RECORD SEMICOLON 
+-- On FUNC reduce production decl -> TYPE ident IS RECORD nonempty_list(fields) END RECORD SEMICOLON 
+-- On BEGIN reduce production decl -> TYPE ident IS RECORD nonempty_list(fields) END RECORD SEMICOLON 
+
+State 54:
+nonempty_list(fields) -> fields . [ END ]
+nonempty_list(fields) -> fields . nonempty_list(fields) [ END ]
+-- On IDENT shift to state 2
+-- On separated_nonempty_list(COMMA,ident) shift to state 46
+-- On nonempty_list(fields) shift to state 55
+-- On ident_desc shift to state 3
+-- On ident shift to state 33
+-- On fields shift to state 54
+-- On END reduce production nonempty_list(fields) -> fields 
+
+State 55:
+nonempty_list(fields) -> fields nonempty_list(fields) . [ END ]
+-- On END reduce production nonempty_list(fields) -> fields nonempty_list(fields) 
+
+State 56:
+option(preceded(IS,type_annot)) -> IS type_annot . [ SEMICOLON ]
+-- On SEMICOLON reduce production option(preceded(IS,type_annot)) -> IS type_annot 
+
+State 57:
+decl -> TYPE ident option(preceded(IS,type_annot)) . SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On SEMICOLON shift to state 58
+
+State 58:
+decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON . [ TYPE PROC IDENT FUNC BEGIN ]
+-- On TYPE reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
+-- On PROC reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
+-- On IDENT reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
+-- On FUNC reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
+-- On BEGIN reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
+
+State 59:
+decl -> PROC . proc [ TYPE PROC IDENT FUNC BEGIN ]
+-- On IDENT shift to state 2
+-- On proc_or_func shift to state 14
+-- On proc shift to state 60
+-- On ident_desc shift to state 3
+-- On ident shift to state 17
+
+State 60:
+decl -> PROC proc . [ TYPE PROC IDENT FUNC BEGIN ]
+-- On TYPE reduce production decl -> PROC proc 
+-- On PROC reduce production decl -> PROC proc 
+-- On IDENT reduce production decl -> PROC proc 
+-- On FUNC reduce production decl -> PROC proc 
+-- On BEGIN reduce production decl -> PROC proc 
+
+State 61:
+decl -> FUNC . func [ TYPE PROC IDENT FUNC BEGIN ]
+-- On IDENT shift to state 2
+-- On proc_or_func shift to state 62
+-- On ident_desc shift to state 3
+-- On ident shift to state 17
+-- On func shift to state 63
+
+State 62:
+func -> proc_or_func . [ TYPE PROC IDENT FUNC BEGIN ]
+-- On TYPE reduce production func -> proc_or_func 
+-- On PROC reduce production func -> proc_or_func 
+-- On IDENT reduce production func -> proc_or_func 
+-- On FUNC reduce production func -> proc_or_func 
+-- On BEGIN reduce production func -> proc_or_func 
+
+State 63:
+decl -> FUNC func . [ TYPE PROC IDENT FUNC BEGIN ]
+-- On TYPE reduce production decl -> FUNC func 
+-- On PROC reduce production decl -> FUNC func 
+-- On IDENT reduce production decl -> FUNC func 
+-- On FUNC reduce production decl -> FUNC func 
+-- On BEGIN reduce production decl -> FUNC func 
+
+State 64:
+decl -> separated_nonempty_list(COMMA,ident) . COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On COLON shift to state 65
+
+State 65:
+decl -> separated_nonempty_list(COMMA,ident) COLON . type_annot option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On IDENT shift to state 2
+-- On ACCESS shift to state 26
+-- On type_annot shift to state 66
+-- On ident_desc shift to state 3
+-- On ident shift to state 29
+
+State 66:
+decl -> separated_nonempty_list(COMMA,ident) COLON type_annot . option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On AFFECT shift to state 67
+-- On option(preceded(AFFECT,expr)) shift to state 127
+-- On SEMICOLON reduce production option(preceded(AFFECT,expr)) -> 
+
+State 67:
+option(preceded(AFFECT,expr)) -> AFFECT . expr [ SEMICOLON ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 126
+-- On const shift to state 89
+
+State 68:
+const -> NULL . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production const -> NULL 
+-- On THEN reduce production const -> NULL 
+-- On SEMICOLON reduce production const -> NULL 
+-- On RPAREN reduce production const -> NULL 
+-- On REM reduce production const -> NULL 
+-- On PLUS reduce production const -> NULL 
+-- On OR reduce production const -> NULL 
+-- On NEQ reduce production const -> NULL 
+-- On MINUS reduce production const -> NULL 
+-- On LT reduce production const -> NULL 
+-- On LOOP reduce production const -> NULL 
+-- On LEQ reduce production const -> NULL 
+-- On GT reduce production const -> NULL 
+-- On GEQ reduce production const -> NULL 
+-- On EQ reduce production const -> NULL 
+-- On DOTDOT reduce production const -> NULL 
+-- On DOT reduce production const -> NULL 
+-- On DIV reduce production const -> NULL 
+-- On COMMA reduce production const -> NULL 
+-- On AND reduce production const -> NULL 
+
+State 69:
+expr_desc -> NOT . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 125
+-- On const shift to state 89
+
+State 70:
+expr_desc -> NEW . ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 71
+
+State 71:
+expr_desc -> NEW ident . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production expr_desc -> NEW ident 
+-- On THEN reduce production expr_desc -> NEW ident 
+-- On SEMICOLON reduce production expr_desc -> NEW ident 
+-- On RPAREN reduce production expr_desc -> NEW ident 
+-- On REM reduce production expr_desc -> NEW ident 
+-- On PLUS reduce production expr_desc -> NEW ident 
+-- On OR reduce production expr_desc -> NEW ident 
+-- On NEQ reduce production expr_desc -> NEW ident 
+-- On MINUS reduce production expr_desc -> NEW ident 
+-- On LT reduce production expr_desc -> NEW ident 
+-- On LOOP reduce production expr_desc -> NEW ident 
+-- On LEQ reduce production expr_desc -> NEW ident 
+-- On GT reduce production expr_desc -> NEW ident 
+-- On GEQ reduce production expr_desc -> NEW ident 
+-- On EQ reduce production expr_desc -> NEW ident 
+-- On DOTDOT reduce production expr_desc -> NEW ident 
+-- On DOT reduce production expr_desc -> NEW ident 
+-- On DIV reduce production expr_desc -> NEW ident 
+-- On COMMA reduce production expr_desc -> NEW ident 
+-- On AND reduce production expr_desc -> NEW ident 
+
+State 72:
+expr_desc -> MINUS . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 124
+-- On const shift to state 89
+
+State 73:
+expr_desc -> LPAREN . expr RPAREN [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 122
+-- On const shift to state 89
+
+State 74:
+const -> INT . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production const -> INT 
+-- On THEN reduce production const -> INT 
+-- On SEMICOLON reduce production const -> INT 
+-- On RPAREN reduce production const -> INT 
+-- On REM reduce production const -> INT 
+-- On PLUS reduce production const -> INT 
+-- On OR reduce production const -> INT 
+-- On NEQ reduce production const -> INT 
+-- On MINUS reduce production const -> INT 
+-- On LT reduce production const -> INT 
+-- On LOOP reduce production const -> INT 
+-- On LEQ reduce production const -> INT 
+-- On GT reduce production const -> INT 
+-- On GEQ reduce production const -> INT 
+-- On EQ reduce production const -> INT 
+-- On DOTDOT reduce production const -> INT 
+-- On DOT reduce production const -> INT 
+-- On DIV reduce production const -> INT 
+-- On COMMA reduce production const -> INT 
+-- On AND reduce production const -> INT 
+
+State 75:
+expr_desc -> CHAR_VAL . LPAREN expr RPAREN [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On LPAREN shift to state 76
+
+State 76:
+expr_desc -> CHAR_VAL LPAREN . expr RPAREN [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 120
+-- On const shift to state 89
+
+State 77:
+const -> CHAR . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production const -> CHAR 
+-- On THEN reduce production const -> CHAR 
+-- On SEMICOLON reduce production const -> CHAR 
+-- On RPAREN reduce production const -> CHAR 
+-- On REM reduce production const -> CHAR 
+-- On PLUS reduce production const -> CHAR 
+-- On OR reduce production const -> CHAR 
+-- On NEQ reduce production const -> CHAR 
+-- On MINUS reduce production const -> CHAR 
+-- On LT reduce production const -> CHAR 
+-- On LOOP reduce production const -> CHAR 
+-- On LEQ reduce production const -> CHAR 
+-- On GT reduce production const -> CHAR 
+-- On GEQ reduce production const -> CHAR 
+-- On EQ reduce production const -> CHAR 
+-- On DOTDOT reduce production const -> CHAR 
+-- On DOT reduce production const -> CHAR 
+-- On DIV reduce production const -> CHAR 
+-- On COMMA reduce production const -> CHAR 
+-- On AND reduce production const -> CHAR 
+
+State 78:
+const -> BOOL . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production const -> BOOL 
+-- On THEN reduce production const -> BOOL 
+-- On SEMICOLON reduce production const -> BOOL 
+-- On RPAREN reduce production const -> BOOL 
+-- On REM reduce production const -> BOOL 
+-- On PLUS reduce production const -> BOOL 
+-- On OR reduce production const -> BOOL 
+-- On NEQ reduce production const -> BOOL 
+-- On MINUS reduce production const -> BOOL 
+-- On LT reduce production const -> BOOL 
+-- On LOOP reduce production const -> BOOL 
+-- On LEQ reduce production const -> BOOL 
+-- On GT reduce production const -> BOOL 
+-- On GEQ reduce production const -> BOOL 
+-- On EQ reduce production const -> BOOL 
+-- On DOTDOT reduce production const -> BOOL 
+-- On DOT reduce production const -> BOOL 
+-- On DIV reduce production const -> BOOL 
+-- On COMMA reduce production const -> BOOL 
+-- On AND reduce production const -> BOOL 
+
+State 79:
+expr_desc -> ident . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> ident . LPAREN separated_nonempty_list(COMMA,expr) RPAREN [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On LPAREN shift to state 80
+-- On TIMES reduce production expr_desc -> ident 
+-- On THEN reduce production expr_desc -> ident 
+-- On SEMICOLON reduce production expr_desc -> ident 
+-- On RPAREN reduce production expr_desc -> ident 
+-- On REM reduce production expr_desc -> ident 
+-- On PLUS reduce production expr_desc -> ident 
+-- On OR reduce production expr_desc -> ident 
+-- On NEQ reduce production expr_desc -> ident 
+-- On MINUS reduce production expr_desc -> ident 
+-- On LT reduce production expr_desc -> ident 
+-- On LOOP reduce production expr_desc -> ident 
+-- On LEQ reduce production expr_desc -> ident 
+-- On GT reduce production expr_desc -> ident 
+-- On GEQ reduce production expr_desc -> ident 
+-- On EQ reduce production expr_desc -> ident 
+-- On DOTDOT reduce production expr_desc -> ident 
+-- On DOT reduce production expr_desc -> ident 
+-- On DIV reduce production expr_desc -> ident 
+-- On COMMA reduce production expr_desc -> ident 
+-- On AND reduce production expr_desc -> ident 
+
+State 80:
+expr_desc -> ident LPAREN . separated_nonempty_list(COMMA,expr) RPAREN [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On separated_nonempty_list(COMMA,expr) shift to state 81
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 84
+-- On const shift to state 89
+
+State 81:
+expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) . RPAREN [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On RPAREN shift to state 82
+
+State 82:
+expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On THEN reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On SEMICOLON reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On RPAREN reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On REM reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On PLUS reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On OR reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On NEQ reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On MINUS reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On LT reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On LOOP reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On LEQ reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On GT reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On GEQ reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On EQ reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On DOTDOT reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On DOT reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On DIV reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On COMMA reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On AND reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+
+State 83:
+expr -> expr_desc . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production expr -> expr_desc 
+-- On THEN reduce production expr -> expr_desc 
+-- On SEMICOLON reduce production expr -> expr_desc 
+-- On RPAREN reduce production expr -> expr_desc 
+-- On REM reduce production expr -> expr_desc 
+-- On PLUS reduce production expr -> expr_desc 
+-- On OR reduce production expr -> expr_desc 
+-- On NEQ reduce production expr -> expr_desc 
+-- On MINUS reduce production expr -> expr_desc 
+-- On LT reduce production expr -> expr_desc 
+-- On LOOP reduce production expr -> expr_desc 
+-- On LEQ reduce production expr -> expr_desc 
+-- On GT reduce production expr -> expr_desc 
+-- On GEQ reduce production expr -> expr_desc 
+-- On EQ reduce production expr -> expr_desc 
+-- On DOTDOT reduce production expr -> expr_desc 
+-- On DOT reduce production expr -> expr_desc 
+-- On DIV reduce production expr -> expr_desc 
+-- On COMMA reduce production expr -> expr_desc 
+-- On AND reduce production expr -> expr_desc 
+
+State 84:
+expr_desc -> expr . DOT ident [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV COMMA AND ]
+separated_nonempty_list(COMMA,expr) -> expr . [ RPAREN ]
+separated_nonempty_list(COMMA,expr) -> expr . COMMA separated_nonempty_list(COMMA,expr) [ RPAREN ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On COMMA shift to state 118
+-- On AND shift to state 113
+-- On RPAREN reduce production separated_nonempty_list(COMMA,expr) -> expr 
+
+State 85:
+expr_desc -> expr TIMES . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 86
+-- On const shift to state 89
+
+State 86:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr TIMES expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On DOT shift to state 87
+-- On TIMES reduce production expr_desc -> expr TIMES expr 
+-- On THEN reduce production expr_desc -> expr TIMES expr 
+-- On SEMICOLON reduce production expr_desc -> expr TIMES expr 
+-- On RPAREN reduce production expr_desc -> expr TIMES expr 
+-- On REM reduce production expr_desc -> expr TIMES expr 
+-- On PLUS reduce production expr_desc -> expr TIMES expr 
+-- On OR reduce production expr_desc -> expr TIMES expr 
+-- On NEQ reduce production expr_desc -> expr TIMES expr 
+-- On MINUS reduce production expr_desc -> expr TIMES expr 
+-- On LT reduce production expr_desc -> expr TIMES expr 
+-- On LOOP reduce production expr_desc -> expr TIMES expr 
+-- On LEQ reduce production expr_desc -> expr TIMES expr 
+-- On GT reduce production expr_desc -> expr TIMES expr 
+-- On GEQ reduce production expr_desc -> expr TIMES expr 
+-- On EQ reduce production expr_desc -> expr TIMES expr 
+-- On DOTDOT reduce production expr_desc -> expr TIMES expr 
+-- On DIV reduce production expr_desc -> expr TIMES expr 
+-- On COMMA reduce production expr_desc -> expr TIMES expr 
+-- On AND reduce production expr_desc -> expr TIMES expr 
+
+State 87:
+expr_desc -> expr DOT . ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 88
+
+State 88:
+expr_desc -> expr DOT ident . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production expr_desc -> expr DOT ident 
+-- On THEN reduce production expr_desc -> expr DOT ident 
+-- On SEMICOLON reduce production expr_desc -> expr DOT ident 
+-- On RPAREN reduce production expr_desc -> expr DOT ident 
+-- On REM reduce production expr_desc -> expr DOT ident 
+-- On PLUS reduce production expr_desc -> expr DOT ident 
+-- On OR reduce production expr_desc -> expr DOT ident 
+-- On NEQ reduce production expr_desc -> expr DOT ident 
+-- On MINUS reduce production expr_desc -> expr DOT ident 
+-- On LT reduce production expr_desc -> expr DOT ident 
+-- On LOOP reduce production expr_desc -> expr DOT ident 
+-- On LEQ reduce production expr_desc -> expr DOT ident 
+-- On GT reduce production expr_desc -> expr DOT ident 
+-- On GEQ reduce production expr_desc -> expr DOT ident 
+-- On EQ reduce production expr_desc -> expr DOT ident 
+-- On DOTDOT reduce production expr_desc -> expr DOT ident 
+-- On DOT reduce production expr_desc -> expr DOT ident 
+-- On DIV reduce production expr_desc -> expr DOT ident 
+-- On COMMA reduce production expr_desc -> expr DOT ident 
+-- On AND reduce production expr_desc -> expr DOT ident 
+
+State 89:
+expr_desc -> const . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production expr_desc -> const 
+-- On THEN reduce production expr_desc -> const 
+-- On SEMICOLON reduce production expr_desc -> const 
+-- On RPAREN reduce production expr_desc -> const 
+-- On REM reduce production expr_desc -> const 
+-- On PLUS reduce production expr_desc -> const 
+-- On OR reduce production expr_desc -> const 
+-- On NEQ reduce production expr_desc -> const 
+-- On MINUS reduce production expr_desc -> const 
+-- On LT reduce production expr_desc -> const 
+-- On LOOP reduce production expr_desc -> const 
+-- On LEQ reduce production expr_desc -> const 
+-- On GT reduce production expr_desc -> const 
+-- On GEQ reduce production expr_desc -> const 
+-- On EQ reduce production expr_desc -> const 
+-- On DOTDOT reduce production expr_desc -> const 
+-- On DOT reduce production expr_desc -> const 
+-- On DIV reduce production expr_desc -> const 
+-- On COMMA reduce production expr_desc -> const 
+-- On AND reduce production expr_desc -> const 
+
+State 90:
+expr_desc -> expr REM . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 91
+-- On const shift to state 89
+
+State 91:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr REM expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On DOT shift to state 87
+-- On TIMES reduce production expr_desc -> expr REM expr 
+-- On THEN reduce production expr_desc -> expr REM expr 
+-- On SEMICOLON reduce production expr_desc -> expr REM expr 
+-- On RPAREN reduce production expr_desc -> expr REM expr 
+-- On REM reduce production expr_desc -> expr REM expr 
+-- On PLUS reduce production expr_desc -> expr REM expr 
+-- On OR reduce production expr_desc -> expr REM expr 
+-- On NEQ reduce production expr_desc -> expr REM expr 
+-- On MINUS reduce production expr_desc -> expr REM expr 
+-- On LT reduce production expr_desc -> expr REM expr 
+-- On LOOP reduce production expr_desc -> expr REM expr 
+-- On LEQ reduce production expr_desc -> expr REM expr 
+-- On GT reduce production expr_desc -> expr REM expr 
+-- On GEQ reduce production expr_desc -> expr REM expr 
+-- On EQ reduce production expr_desc -> expr REM expr 
+-- On DOTDOT reduce production expr_desc -> expr REM expr 
+-- On DIV reduce production expr_desc -> expr REM expr 
+-- On COMMA reduce production expr_desc -> expr REM expr 
+-- On AND reduce production expr_desc -> expr REM expr 
+
+State 92:
+expr_desc -> expr PLUS . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 93
+-- On const shift to state 89
+
+State 93:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr PLUS expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr PLUS expr 
+-- On SEMICOLON reduce production expr_desc -> expr PLUS expr 
+-- On RPAREN reduce production expr_desc -> expr PLUS expr 
+-- On PLUS reduce production expr_desc -> expr PLUS expr 
+-- On OR reduce production expr_desc -> expr PLUS expr 
+-- On NEQ reduce production expr_desc -> expr PLUS expr 
+-- On MINUS reduce production expr_desc -> expr PLUS expr 
+-- On LT reduce production expr_desc -> expr PLUS expr 
+-- On LOOP reduce production expr_desc -> expr PLUS expr 
+-- On LEQ reduce production expr_desc -> expr PLUS expr 
+-- On GT reduce production expr_desc -> expr PLUS expr 
+-- On GEQ reduce production expr_desc -> expr PLUS expr 
+-- On EQ reduce production expr_desc -> expr PLUS expr 
+-- On DOTDOT reduce production expr_desc -> expr PLUS expr 
+-- On COMMA reduce production expr_desc -> expr PLUS expr 
+-- On AND reduce production expr_desc -> expr PLUS expr 
+
+State 94:
+expr_desc -> expr DIV . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 95
+-- On const shift to state 89
+
+State 95:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr DIV expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On DOT shift to state 87
+-- On TIMES reduce production expr_desc -> expr DIV expr 
+-- On THEN reduce production expr_desc -> expr DIV expr 
+-- On SEMICOLON reduce production expr_desc -> expr DIV expr 
+-- On RPAREN reduce production expr_desc -> expr DIV expr 
+-- On REM reduce production expr_desc -> expr DIV expr 
+-- On PLUS reduce production expr_desc -> expr DIV expr 
+-- On OR reduce production expr_desc -> expr DIV expr 
+-- On NEQ reduce production expr_desc -> expr DIV expr 
+-- On MINUS reduce production expr_desc -> expr DIV expr 
+-- On LT reduce production expr_desc -> expr DIV expr 
+-- On LOOP reduce production expr_desc -> expr DIV expr 
+-- On LEQ reduce production expr_desc -> expr DIV expr 
+-- On GT reduce production expr_desc -> expr DIV expr 
+-- On GEQ reduce production expr_desc -> expr DIV expr 
+-- On EQ reduce production expr_desc -> expr DIV expr 
+-- On DOTDOT reduce production expr_desc -> expr DIV expr 
+-- On DIV reduce production expr_desc -> expr DIV expr 
+-- On COMMA reduce production expr_desc -> expr DIV expr 
+-- On AND reduce production expr_desc -> expr DIV expr 
+
+State 96:
+expr_desc -> expr OR . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr OR . ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On ELSE shift to state 97
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 117
+-- On const shift to state 89
+
+State 97:
+expr_desc -> expr OR ELSE . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 98
+-- On const shift to state 89
+
+State 98:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr OR ELSE expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+-- On THEN reduce production expr_desc -> expr OR ELSE expr 
+-- On SEMICOLON reduce production expr_desc -> expr OR ELSE expr 
+-- On RPAREN reduce production expr_desc -> expr OR ELSE expr 
+-- On OR reduce production expr_desc -> expr OR ELSE expr 
+-- On LOOP reduce production expr_desc -> expr OR ELSE expr 
+-- On DOTDOT reduce production expr_desc -> expr OR ELSE expr 
+-- On COMMA reduce production expr_desc -> expr OR ELSE expr 
+
+State 99:
+expr_desc -> expr NEQ . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 100
+-- On const shift to state 89
+
+State 100:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr NEQ expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr NEQ expr 
+-- On SEMICOLON reduce production expr_desc -> expr NEQ expr 
+-- On RPAREN reduce production expr_desc -> expr NEQ expr 
+-- On OR reduce production expr_desc -> expr NEQ expr 
+-- On LOOP reduce production expr_desc -> expr NEQ expr 
+-- On DOTDOT reduce production expr_desc -> expr NEQ expr 
+-- On COMMA reduce production expr_desc -> expr NEQ expr 
+-- On AND reduce production expr_desc -> expr NEQ expr 
+
+State 101:
+expr_desc -> expr MINUS . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 102
+-- On const shift to state 89
+
+State 102:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr MINUS expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr MINUS expr 
+-- On SEMICOLON reduce production expr_desc -> expr MINUS expr 
+-- On RPAREN reduce production expr_desc -> expr MINUS expr 
+-- On PLUS reduce production expr_desc -> expr MINUS expr 
+-- On OR reduce production expr_desc -> expr MINUS expr 
+-- On NEQ reduce production expr_desc -> expr MINUS expr 
+-- On MINUS reduce production expr_desc -> expr MINUS expr 
+-- On LT reduce production expr_desc -> expr MINUS expr 
+-- On LOOP reduce production expr_desc -> expr MINUS expr 
+-- On LEQ reduce production expr_desc -> expr MINUS expr 
+-- On GT reduce production expr_desc -> expr MINUS expr 
+-- On GEQ reduce production expr_desc -> expr MINUS expr 
+-- On EQ reduce production expr_desc -> expr MINUS expr 
+-- On DOTDOT reduce production expr_desc -> expr MINUS expr 
+-- On COMMA reduce production expr_desc -> expr MINUS expr 
+-- On AND reduce production expr_desc -> expr MINUS expr 
+
+State 103:
+expr_desc -> expr LT . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 104
+-- On const shift to state 89
+
+State 104:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr LT expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On MINUS shift to state 101
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr LT expr 
+-- On SEMICOLON reduce production expr_desc -> expr LT expr 
+-- On RPAREN reduce production expr_desc -> expr LT expr 
+-- On OR reduce production expr_desc -> expr LT expr 
+-- On NEQ reduce production expr_desc -> expr LT expr 
+-- On LOOP reduce production expr_desc -> expr LT expr 
+-- On EQ reduce production expr_desc -> expr LT expr 
+-- On DOTDOT reduce production expr_desc -> expr LT expr 
+-- On COMMA reduce production expr_desc -> expr LT expr 
+-- On AND reduce production expr_desc -> expr LT expr 
+
+State 105:
+expr_desc -> expr LEQ . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 106
+-- On const shift to state 89
+
+State 106:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr LEQ expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On MINUS shift to state 101
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr LEQ expr 
+-- On SEMICOLON reduce production expr_desc -> expr LEQ expr 
+-- On RPAREN reduce production expr_desc -> expr LEQ expr 
+-- On OR reduce production expr_desc -> expr LEQ expr 
+-- On NEQ reduce production expr_desc -> expr LEQ expr 
+-- On LOOP reduce production expr_desc -> expr LEQ expr 
+-- On EQ reduce production expr_desc -> expr LEQ expr 
+-- On DOTDOT reduce production expr_desc -> expr LEQ expr 
+-- On COMMA reduce production expr_desc -> expr LEQ expr 
+-- On AND reduce production expr_desc -> expr LEQ expr 
+
+State 107:
+expr_desc -> expr GT . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 108
+-- On const shift to state 89
+
+State 108:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr GT expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On MINUS shift to state 101
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr GT expr 
+-- On SEMICOLON reduce production expr_desc -> expr GT expr 
+-- On RPAREN reduce production expr_desc -> expr GT expr 
+-- On OR reduce production expr_desc -> expr GT expr 
+-- On NEQ reduce production expr_desc -> expr GT expr 
+-- On LOOP reduce production expr_desc -> expr GT expr 
+-- On EQ reduce production expr_desc -> expr GT expr 
+-- On DOTDOT reduce production expr_desc -> expr GT expr 
+-- On COMMA reduce production expr_desc -> expr GT expr 
+-- On AND reduce production expr_desc -> expr GT expr 
+
+State 109:
+expr_desc -> expr GEQ . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 110
+-- On const shift to state 89
+
+State 110:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr GEQ expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On MINUS shift to state 101
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr GEQ expr 
+-- On SEMICOLON reduce production expr_desc -> expr GEQ expr 
+-- On RPAREN reduce production expr_desc -> expr GEQ expr 
+-- On OR reduce production expr_desc -> expr GEQ expr 
+-- On NEQ reduce production expr_desc -> expr GEQ expr 
+-- On LOOP reduce production expr_desc -> expr GEQ expr 
+-- On EQ reduce production expr_desc -> expr GEQ expr 
+-- On DOTDOT reduce production expr_desc -> expr GEQ expr 
+-- On COMMA reduce production expr_desc -> expr GEQ expr 
+-- On AND reduce production expr_desc -> expr GEQ expr 
+
+State 111:
+expr_desc -> expr EQ . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 112
+-- On const shift to state 89
+
+State 112:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr EQ expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr EQ expr 
+-- On SEMICOLON reduce production expr_desc -> expr EQ expr 
+-- On RPAREN reduce production expr_desc -> expr EQ expr 
+-- On OR reduce production expr_desc -> expr EQ expr 
+-- On LOOP reduce production expr_desc -> expr EQ expr 
+-- On DOTDOT reduce production expr_desc -> expr EQ expr 
+-- On COMMA reduce production expr_desc -> expr EQ expr 
+-- On AND reduce production expr_desc -> expr EQ expr 
+
+State 113:
+expr_desc -> expr AND . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr AND . THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On THEN shift to state 114
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 116
+-- On const shift to state 89
+
+State 114:
+expr_desc -> expr AND THEN . expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 115
+-- On const shift to state 89
+
+State 115:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr AND THEN expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr AND THEN expr 
+-- On SEMICOLON reduce production expr_desc -> expr AND THEN expr 
+-- On RPAREN reduce production expr_desc -> expr AND THEN expr 
+-- On OR reduce production expr_desc -> expr AND THEN expr 
+-- On LOOP reduce production expr_desc -> expr AND THEN expr 
+-- On DOTDOT reduce production expr_desc -> expr AND THEN expr 
+-- On COMMA reduce production expr_desc -> expr AND THEN expr 
+-- On AND reduce production expr_desc -> expr AND THEN expr 
+
+State 116:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr AND expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> expr AND expr 
+-- On SEMICOLON reduce production expr_desc -> expr AND expr 
+-- On RPAREN reduce production expr_desc -> expr AND expr 
+-- On OR reduce production expr_desc -> expr AND expr 
+-- On LOOP reduce production expr_desc -> expr AND expr 
+-- On DOTDOT reduce production expr_desc -> expr AND expr 
+-- On COMMA reduce production expr_desc -> expr AND expr 
+-- On AND reduce production expr_desc -> expr AND expr 
+
+State 117:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr OR expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+-- On THEN reduce production expr_desc -> expr OR expr 
+-- On SEMICOLON reduce production expr_desc -> expr OR expr 
+-- On RPAREN reduce production expr_desc -> expr OR expr 
+-- On OR reduce production expr_desc -> expr OR expr 
+-- On LOOP reduce production expr_desc -> expr OR expr 
+-- On DOTDOT reduce production expr_desc -> expr OR expr 
+-- On COMMA reduce production expr_desc -> expr OR expr 
+
+State 118:
+separated_nonempty_list(COMMA,expr) -> expr COMMA . separated_nonempty_list(COMMA,expr) [ RPAREN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On separated_nonempty_list(COMMA,expr) shift to state 119
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 84
+-- On const shift to state 89
+
+State 119:
+separated_nonempty_list(COMMA,expr) -> expr COMMA separated_nonempty_list(COMMA,expr) . [ RPAREN ]
+-- On RPAREN reduce production separated_nonempty_list(COMMA,expr) -> expr COMMA separated_nonempty_list(COMMA,expr) 
+
+State 120:
+expr_desc -> expr . DOT ident [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> CHAR_VAL LPAREN expr . RPAREN [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On RPAREN shift to state 121
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 121:
+expr_desc -> CHAR_VAL LPAREN expr RPAREN . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On THEN reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On SEMICOLON reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On RPAREN reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On REM reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On PLUS reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On OR reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On NEQ reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On MINUS reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On LT reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On LOOP reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On LEQ reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On GT reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On GEQ reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On EQ reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On DOTDOT reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On DOT reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On DIV reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On COMMA reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+-- On AND reduce production expr_desc -> CHAR_VAL LPAREN expr RPAREN 
+
+State 122:
+expr_desc -> LPAREN expr . RPAREN [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DOT ident [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+-- On TIMES shift to state 85
+-- On RPAREN shift to state 123
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 123:
+expr_desc -> LPAREN expr RPAREN . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES reduce production expr_desc -> LPAREN expr RPAREN 
+-- On THEN reduce production expr_desc -> LPAREN expr RPAREN 
+-- On SEMICOLON reduce production expr_desc -> LPAREN expr RPAREN 
+-- On RPAREN reduce production expr_desc -> LPAREN expr RPAREN 
+-- On REM reduce production expr_desc -> LPAREN expr RPAREN 
+-- On PLUS reduce production expr_desc -> LPAREN expr RPAREN 
+-- On OR reduce production expr_desc -> LPAREN expr RPAREN 
+-- On NEQ reduce production expr_desc -> LPAREN expr RPAREN 
+-- On MINUS reduce production expr_desc -> LPAREN expr RPAREN 
+-- On LT reduce production expr_desc -> LPAREN expr RPAREN 
+-- On LOOP reduce production expr_desc -> LPAREN expr RPAREN 
+-- On LEQ reduce production expr_desc -> LPAREN expr RPAREN 
+-- On GT reduce production expr_desc -> LPAREN expr RPAREN 
+-- On GEQ reduce production expr_desc -> LPAREN expr RPAREN 
+-- On EQ reduce production expr_desc -> LPAREN expr RPAREN 
+-- On DOTDOT reduce production expr_desc -> LPAREN expr RPAREN 
+-- On DOT reduce production expr_desc -> LPAREN expr RPAREN 
+-- On DIV reduce production expr_desc -> LPAREN expr RPAREN 
+-- On COMMA reduce production expr_desc -> LPAREN expr RPAREN 
+-- On AND reduce production expr_desc -> LPAREN expr RPAREN 
+
+State 124:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> MINUS expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On DOT shift to state 87
+-- On TIMES reduce production expr_desc -> MINUS expr 
+-- On THEN reduce production expr_desc -> MINUS expr 
+-- On SEMICOLON reduce production expr_desc -> MINUS expr 
+-- On RPAREN reduce production expr_desc -> MINUS expr 
+-- On REM reduce production expr_desc -> MINUS expr 
+-- On PLUS reduce production expr_desc -> MINUS expr 
+-- On OR reduce production expr_desc -> MINUS expr 
+-- On NEQ reduce production expr_desc -> MINUS expr 
+-- On MINUS reduce production expr_desc -> MINUS expr 
+-- On LT reduce production expr_desc -> MINUS expr 
+-- On LOOP reduce production expr_desc -> MINUS expr 
+-- On LEQ reduce production expr_desc -> MINUS expr 
+-- On GT reduce production expr_desc -> MINUS expr 
+-- On GEQ reduce production expr_desc -> MINUS expr 
+-- On EQ reduce production expr_desc -> MINUS expr 
+-- On DOTDOT reduce production expr_desc -> MINUS expr 
+-- On DIV reduce production expr_desc -> MINUS expr 
+-- On COMMA reduce production expr_desc -> MINUS expr 
+-- On AND reduce production expr_desc -> MINUS expr 
+
+State 125:
+expr_desc -> expr . DOT ident [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> NOT expr . [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GT expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . REM expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN SEMICOLON RPAREN REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOTDOT DOT DIV COMMA AND ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On THEN reduce production expr_desc -> NOT expr 
+-- On SEMICOLON reduce production expr_desc -> NOT expr 
+-- On RPAREN reduce production expr_desc -> NOT expr 
+-- On OR reduce production expr_desc -> NOT expr 
+-- On LOOP reduce production expr_desc -> NOT expr 
+-- On DOTDOT reduce production expr_desc -> NOT expr 
+-- On COMMA reduce production expr_desc -> NOT expr 
+-- On AND reduce production expr_desc -> NOT expr 
+
+State 126:
+expr_desc -> expr . DOT ident [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+option(preceded(AFFECT,expr)) -> AFFECT expr . [ SEMICOLON ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+-- On SEMICOLON reduce production option(preceded(AFFECT,expr)) -> AFFECT expr 
+
+State 127:
+decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) . SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+-- On SEMICOLON shift to state 128
+
+State 128:
+decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON . [ TYPE PROC IDENT FUNC BEGIN ]
+-- On TYPE reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
+-- On PROC reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
+-- On IDENT reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
+-- On FUNC reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
+-- On BEGIN reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
+
+State 129:
+decls -> list(decl) . [ BEGIN ]
+-- On BEGIN reduce production decls -> list(decl) 
+
+State 130:
+proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls . BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On BEGIN shift to state 131
+
+State 131:
+proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN . stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On WHILE shift to state 132
+-- On RETURN shift to state 135
+-- On PUT shift to state 139
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW_LINE shift to state 144
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IF shift to state 146
+-- On IDENT shift to state 2
+-- On FOR shift to state 149
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On BEGIN shift to state 158
+-- On stmts shift to state 201
+-- On stmt shift to state 162
+-- On nonempty_list(stmt) shift to state 179
+-- On ident_desc shift to state 3
+-- On ident shift to state 164
+-- On expr_desc shift to state 83
+-- On expr shift to state 173
+-- On const shift to state 89
+
+State 132:
+stmt -> WHILE . expr LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 133
+-- On const shift to state 89
+
+State 133:
+expr_desc -> expr . DOT ident [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> WHILE expr . LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LOOP shift to state 134
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 134:
+stmt -> WHILE expr LOOP . stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE shift to state 132
+-- On RETURN shift to state 135
+-- On PUT shift to state 139
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW_LINE shift to state 144
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IF shift to state 146
+-- On IDENT shift to state 2
+-- On FOR shift to state 149
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On BEGIN shift to state 158
+-- On stmts shift to state 197
+-- On stmt shift to state 162
+-- On nonempty_list(stmt) shift to state 179
+-- On ident_desc shift to state 3
+-- On ident shift to state 164
+-- On expr_desc shift to state 83
+-- On expr shift to state 173
+-- On const shift to state 89
+
+State 135:
+stmt -> RETURN . option(expr) SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On option(expr) shift to state 136
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 138
+-- On const shift to state 89
+-- On SEMICOLON reduce production option(expr) -> 
+
+State 136:
+stmt -> RETURN option(expr) . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 137
+
+State 137:
+stmt -> RETURN option(expr) SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On RETURN reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On PUT reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On NULL reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On NOT reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On NEW_LINE reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On NEW reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On MINUS reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On LPAREN reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On INT reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On IF reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On IDENT reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On FOR reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On END reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On ELSIF reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On ELSE reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On CHAR reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On BOOL reduce production stmt -> RETURN option(expr) SEMICOLON 
+-- On BEGIN reduce production stmt -> RETURN option(expr) SEMICOLON 
+
+State 138:
+expr_desc -> expr . DOT ident [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+option(expr) -> expr . [ SEMICOLON ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+-- On SEMICOLON reduce production option(expr) -> expr 
+
+State 139:
+stmt -> PUT . LPAREN expr RPAREN SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On LPAREN shift to state 140
+
+State 140:
+stmt -> PUT LPAREN . expr RPAREN SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 141
+-- On const shift to state 89
+
+State 141:
+expr_desc -> expr . DOT ident [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES RPAREN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> PUT LPAREN expr . RPAREN SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On TIMES shift to state 85
+-- On RPAREN shift to state 142
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 142:
+stmt -> PUT LPAREN expr RPAREN . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 143
+
+State 143:
+stmt -> PUT LPAREN expr RPAREN SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On RETURN reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On PUT reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On NULL reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On NOT reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On NEW_LINE reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On NEW reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On MINUS reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On LPAREN reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On INT reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On IF reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On IDENT reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On FOR reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On END reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On ELSIF reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On ELSE reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On CHAR reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On BOOL reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+-- On BEGIN reduce production stmt -> PUT LPAREN expr RPAREN SEMICOLON 
+
+State 144:
+stmt -> NEW_LINE . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 145
+
+State 145:
+stmt -> NEW_LINE SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> NEW_LINE SEMICOLON 
+-- On RETURN reduce production stmt -> NEW_LINE SEMICOLON 
+-- On PUT reduce production stmt -> NEW_LINE SEMICOLON 
+-- On NULL reduce production stmt -> NEW_LINE SEMICOLON 
+-- On NOT reduce production stmt -> NEW_LINE SEMICOLON 
+-- On NEW_LINE reduce production stmt -> NEW_LINE SEMICOLON 
+-- On NEW reduce production stmt -> NEW_LINE SEMICOLON 
+-- On MINUS reduce production stmt -> NEW_LINE SEMICOLON 
+-- On LPAREN reduce production stmt -> NEW_LINE SEMICOLON 
+-- On INT reduce production stmt -> NEW_LINE SEMICOLON 
+-- On IF reduce production stmt -> NEW_LINE SEMICOLON 
+-- On IDENT reduce production stmt -> NEW_LINE SEMICOLON 
+-- On FOR reduce production stmt -> NEW_LINE SEMICOLON 
+-- On END reduce production stmt -> NEW_LINE SEMICOLON 
+-- On ELSIF reduce production stmt -> NEW_LINE SEMICOLON 
+-- On ELSE reduce production stmt -> NEW_LINE SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> NEW_LINE SEMICOLON 
+-- On CHAR reduce production stmt -> NEW_LINE SEMICOLON 
+-- On BOOL reduce production stmt -> NEW_LINE SEMICOLON 
+-- On BEGIN reduce production stmt -> NEW_LINE SEMICOLON 
+
+State 146:
+stmt -> IF . expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 147
+-- On const shift to state 89
+
+State 147:
+expr_desc -> expr . DOT ident [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> IF expr . THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On TIMES shift to state 85
+-- On THEN shift to state 148
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 148:
+stmt -> IF expr THEN . stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE shift to state 132
+-- On RETURN shift to state 135
+-- On PUT shift to state 139
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW_LINE shift to state 144
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IF shift to state 146
+-- On IDENT shift to state 2
+-- On FOR shift to state 149
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On BEGIN shift to state 158
+-- On stmts shift to state 184
+-- On stmt shift to state 162
+-- On nonempty_list(stmt) shift to state 179
+-- On ident_desc shift to state 3
+-- On ident shift to state 164
+-- On expr_desc shift to state 83
+-- On expr shift to state 173
+-- On const shift to state 89
+
+State 149:
+stmt -> FOR . ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 150
+
+State 150:
+stmt -> FOR ident . IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On IN shift to state 151
+
+State 151:
+stmt -> FOR ident IN . option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On REVERSE shift to state 152
+-- On option(REVERSE) shift to state 153
+-- On NULL reduce production option(REVERSE) -> 
+-- On NOT reduce production option(REVERSE) -> 
+-- On NEW reduce production option(REVERSE) -> 
+-- On MINUS reduce production option(REVERSE) -> 
+-- On LPAREN reduce production option(REVERSE) -> 
+-- On INT reduce production option(REVERSE) -> 
+-- On IDENT reduce production option(REVERSE) -> 
+-- On CHAR_VAL reduce production option(REVERSE) -> 
+-- On CHAR reduce production option(REVERSE) -> 
+-- On BOOL reduce production option(REVERSE) -> 
+
+State 152:
+option(REVERSE) -> REVERSE . [ NULL NOT NEW MINUS LPAREN INT IDENT CHAR_VAL CHAR BOOL ]
+-- On NULL reduce production option(REVERSE) -> REVERSE 
+-- On NOT reduce production option(REVERSE) -> REVERSE 
+-- On NEW reduce production option(REVERSE) -> REVERSE 
+-- On MINUS reduce production option(REVERSE) -> REVERSE 
+-- On LPAREN reduce production option(REVERSE) -> REVERSE 
+-- On INT reduce production option(REVERSE) -> REVERSE 
+-- On IDENT reduce production option(REVERSE) -> REVERSE 
+-- On CHAR_VAL reduce production option(REVERSE) -> REVERSE 
+-- On CHAR reduce production option(REVERSE) -> REVERSE 
+-- On BOOL reduce production option(REVERSE) -> REVERSE 
+
+State 153:
+stmt -> FOR ident IN option(REVERSE) . expr DOTDOT expr LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 154
+-- On const shift to state 89
+
+State 154:
+expr_desc -> expr . DOT ident [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOTDOT DOT DIV AND ]
+stmt -> FOR ident IN option(REVERSE) expr . DOTDOT expr LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOTDOT shift to state 155
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 155:
+stmt -> FOR ident IN option(REVERSE) expr DOTDOT . expr LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 156
+-- On const shift to state 89
+
+State 156:
+expr_desc -> expr . DOT ident [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES REM PLUS OR NEQ MINUS LT LOOP LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr . LOOP stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LOOP shift to state 157
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 157:
+stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP . stmts END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE shift to state 132
+-- On RETURN shift to state 135
+-- On PUT shift to state 139
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW_LINE shift to state 144
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IF shift to state 146
+-- On IDENT shift to state 2
+-- On FOR shift to state 149
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On BEGIN shift to state 158
+-- On stmts shift to state 180
+-- On stmt shift to state 162
+-- On nonempty_list(stmt) shift to state 179
+-- On ident_desc shift to state 3
+-- On ident shift to state 164
+-- On expr_desc shift to state 83
+-- On expr shift to state 173
+-- On const shift to state 89
+
+State 158:
+stmt -> BEGIN . stmts END SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE shift to state 132
+-- On RETURN shift to state 135
+-- On PUT shift to state 139
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW_LINE shift to state 144
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IF shift to state 146
+-- On IDENT shift to state 2
+-- On FOR shift to state 149
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On BEGIN shift to state 158
+-- On stmts shift to state 159
+-- On stmt shift to state 162
+-- On nonempty_list(stmt) shift to state 179
+-- On ident_desc shift to state 3
+-- On ident shift to state 164
+-- On expr_desc shift to state 83
+-- On expr shift to state 173
+-- On const shift to state 89
+
+State 159:
+stmt -> BEGIN stmts . END SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On END shift to state 160
+
+State 160:
+stmt -> BEGIN stmts END . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 161
+
+State 161:
+stmt -> BEGIN stmts END SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On RETURN reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On PUT reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On NULL reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On NOT reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On NEW_LINE reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On NEW reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On MINUS reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On LPAREN reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On INT reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On IF reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On IDENT reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On FOR reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On END reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On ELSIF reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On ELSE reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On CHAR reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On BOOL reduce production stmt -> BEGIN stmts END SEMICOLON 
+-- On BEGIN reduce production stmt -> BEGIN stmts END SEMICOLON 
+
+State 162:
+nonempty_list(stmt) -> stmt . [ END ELSIF ELSE ]
+nonempty_list(stmt) -> stmt . nonempty_list(stmt) [ END ELSIF ELSE ]
+-- On WHILE shift to state 132
+-- On RETURN shift to state 135
+-- On PUT shift to state 139
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW_LINE shift to state 144
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IF shift to state 146
+-- On IDENT shift to state 2
+-- On FOR shift to state 149
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On BEGIN shift to state 158
+-- On stmt shift to state 162
+-- On nonempty_list(stmt) shift to state 163
+-- On ident_desc shift to state 3
+-- On ident shift to state 164
+-- On expr_desc shift to state 83
+-- On expr shift to state 173
+-- On const shift to state 89
+-- On END reduce production nonempty_list(stmt) -> stmt 
+-- On ELSIF reduce production nonempty_list(stmt) -> stmt 
+-- On ELSE reduce production nonempty_list(stmt) -> stmt 
+
+State 163:
+nonempty_list(stmt) -> stmt nonempty_list(stmt) . [ END ELSIF ELSE ]
+-- On END reduce production nonempty_list(stmt) -> stmt nonempty_list(stmt) 
+-- On ELSIF reduce production nonempty_list(stmt) -> stmt nonempty_list(stmt) 
+-- On ELSE reduce production nonempty_list(stmt) -> stmt nonempty_list(stmt) 
+
+State 164:
+expr_desc -> ident . [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> ident . LPAREN separated_nonempty_list(COMMA,expr) RPAREN [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> ident . AFFECT expr SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+stmt -> ident . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+stmt -> ident . LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 165
+-- On LPAREN shift to state 166
+-- On AFFECT shift to state 170
+-- On TIMES reduce production expr_desc -> ident 
+-- On REM reduce production expr_desc -> ident 
+-- On PLUS reduce production expr_desc -> ident 
+-- On OR reduce production expr_desc -> ident 
+-- On NEQ reduce production expr_desc -> ident 
+-- On MINUS reduce production expr_desc -> ident 
+-- On LT reduce production expr_desc -> ident 
+-- On LEQ reduce production expr_desc -> ident 
+-- On GT reduce production expr_desc -> ident 
+-- On GEQ reduce production expr_desc -> ident 
+-- On EQ reduce production expr_desc -> ident 
+-- On DOT reduce production expr_desc -> ident 
+-- On DIV reduce production expr_desc -> ident 
+-- On AND reduce production expr_desc -> ident 
+
+State 165:
+stmt -> ident SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> ident SEMICOLON 
+-- On RETURN reduce production stmt -> ident SEMICOLON 
+-- On PUT reduce production stmt -> ident SEMICOLON 
+-- On NULL reduce production stmt -> ident SEMICOLON 
+-- On NOT reduce production stmt -> ident SEMICOLON 
+-- On NEW_LINE reduce production stmt -> ident SEMICOLON 
+-- On NEW reduce production stmt -> ident SEMICOLON 
+-- On MINUS reduce production stmt -> ident SEMICOLON 
+-- On LPAREN reduce production stmt -> ident SEMICOLON 
+-- On INT reduce production stmt -> ident SEMICOLON 
+-- On IF reduce production stmt -> ident SEMICOLON 
+-- On IDENT reduce production stmt -> ident SEMICOLON 
+-- On FOR reduce production stmt -> ident SEMICOLON 
+-- On END reduce production stmt -> ident SEMICOLON 
+-- On ELSIF reduce production stmt -> ident SEMICOLON 
+-- On ELSE reduce production stmt -> ident SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> ident SEMICOLON 
+-- On CHAR reduce production stmt -> ident SEMICOLON 
+-- On BOOL reduce production stmt -> ident SEMICOLON 
+-- On BEGIN reduce production stmt -> ident SEMICOLON 
+
+State 166:
+expr_desc -> ident LPAREN . separated_nonempty_list(COMMA,expr) RPAREN [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> ident LPAREN . separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On separated_nonempty_list(COMMA,expr) shift to state 167
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 84
+-- On const shift to state 89
+
+State 167:
+expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) . RPAREN [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) . RPAREN SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On RPAREN shift to state 168
+
+State 168:
+expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN . [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 169
+-- On TIMES reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On REM reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On PLUS reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On OR reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On NEQ reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On MINUS reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On LT reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On LEQ reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On GT reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On GEQ reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On EQ reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On DOT reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On DIV reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+-- On AND reduce production expr_desc -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN 
+
+State 169:
+stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On RETURN reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On PUT reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On NULL reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On NOT reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On NEW_LINE reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On NEW reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On MINUS reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On LPAREN reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On INT reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On IF reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On IDENT reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On FOR reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On END reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On ELSIF reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On ELSE reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On CHAR reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On BOOL reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+-- On BEGIN reduce production stmt -> ident LPAREN separated_nonempty_list(COMMA,expr) RPAREN SEMICOLON 
+
+State 170:
+stmt -> ident AFFECT . expr SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 171
+-- On const shift to state 89
+
+State 171:
+expr_desc -> expr . DOT ident [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> ident AFFECT expr . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On TIMES shift to state 85
+-- On SEMICOLON shift to state 172
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 172:
+stmt -> ident AFFECT expr SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On RETURN reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On PUT reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On NULL reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On NOT reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On NEW_LINE reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On NEW reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On MINUS reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On LPAREN reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On INT reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On IF reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On IDENT reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On FOR reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On END reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On ELSIF reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On ELSE reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On CHAR reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On BOOL reduce production stmt -> ident AFFECT expr SEMICOLON 
+-- On BEGIN reduce production stmt -> ident AFFECT expr SEMICOLON 
+
+State 173:
+expr_desc -> expr . DOT ident [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> expr . DOT ident AFFECT expr SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On TIMES shift to state 85
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 174
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 174:
+expr_desc -> expr DOT . ident [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> expr DOT . ident AFFECT expr SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On IDENT shift to state 2
+-- On ident_desc shift to state 3
+-- On ident shift to state 175
+
+State 175:
+expr_desc -> expr DOT ident . [ TIMES REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> expr DOT ident . AFFECT expr SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On AFFECT shift to state 176
+-- On TIMES reduce production expr_desc -> expr DOT ident 
+-- On REM reduce production expr_desc -> expr DOT ident 
+-- On PLUS reduce production expr_desc -> expr DOT ident 
+-- On OR reduce production expr_desc -> expr DOT ident 
+-- On NEQ reduce production expr_desc -> expr DOT ident 
+-- On MINUS reduce production expr_desc -> expr DOT ident 
+-- On LT reduce production expr_desc -> expr DOT ident 
+-- On LEQ reduce production expr_desc -> expr DOT ident 
+-- On GT reduce production expr_desc -> expr DOT ident 
+-- On GEQ reduce production expr_desc -> expr DOT ident 
+-- On EQ reduce production expr_desc -> expr DOT ident 
+-- On DOT reduce production expr_desc -> expr DOT ident 
+-- On DIV reduce production expr_desc -> expr DOT ident 
+-- On AND reduce production expr_desc -> expr DOT ident 
+
+State 176:
+stmt -> expr DOT ident AFFECT . expr SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 177
+-- On const shift to state 89
+
+State 177:
+expr_desc -> expr . DOT ident [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES SEMICOLON REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+stmt -> expr DOT ident AFFECT expr . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On TIMES shift to state 85
+-- On SEMICOLON shift to state 178
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 178:
+stmt -> expr DOT ident AFFECT expr SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On RETURN reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On PUT reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On NULL reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On NOT reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On NEW_LINE reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On NEW reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On MINUS reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On LPAREN reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On INT reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On IF reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On IDENT reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On FOR reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On END reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On ELSIF reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On ELSE reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On CHAR reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On BOOL reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+-- On BEGIN reduce production stmt -> expr DOT ident AFFECT expr SEMICOLON 
+
+State 179:
+stmts -> nonempty_list(stmt) . [ END ELSIF ELSE ]
+-- On END reduce production stmts -> nonempty_list(stmt) 
+-- On ELSIF reduce production stmts -> nonempty_list(stmt) 
+-- On ELSE reduce production stmts -> nonempty_list(stmt) 
+
+State 180:
+stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts . END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On END shift to state 181
+
+State 181:
+stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END . LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On LOOP shift to state 182
+
+State 182:
+stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 183
+
+State 183:
+stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On RETURN reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On PUT reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On NULL reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On NOT reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On NEW_LINE reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On NEW reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On MINUS reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On LPAREN reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On INT reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On IF reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On IDENT reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On FOR reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On END reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On ELSIF reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On ELSE reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On CHAR reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On BOOL reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+-- On BEGIN reduce production stmt -> FOR ident IN option(REVERSE) expr DOTDOT expr LOOP stmts END LOOP SEMICOLON 
+
+State 184:
+stmt -> IF expr THEN stmts . list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On ELSIF shift to state 185
+-- On list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) shift to state 190
+-- On END reduce production list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> 
+-- On ELSE reduce production list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> 
+
+State 185:
+list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> ELSIF . expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) [ END ELSE ]
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IDENT shift to state 2
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On ident_desc shift to state 3
+-- On ident shift to state 79
+-- On expr_desc shift to state 83
+-- On expr shift to state 186
+-- On const shift to state 89
+
+State 186:
+expr_desc -> expr . DOT ident [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . EQ expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . NEQ expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LT expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . LEQ expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GT expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . GEQ expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . PLUS expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . MINUS expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . TIMES expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . DIV expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . REM expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . AND THEN expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+expr_desc -> expr . OR ELSE expr [ TIMES THEN REM PLUS OR NEQ MINUS LT LEQ GT GEQ EQ DOT DIV AND ]
+list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> ELSIF expr . THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) [ END ELSE ]
+-- On TIMES shift to state 85
+-- On THEN shift to state 187
+-- On REM shift to state 90
+-- On PLUS shift to state 92
+-- On OR shift to state 96
+-- On NEQ shift to state 99
+-- On MINUS shift to state 101
+-- On LT shift to state 103
+-- On LEQ shift to state 105
+-- On GT shift to state 107
+-- On GEQ shift to state 109
+-- On EQ shift to state 111
+-- On DOT shift to state 87
+-- On DIV shift to state 94
+-- On AND shift to state 113
+
+State 187:
+list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> ELSIF expr THEN . stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) [ END ELSE ]
+-- On WHILE shift to state 132
+-- On RETURN shift to state 135
+-- On PUT shift to state 139
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW_LINE shift to state 144
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IF shift to state 146
+-- On IDENT shift to state 2
+-- On FOR shift to state 149
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On BEGIN shift to state 158
+-- On stmts shift to state 188
+-- On stmt shift to state 162
+-- On nonempty_list(stmt) shift to state 179
+-- On ident_desc shift to state 3
+-- On ident shift to state 164
+-- On expr_desc shift to state 83
+-- On expr shift to state 173
+-- On const shift to state 89
+
+State 188:
+list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> ELSIF expr THEN stmts . list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) [ END ELSE ]
+-- On ELSIF shift to state 185
+-- On list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) shift to state 189
+-- On END reduce production list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> 
+-- On ELSE reduce production list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> 
+
+State 189:
+list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> ELSIF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) . [ END ELSE ]
+-- On END reduce production list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> ELSIF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) 
+-- On ELSE reduce production list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) -> ELSIF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) 
+
+State 190:
+stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) . option(preceded(ELSE,stmts)) END IF SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On ELSE shift to state 191
+-- On option(preceded(ELSE,stmts)) shift to state 193
+-- On END reduce production option(preceded(ELSE,stmts)) -> 
+
+State 191:
+option(preceded(ELSE,stmts)) -> ELSE . stmts [ END ]
+-- On WHILE shift to state 132
+-- On RETURN shift to state 135
+-- On PUT shift to state 139
+-- On NULL shift to state 68
+-- On NOT shift to state 69
+-- On NEW_LINE shift to state 144
+-- On NEW shift to state 70
+-- On MINUS shift to state 72
+-- On LPAREN shift to state 73
+-- On INT shift to state 74
+-- On IF shift to state 146
+-- On IDENT shift to state 2
+-- On FOR shift to state 149
+-- On CHAR_VAL shift to state 75
+-- On CHAR shift to state 77
+-- On BOOL shift to state 78
+-- On BEGIN shift to state 158
+-- On stmts shift to state 192
+-- On stmt shift to state 162
+-- On nonempty_list(stmt) shift to state 179
+-- On ident_desc shift to state 3
+-- On ident shift to state 164
+-- On expr_desc shift to state 83
+-- On expr shift to state 173
+-- On const shift to state 89
+
+State 192:
+option(preceded(ELSE,stmts)) -> ELSE stmts . [ END ]
+-- On END reduce production option(preceded(ELSE,stmts)) -> ELSE stmts 
+
+State 193:
+stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) . END IF SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On END shift to state 194
+
+State 194:
+stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END . IF SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On IF shift to state 195
+
+State 195:
+stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 196
+
+State 196:
+stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On RETURN reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On PUT reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On NULL reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On NOT reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On NEW_LINE reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On NEW reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On MINUS reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On LPAREN reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On INT reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On IF reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On IDENT reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On FOR reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On END reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On ELSIF reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On ELSE reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On CHAR reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On BOOL reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+-- On BEGIN reduce production stmt -> IF expr THEN stmts list(pair(preceded(ELSIF,expr),preceded(THEN,stmts))) option(preceded(ELSE,stmts)) END IF SEMICOLON 
+
+State 197:
+stmt -> WHILE expr LOOP stmts . END LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On END shift to state 198
+
+State 198:
+stmt -> WHILE expr LOOP stmts END . LOOP SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On LOOP shift to state 199
+
+State 199:
+stmt -> WHILE expr LOOP stmts END LOOP . SEMICOLON [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On SEMICOLON shift to state 200
+
+State 200:
+stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON . [ WHILE RETURN PUT NULL NOT NEW_LINE NEW MINUS LPAREN INT IF IDENT FOR END ELSIF ELSE CHAR_VAL CHAR BOOL BEGIN ]
+-- On WHILE reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On RETURN reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On PUT reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On NULL reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On NOT reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On NEW_LINE reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On NEW reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On MINUS reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On LPAREN reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On INT reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On IF reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On IDENT reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On FOR reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On END reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On ELSIF reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On ELSE reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On CHAR_VAL reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On CHAR reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On BOOL reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+-- On BEGIN reduce production stmt -> WHILE expr LOOP stmts END LOOP SEMICOLON 
+
+State 201:
+proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts . END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On END shift to state 202
+
+State 202:
+proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END . option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On IDENT shift to state 2
+-- On option(ident) shift to state 203
+-- On ident_desc shift to state 3
+-- On ident shift to state 205
+-- On SEMICOLON reduce production option(ident) -> 
+
+State 203:
+proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) . SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On SEMICOLON shift to state 204
+
+State 204:
+proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON . [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On TYPE reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On PROC reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On IDENT reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On FUNC reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On EOF reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On BEGIN reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+
+State 205:
+option(ident) -> ident . [ SEMICOLON ]
+-- On SEMICOLON reduce production option(ident) -> ident 
+
+State 206:
+list(decl) -> decl . list(decl) [ BEGIN ]
+-- On TYPE shift to state 42
+-- On PROC shift to state 59
+-- On IDENT shift to state 2
+-- On FUNC shift to state 61
+-- On separated_nonempty_list(COMMA,ident) shift to state 64
+-- On list(decl) shift to state 207
+-- On ident_desc shift to state 3
+-- On ident shift to state 33
+-- On decl shift to state 206
+-- On BEGIN reduce production list(decl) -> 
+
+State 207:
+list(decl) -> decl list(decl) . [ BEGIN ]
+-- On BEGIN reduce production list(decl) -> decl list(decl) 
+
+State 208:
+file' -> file . [ # ]
+-- On # accept file
+
