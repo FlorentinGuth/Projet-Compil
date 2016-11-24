@@ -1,12 +1,15 @@
-FLAGS = -I _build/ -verbose 1 -use-menhir -yaccflags -v -cflags -w,+A-4-52
-TARGET_SUFFIX = .native
+FLAGS = -I _build/ -verbose 1 -use-menhir -yaccflags -v -lflags -g -cflags -g,-w,+A-4-52
+TARGET_SUFFIX = byte
+TARGET = main.$(TARGET_SUFFIX)
 
-all: main.native
+all: main.byte
 
-.PHONY: main.native regen_msg update_msg clean
+.PHONY: main.byte main.native regen_msg update_msg clean
 
 main.native:
-	ocamlbuild $(FLAGS) main.native
+	ocamlbuild $(FLAGS) $@
+main.byte:
+	ocamlbuild $(FLAGS) $@
 
 
 clean:

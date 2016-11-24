@@ -1,22 +1,17 @@
 {
+open Utils
 open Parser
-open Lexing  
+open Lexing
 
 
-exception Lexical_error of string
-let error s = raise (Lexical_error s)
-
+let error lexbuf s = raise (Lexing_error (s, (lexeme_start_p lexbuf,
+                                              lexeme_end_p   lexbuf)))
+(*
 let new_line lexbuf =
   let pos = lexbuf.lex_curr_p in
   lexbuf.lex_curr_p <- { pos with pos_lnum = pos.pos_lnum + 1;
                                   pos_bol = pos.pos_cnum
-                       }
-
-
-let assoc_to_hashtbl l =
-  let t = Hashtbl.create 42 in
-  List.iter (fun (k, v) -> Hashtbl.add t k v) l;
-  t
+                       }*)
 
 let reserved = assoc_to_hashtbl
                  [("access",    ACCESS);
@@ -63,7 +58,7 @@ let to_token s =
 
 
 let epsilon = ""
-let newline = '\n'
+let newline = "\n" | "\r\n"
 let separator = [' ' '\t']
 let digit = ['0'-'9']
 let letter = ['a'-'z' 'A'-'Z']
@@ -81,13 +76,14 @@ rule token = parse
   | (ident as s1) "'" (ident as s2) { if String.lowercase_ascii s1 = "character"
                                            && String.lowercase_ascii s2 = "val"
                                       then CHAR_VAL
-                                      else error "\"'\" is not a valid character here" }
+                                      else error lexbuf
+                                             "\"'\" is not a valid character here" }
   | ident as s   { to_token s }
   | integer as n { try
                      let n = int_of_string n in
                      assert (n <= 1 lsl 31);
                      INT n
-                   with _ -> error "Integer too big" }
+                   with _ -> error lexbuf "Integer too big" }
   | char as c    { CHAR c.[1] }
   | "="  { EQ }
   | "/=" { NEQ }
@@ -108,7 +104,7 @@ rule token = parse
   | "("  { LPAREN }
   | ")"  { RPAREN }
   | eof          { EOF }
-  | _ as c       { error ("Unknown character " ^ (String.make 1 c)) }
+  | _ as c       { error lexbuf ("Unknown character " ^ (String.make 1 c)) }
     
 and comment = parse
   | newline      { new_line lexbuf; token lexbuf }

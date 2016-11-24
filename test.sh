@@ -1,11 +1,12 @@
 #!/bin/bash
 
 shopt -s nullglob
+cd tests/
 
 # script de test pour le projet de compilation
 
 option=$1
-compilo=$2
+compilo="../"$2
 score=0
 max=0
 verbose=0
@@ -55,6 +56,7 @@ for f in exec-fail/*.adb; do
       echo "echec de gnatmake sur $f"; exit 1
     fi
 done
+cd ..
 }
 
 compile () {
@@ -278,6 +280,7 @@ case $option in
         echo "-v1     : tester la partie 1 (verbose)"
         echo "-v2     : tester la partie 2 (verbose)"
         echo "-v3     : tester la partie 3 (verbose)"
+        echo "-gnat   : vérifier que gnat a le bon comportement"
         echo "-all    : tout tester";;
 
 esac

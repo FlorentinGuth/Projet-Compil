@@ -5,4 +5,3 @@ procedure Test is
 begin
    put(f);
 end;
-

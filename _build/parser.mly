@@ -1,26 +1,8 @@
 %{
-  open Ast
-
-  exception Parser_error of string
-  
-
-  let developp (l, y) = 
-    List.map (fun x -> (x, y)) l
-
-  let developp_full l =
-    List.flatten (List.map developp l)
-
-  let verify x = function
-    | None -> true
-    | Some y -> x = y
-
- let to_some default = function
-   | None -> default
-   | Some x -> x
- let option_to_list = to_some []
-
- let decorate desc deco = 
-   { desc; deco }
+    open Utils
+    open Ast
+           
+    let error m s e = raise (Parsing_error (m, (s, e)))
 %}
 
 (** List of tokens *)
@@ -69,7 +51,7 @@
 
 (** Entry point *)
 
-%start <unit Ast.proc> file
+%start <Ast.ast> file
 
 
 %% (** Beginning of rules *)
@@ -80,17 +62,15 @@ file:
   PROC; p = proc; EOF 
     { if not (ada1.desc = "ada" && text_io1.desc = "text_io" &&
         ada2.desc = "ada" && text_io2.desc = "text_io")
-      then raise
-             (Parser_error
-                "Wrong header, should be \"with Ada.Text_IO; use Ada.Text_IO;\"");
-      if p.params <> [] then raise
-                               (Parser_error
-                                  "Main prcedure can't take any parameters");
+      then error "Wrong header, should be \"with Ada.Text_IO; use Ada.Text_IO;\""
+             $startpos $endpos;
+      if p.params <> [] then error "Main procedure can't take any parameters"
+                               $startpos $endpos;
       p }
 
 
 %inline decorated(X):
-  | x = X { decorate x () }
+  | x = X { decorate x ($startpos, $endpos) }
 
 
 ident_desc:
@@ -122,11 +102,11 @@ fields:
 proc_or_func:
   | name = ident; ps = option(params); rt = option(preceded(RETURN, type_annot));
     IS; decls = decls; BEGIN; stmt = stmts; END; end_id = option(ident); SEMICOLON
-    { if name <> to_some name end_id
+    { if name.desc <> (to_some name end_id).desc
       then
-        raise
-          (Parser_error
-             "Ident following \"end\" must have same name than the function/procedure");
+        error
+          "Ident following \"end\" must have same name than the function/procedure"
+          $startpos $endpos;
       { name;
         params = option_to_list ps;
         return = rt;
@@ -134,15 +114,17 @@ proc_or_func:
         stmt } }
 
 proc:
-  | p = proc_or_func { assert (p.return = None); { p with return = () } }
+  | p = proc_or_func { if p.return <> None
+                       then error "A procedure cannot have a return type"
+                              $startpos $endpos;
+                       { p with return = () } }
 
 func:
   | f = proc_or_func { match f.return with
                        | Some t -> { f with return = t }
-                       | None ->
-                          raise
-                            (Parser_error
-                               "A function must have an annotated return type") }
+                       | None -> error
+                                   "A function must have an annotated return type"
+                                   $startpos $endpos }
 
 
 decl:
@@ -200,33 +182,39 @@ expr:
   | e = decorated(expr_desc) { e }
 
 
-stmt:
-  | lv = left_val; AFFECT; e = expr; SEMICOLON { decorate (Saffect (lv, e)) () }
-  | p = ident; SEMICOLON { decorate (Scall_proc (p, [])) () }
+elsif_desc:
+  | END; IF; SEMICOLON { Sblock [] }
+  | ELSE; s = stmts; END; IF; SEMICOLON { s.desc }
+  | ELSIF; e = expr; THEN; s = stmts; tl = elsif 
+    { Scond (e, s, tl) }                 
+elsif:
+  | e = decorated(elsif_desc) { e }
+                 
+stmt_desc:
+  | lv = left_val; AFFECT; e = expr; SEMICOLON { Saffect (lv, e) }
+  | p = ident; SEMICOLON { Scall_proc (p, []) }
   | p = ident; LPAREN; ps = separated_nonempty_list(COMMA, expr); RPAREN; SEMICOLON
-    { decorate (Scall_proc (p, ps)) () }
-  | PUT; LPAREN; e = expr; RPAREN; SEMICOLON { decorate (Sput e) () }
-  | NEW_LINE; SEMICOLON { decorate Snew_line () }
+    { Scall_proc (p, ps) }
+  | PUT; LPAREN; e = expr; RPAREN; SEMICOLON { Sput e }
+  | NEW_LINE; SEMICOLON { Snew_line }
   | RETURN; e = option(expr); SEMICOLON 
-   { decorate (Sreturn (to_some (decorate (Econst Cnull) ()) e)) () }
-  | BEGIN; s = stmts; END; SEMICOLON { decorate (s.desc) () }
-  | IF; e = expr; THEN; s1 = stmts; 
-    elsif = list(pair(preceded(ELSIF, expr), preceded(THEN, stmts)));
-    else_opt = option(preceded(ELSE, stmts)); END; IF; SEMICOLON
-    { let rec fold = function
-        | [] -> to_some (decorate (Sblock []) ()) else_opt
-        | (e, s) :: tl -> decorate (Scond (e, s, fold tl)) ()
-      in
-      decorate (Scond (e, s1, fold elsif)) ()}
+   { Sreturn (to_some (decorate (Econst Cnull) ($startpos, $endpos)) e) }
+  | BEGIN; s = stmts; END; SEMICOLON { s.desc }
+  | IF; c = expr; THEN; t = stmts; e = elsif
+    { Scond (c, t, e) }
   | WHILE; e = expr; LOOP; s = stmts; END; LOOP; SEMICOLON 
-    { decorate (Swhile (e, s)) () }
+    { Swhile (e, s) }
   | FOR; i = ident; IN; r = option(REVERSE); el = expr; DOTDOT; eu = expr;
     LOOP; s = stmts; END; LOOP; SEMICOLON
     { let r = match r with
         | None -> false
         | Some () -> true
       in
-      decorate (Sfor (i, r, el, eu, s)) () }
+      Sfor (i, r, el, eu, s) }
+stmt:
+  | s = decorated(stmt_desc) { s }
 
+stmts_desc:
+  | l = nonempty_list(stmt) { Sblock l }
 stmts:
-  | l = nonempty_list(stmt) { decorate (Sblock l) () }
+  | s = decorated(stmts_desc) { s }

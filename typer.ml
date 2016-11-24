@@ -1,51 +1,104 @@
 open Ast
+open Utils
 
-
-module Smap = Map.Make(String)
-type env = typ Smap.t
-type funcs = loc func Smap.t
+let error m s e =
+  raise (Typing_error (m, (s, e)))
 
 let equiv t1 t2 =
   match (t1, t2) with
   | (Tnull, Taccess _) | (Taccess _, Tnull) -> true
   | _ -> t1 = t2
 
-let type_field (r : record) f =
-  snd (List.find (fun (s, _) -> s = f) r)
 
 
-let rec type_expr (env : env) (funcs : funcs) (expr : loc expr) =
-  let type_expr = type_expr env funcs in
+module Env : sig
+  type t
+
+  val new_env : t
+
+  val get_id_type :  t -> ident_desc -> typ
+  val get_typ_type : t -> ident_desc -> typ 
+end = struct
+  module Smap = Map.Make(String)
+      
+  type map = typ Smap.t (* maps an identifier with its type *)
+  type t = map * map
+  let new_env = (Smap.empty,
+                 Smap.of_list [("integer",   Tint);
+                               ("character", Tchar);
+                               ("boolean",   Tbool);])
+
+  let get_id_type (id_env, _) id =
+    Smap.find id id_env
+
+  let get_typ_type (_, typ_env) typ =
+    Smap.find typ typ_env
+end
+
+
+
+
+let type_ident env id =
+  replace_deco id (Env.get_id_type env id.desc)
+
+let type_unop = function
+  | Unot  -> Tfunc ([Tbool], Tbool)
+  | Uminus-> Tfunc ([Tint],  Tint)
+
+let type_binop = function
+  | Beq | Bneq -> assert false
+  | Blt | Bleq | Bgt | Bgeq -> Tfunc ([Tint; Tint], Tbool)
+  | Bplus | Bminus | Btimes | Bdiv | Brem ->
+    Tfunc ([Tint; Tint], Tint)
+  | Band | Band_then | Bor | Bor_else ->
+    Tfunc ([Tbool; Tbool], Tbool)
+
+let type_type_annot env ta =
+  let type_typ typ =
+    replace_deco typ (Env.get_typ_type env typ.desc)
+  in
+  match ta with
+  | Aident  id -> Aident  (type_typ id)
+  | Aaccess id -> Aaccess (type_typ id)
+
+
+
+let type_const = function
+  | Cint  _ -> Tint
+  | Cchar _ -> Tchar
+  | Cbool _ -> Tbool
+  | Cnull   -> Tnull
+
+let type_leftval env = function
+  | Lident id -> type_id id
+  
+
+
+  
+let rec type_expr (env : env) (expr : loc expr) =
   let verify e t = assert (e.deco = t) in
-  let encaps e t = { desc = e; deco = t } in
-  let type_id id = Smap.find id.desc env in
   let type_annot = function
-    | Aident id -> type_id id
+    | Aident id -> type_id env id
     | Aaccess id ->
       begin
-        match type_id id with
+        match type_id env id with
         | Trecord r -> Taccess r
         | _ -> failwith "Record expected"
       end
   in
   match expr.desc with
-  | Eint _ as ed -> encaps ed Tint
-  | Echar _ as ed -> encaps ed Tchar
-  | Ebool _ as ed -> encaps ed Tbool
-  | Enull as ed -> encaps ed Tnull
-  | Eleft_val l ->
+  | Econst c -> replace_deco expr (type_const c)
+  | Eleft_val (Lident id) -> let t = type_id env id in
+    decorate (Eleft_val (Lident (replace_deco id t))) t
+  | Eleft_val (Lmember (e2, f)) ->
     begin
-      match l with
-      | Lident id -> let t = type_id id in
-        encaps (Eleft_val (Lident (encaps id.desc t))) t
-      | Lmember (e2, f) ->
-        begin
-          let e2' = type_expr e2 in
-          match e2'.deco with
-          | Trecord r | Taccess r -> let t = type_field r f.desc in
-            encaps (Eleft_val (Lmember (e2', encaps f.desc t))) t
-          | _ -> failwith "Record expected"
-        end
+      let e2' = type_expr env e2 in
+      match e2'.deco with
+      | Trecord r | Taccess r ->
+        let t_r = 
+        let t = type_field r f.desc in
+        encaps (Eleft_val (Lmember (e2', encaps f.desc t))) t
+      | _ -> failwith "Record expected"
     end
   | Ebinop (e1, op, e2) ->
     begin

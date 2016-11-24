@@ -1,16 +1,3 @@
-(** Decoration *)
-
-type loc = Lexing.position
-
-type typ =
-  | Tnull
-  | Tint
-  | Tchar 
-  | Tbool
-  | Trecord of string
-  | Taccess of string
-type record = (string * typ) list
-
 type ('desc, 'deco) node = {
   desc : 'desc;
   deco : 'deco;
@@ -99,6 +86,26 @@ and 'deco stmt_desc =
      Really tempting to convert in while loop, but would need a new variable, and
      the declarations aren't available during parsing *)
 and 'deco stmt = ('deco stmt_desc, 'deco) node
+
+
+(** Decoration *)
+
+type pos = Lexing.position
+type loc = pos * pos (* (start, end) *)
+
+type typ =
+  | Tnull
+  | Tint
+  | Tchar 
+  | Tbool
+  | Trecord of record
+  | Taccess of record
+  | Tfunc   of typ list * typ
+  | Tproc   of typ list
+and record = {
+  ident  : ident_desc;
+  fields : (ident_desc * ident_desc) list;
+}
 
 
 (** Actual AST *)

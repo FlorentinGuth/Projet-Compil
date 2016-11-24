@@ -65,4 +65,4 @@ exception Error
 
 (* The monolithic API. *)
 
-val file: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (unit Ast.proc)
+val file: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.ast)

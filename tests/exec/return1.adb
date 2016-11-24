@@ -10,6 +10,6 @@ begin
 end Hello;
 
 --  Local Variables:
---  compile-command: "gnatmake test.adb && ./test"
+--  compile-command: "gnatmake return1.adb && ./return1"
 --  End:
 
