@@ -15,6 +15,10 @@ let print_list print_sep print_elt =
 let print_sep s fmt () =
   fprintf fmt "%s" s
 
+let print_to_string printer arg =
+  let () = printer Format.str_formatter arg in
+  Format.flush_str_formatter ()
+
 
 (** Tokens printer *)
 
@@ -122,7 +126,7 @@ let print_mode fmt = function
   | In    -> fprintf fmt "in"
   | InOut -> fprintf fmt "@[in@ out@]"
 
-let print_param fmt (id, m, t) =
+let print_param fmt ((id, m, t) : 'a param) =
   fprintf fmt "@[%a@ :@ %a@ %a@]" print_ident id print_mode m print_type_annot t
 let print_param_list fmt ps = print_list (print_sep ",@ ") print_param fmt ps
 
@@ -147,7 +151,7 @@ and print_left_val fmt = function
   | Lmember (e, id) -> fprintf fmt "@[%a.%a@]" print_expr e print_ident id
 and print_expr_list fmt es = print_list (print_sep ",@ ") print_expr fmt es
 
-let print_field fmt (id, t) =
+let print_field fmt ((id : 'a ident), t) =
   fprintf fmt "@[%a@ :@ %a@]" print_ident id print_type_annot t
 let print_fields fmt fs = print_list (print_sep ";\n") print_field fmt fs
 
@@ -198,3 +202,36 @@ and print_decl_list fmt ds = print_list (print_sep "\n") print_decl fmt ds
 let print_ast fmt a =
   print_proc fmt a;
   pp_print_flush fmt ()
+
+
+
+(** Decoration printers *)
+
+let print_loc fmt ((s, e) : loc) =
+  let open Lexing in
+  fprintf fmt "@]File@ \"%s\"@, line@ %d,@ characters@ %d-%d@]"
+    s.pos_fname s.pos_lnum (s.pos_cnum - s.pos_bol + 1) (e.pos_cnum - s.pos_bol + 1)
+
+
+let print_record fmt r =
+  match r with
+  | Def r -> let print_field fmt (n, t) = fprintf fmt "@[%s:@ %s@]" n t in
+    let print_fields fmt l = print_list (print_sep ";@ ") print_field fmt l in
+    fprintf fmt "@[%s@ is@ record@ @[%a@]@ end@ record@]"
+      r.ident print_fields r.fields
+  | Decl s -> fprintf fmt "%s" s
+
+let print_typ fmt = function
+  | Tnull -> fprintf fmt "typenull"
+  | Tint  -> fprintf fmt "integer"
+  | Tchar -> fprintf fmt "character"
+  | Tbool -> fprintf fmt "boolean"
+  | Trecord r -> print_record fmt r
+  | Taccess r -> fprintf fmt "@[access@ %a@]" print_record r
+  | Tfunc _ | Tproc _ -> assert false
+
+
+(** To string printers *)
+
+let print_typ_to_str () = print_to_string print_typ
+let print_type_annot_to_str () = print_to_string print_type_annot

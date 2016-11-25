@@ -2,12 +2,8 @@ let parse_only = ref false
 let type_only  = ref false
 
 
-let report h msg (s, e) =
-  let l = s.Lexing.pos_lnum in
-  let fc = s.Lexing.pos_cnum - s.Lexing.pos_bol + 1 in
-  let lc = e.Lexing.pos_cnum - s.Lexing.pos_bol + 1 in
-  Format.eprintf "File \"%s\", line %d, characters %d-%d:\n%s%s%s"
-    s.Lexing.pos_fname l fc lc h " erorr: " msg;
+let report h msg loc =
+  Format.eprintf "%a:\n%s%s%s" Printer.print_loc loc h " erorr: " msg;
   Format.pp_print_flush Format.err_formatter ()
 
 let error s =
@@ -52,6 +48,7 @@ let compile file =
     (*print_tokens ();*)
     let a = Parser.file Lexer.token buf in
     print_ast a;
+    if not !parse_only then Typer.type_ast a;
     print_endline "Everything went fine!";
     close_in ch
   with

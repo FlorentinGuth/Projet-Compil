@@ -84,7 +84,7 @@ and 'deco stmt_desc =
   | Sfor       of 'deco ident * bool * 'deco expr * 'deco expr * 'deco stmt
   (* counter, reverse, lower_bound, upper_bound, instructions 
      Really tempting to convert in while loop, but would need a new variable, and
-     the declarations aren't available during parsing *)
+     the declarations aren't available during parsing... *)
 and 'deco stmt = ('deco stmt_desc, 'deco) node
 
 
@@ -93,6 +93,16 @@ and 'deco stmt = ('deco stmt_desc, 'deco) node
 type pos = Lexing.position
 type loc = pos * pos (* (start, end) *)
 
+(* Actual types of values or functions/procedures *)
+           
+type record_def = {
+  ident  : ident_desc;
+  fields : (ident_desc * ident_desc) list; (* list is non-empty *)
+}
+type record =
+   | Decl of ident_desc
+   | Def  of record_def
+
 type typ =
   | Tnull
   | Tint
@@ -100,12 +110,9 @@ type typ =
   | Tbool
   | Trecord of record
   | Taccess of record
-  | Tfunc   of typ list * typ
-  | Tproc   of typ list
-and record = {
-  ident  : ident_desc;
-  fields : (ident_desc * ident_desc) list;
-}
+  | Tfunc   of (typ * mode) list * typ
+  (* list is non-empty, otherwise it is treated as an ident *)
+  | Tproc   of (typ * mode) list
 
 
 (** Actual AST *)
