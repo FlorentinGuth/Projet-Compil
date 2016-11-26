@@ -1,10 +1,14 @@
+open Format
+    
+
 let parse_only = ref false
 let type_only  = ref false
 
 
-let report h msg loc =
-  Format.eprintf "%a:\n%s%s%s" Printer.print_loc loc h " erorr: " msg;
-  Format.pp_print_flush Format.err_formatter ()
+let report h file msg (s, e) =
+  let loc = ({ s with Lexing.pos_fname = file }, e) in
+  eprintf "%a:\n%s%s%s" Ast.Loc.print_loc loc h " erorr: " msg;
+  pp_print_flush err_formatter ()
 
 let error s =
   Format.eprintf "%s" s;
@@ -25,6 +29,7 @@ let compile file =
     with End_of_file -> print_string "\n\n"; seek_in ch 0
   in
 
+  (*
   let rec token_list () =
     match Lexer.token buf with
     | Parser.EOF -> []
@@ -42,21 +47,23 @@ let compile file =
     Printer.print_ast out a;
     print_string "\n\n"
   in
+  *)
  
   try
     print_file ();
     (*print_tokens ();*)
     let a = Parser.file Lexer.token buf in
-    print_ast a;
+    (*print_ast a;*)
     if not !parse_only then Typer.type_ast a;
     print_endline "Everything went fine!";
     close_in ch
   with
-  | Utils.Lexing_error  (msg, l) -> report "Lexical" msg l; exit 1
-  | Utils.Parsing_error (msg, l) -> report "Syntax"  msg l; exit 1
-  | Utils.Typing_error  (msg, l) -> report "Typing"  msg l; exit 1
-  | Parser.Error -> error "Undocumented syntax error"; exit 1
-  | _ ->            error "Unknown error";             exit 2
+  | Utils.Lexing_error  (msg, l) -> report "Lexical" file msg l; exit 1
+  | Utils.Parsing_error (msg, l) -> report "Syntax"  file msg l; exit 1
+  | Utils.Typing_error  (msg, l) -> report "Typing"  file msg l; exit 1
+  | Parser.Error -> report "Syntax" file "Undocumented syntax error"
+                      (Lexing.lexeme_start_p buf, Lexing.lexeme_end_p buf); exit 1
+  | _ ->            error "Unknown compiler error";    exit 2
            
 
 let () =

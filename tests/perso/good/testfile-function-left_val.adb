@@ -15,6 +15,6 @@ procedure Main is
    end;
 begin
         Print_Int(X.all);
-        F.all := 3;
+        F := 3;
         Print_Int(F.all);
 end;

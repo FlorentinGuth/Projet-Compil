@@ -2,13 +2,12 @@ open Ast
 
 (** Errors *)
 
-exception Lexing_error  of string * loc
-exception Parsing_error of string * loc
-exception Typing_error  of string * loc
+exception Lexing_error  of string * Loc.loc
+exception Parsing_error of string * Loc.loc
+exception Typing_error  of string * Loc.loc
 
 
 (** Helper functions *)
-
 
 let assoc_to_hashtbl l =
   let t = Hashtbl.create 42 in
@@ -29,14 +28,12 @@ let verify x = function
 let to_some default = function
   | None -> default
   | Some x -> x
-let option_to_list l = to_some [] l
                                  
 let decorate desc deco = 
   { desc; deco }
 let replace_deco node deco =
   decorate node.desc deco
 let decorate_dummy_loc desc = decorate desc (Lexing.dummy_pos, Lexing.dummy_pos)
-let decorate_dummy_typ desc = decorate desc Tnull
 
 
 (** Adding functions to standard library modules *)

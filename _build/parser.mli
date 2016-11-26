@@ -15,7 +15,7 @@ type token =
   | RETURN
   | REM
   | RECORD
-  | PUT
+  | QUOTE
   | PROC
   | PLUS
   | OUT
@@ -23,7 +23,6 @@ type token =
   | OR
   | NULL
   | NOT
-  | NEW_LINE
   | NEW
   | NEQ
   | MINUS
@@ -50,7 +49,6 @@ type token =
   | DIV
   | COMMA
   | COLON
-  | CHAR_VAL
   | CHAR of (char)
   | BOOL of (bool)
   | BEGIN
@@ -65,4 +63,4 @@ exception Error
 
 (* The monolithic API. *)
 
-val file: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.ast)
+val file: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.AST.ast)

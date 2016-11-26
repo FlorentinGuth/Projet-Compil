@@ -1,6 +1,7 @@
 %{
     open Utils
     open Ast
+    open AST
            
     let error m s e = raise (Parsing_error (m, (s, e)))
 %}
@@ -8,7 +9,6 @@
 (** List of tokens *)
 
 %token WITH USE
-%token PUT NEW_LINE CHAR_VAL
 %token PROC FUNC RETURN IS BEGIN END
 %token TYPE ACCESS RECORD
 
@@ -24,9 +24,9 @@
 %token NEW
 
 %token IF THEN ELSIF ELSE
-%token WHILE FOR DOTDOT REVERSE LOOP
+%token WHILE FOR REVERSE LOOP
 
-%token COMMA SEMICOLON COLON AFFECT DOT
+%token COMMA SEMICOLON COLON AFFECT DOT DOTDOT QUOTE
 %token LPAREN RPAREN
 %token IN OUT
 
@@ -51,7 +51,7 @@
 
 (** Entry point *)
 
-%start <Ast.ast> file
+%start <Ast.AST.ast> file
 
 
 %% (** Beginning of rules *)
@@ -64,8 +64,8 @@ file:
         ada2.desc = "ada" && text_io2.desc = "text_io")
       then error "Wrong header, should be \"with Ada.Text_IO; use Ada.Text_IO;\""
              $startpos $endpos;
-      if p.params <> [] then error "Main procedure can't take any parameters"
-                               $startpos $endpos;
+      if p.params <> []
+      then error "Main procedure can't take any parameters" $startpos $endpos;
       p }
 
 
@@ -108,7 +108,7 @@ proc_or_func:
           "Ident following \"end\" must have same name than the function/procedure"
           $startpos $endpos;
       { name;
-        params = option_to_list ps;
+        params = to_some [] ps;
         return = rt;
         decls;
         stmt } }
@@ -116,15 +116,14 @@ proc_or_func:
 proc:
   | p = proc_or_func { if p.return <> None
                        then error "A procedure cannot have a return type"
-                              $startpos $endpos;
-                       { p with return = () } }
-
+                            $startpos $endpos;
+                       p }
 func:
   | f = proc_or_func { match f.return with
-                       | Some t -> { f with return = t }
-                       | None -> error
-                                   "A function must have an annotated return type"
-                                   $startpos $endpos }
+                       | Some _ -> f
+                       | None ->
+                          error "A function must have an annotated return type"
+                          $startpos $endpos }
 
 
 decl:
@@ -135,8 +134,8 @@ decl:
   | lv_list = separated_nonempty_list(COMMA, ident); COLON; typ = type_annot;
     e = option(preceded(AFFECT, expr)); SEMICOLON;
     { List.map (fun lv -> Dvar_decl (lv, typ, e)) lv_list }
-  | PROC; p = proc { [Dproc p] }
-  | FUNC; f = func { [Dfunc f] }
+  | PROC; p = proc { [Dproc_func p] }
+  | FUNC; f = func { [Dproc_func f] }
 
 decls:
   | ds = list(decl) { List.flatten ds }
@@ -157,8 +156,9 @@ expr_desc:
   | c = const { Econst c }
   | LPAREN; e = expr; RPAREN { e.desc }
   | lv = left_val { Eleft_val lv }
-  | NOT; e = expr { Eunop (Unot, e) }
-  | MINUS; e = expr { Eunop (Uminus, e) } %prec UNARY_MINUS
+  | NOT; e = expr { Enot e }
+  | MINUS; e = expr { Ebinop (decorate_dummy_loc (Econst (Cint 0)),
+                              Bminus, e) } %prec UNARY_MINUS
   | e1 = expr; EQ; e2 = expr { Ebinop (e1, Beq, e2) }
   | e1 = expr; NEQ; e2 = expr { Ebinop (e1, Bneq, e2) }
   | e1 = expr; LT; e2 = expr { Ebinop (e1, Blt, e2) }
@@ -175,9 +175,13 @@ expr_desc:
   | e1 = expr; OR; e2 = expr { Ebinop (e1, Bor, e2) }
   | e1 = expr; OR; ELSE; e2 = expr { Ebinop (e1, Bor_else, e2) } %prec OR_ELSE
   | NEW; id = ident { Enew id }
-  | f = ident; LPAREN; ps = separated_nonempty_list(COMMA, expr); RPAREN
+  | f = ident; LPAREN; ps = separated_nonempty_list(COMMA, expr); RPAREN;
     { Eapp_func (f, ps) }
-  | CHAR_VAL; LPAREN; e = expr; RPAREN { Echar_val e }
+  | char = ident; QUOTE; v = ident; LPAREN; e = expr; RPAREN;
+    { if not (char.desc = "character" && v.desc = "val")
+      then error (Format.sprintf "Unknown identifier: %s'%s" char.desc v.desc)
+             $startpos $endpos
+      else Eapp_func (decorate "character'val" ($startpos(char), $endpos(v)), [e]) }
 expr:
   | e = decorated(expr_desc) { e }
 
@@ -192,11 +196,9 @@ elsif:
                  
 stmt_desc:
   | lv = left_val; AFFECT; e = expr; SEMICOLON { Saffect (lv, e) }
-  | p = ident; SEMICOLON { Scall_proc (p, []) }
-  | p = ident; LPAREN; ps = separated_nonempty_list(COMMA, expr); RPAREN; SEMICOLON
-    { Scall_proc (p, ps) }
-  | PUT; LPAREN; e = expr; RPAREN; SEMICOLON { Sput e }
-  | NEW_LINE; SEMICOLON { Snew_line }
+  | p = ident; ps = option(delimited(LPAREN, separated_nonempty_list(COMMA, expr),
+                                     RPAREN)); SEMICOLON;
+    { Scall_proc (p, to_some [] ps) }
   | RETURN; e = option(expr); SEMICOLON 
    { Sreturn (to_some (decorate (Econst Cnull) ($startpos, $endpos)) e) }
   | BEGIN; s = stmts; END; SEMICOLON { s.desc }

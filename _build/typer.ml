@@ -1,7 +1,12 @@
 open Ast
+open Loc
+open Typ
 open Utils
 open Printer
 
+module A = AST
+open A
+module T = TypedAST
 
 (** General error functions *)
 
@@ -20,9 +25,10 @@ let ensure_defined r loc =
   | Def r -> r
 
 let wrong_type t_exp t_proc loc =
+  let print_typ_to_str = print_to_string print_typ in
   error (Format.sprintf
-           "This expression has type %a but was expected of type %a"
-           print_typ_to_str t_proc print_typ_to_str t_exp) loc
+           "This expression has type %s but was expected of type %s"
+           (print_typ_to_str t_proc) (print_typ_to_str t_exp)) loc
 
 
 let ensure_equal t1 t2 loc2 =
@@ -34,8 +40,9 @@ let ensure_equiv t1 t2 loc2 =
   | _ -> ensure_equal t1 t2 loc2
 
 
-let typ_annot_id = function
-  | Aident id | Aaccess id -> id
+let is_access = function
+  | Taccess _ -> true
+  | _ -> false
 
 (** The environment module *)
 
@@ -44,8 +51,8 @@ module Env : sig
 
   val new_env : t
 
-  val get_id_type : t -> loc ident -> typ
-  val get_typ_annot_type : t -> loc ident -> typ
+  val get_id_type : t -> ident -> typ
+  val get_typ_annot_type : t -> ident -> typ
 
   val set_id_type : t -> ident_desc -> typ -> t
   val set_typ_annot_type : t -> ident_desc -> typ -> t
@@ -54,10 +61,32 @@ end = struct
 
   type map = typ Smap.t (* maps an identifier with its type *)
   type t = map * map
-  let new_env = (Smap.empty,
-                 Smap.of_list [("integer",   Tint);
-                               ("character", Tchar);
-                               ("boolean",   Tbool);])
+
+
+
+  let add_in (ts, r) = Tproc_func (List.map (fun t -> (t, In)) ts, r)
+  let reserved = [("character'val", add_in ([Tint],  Tchar));
+                  ("put",           add_in ([Tchar], Tnull));
+                  ("new_line",      add_in ([],      Tnull));
+                 ]
+
+  let unops    = [("not",           add_in ([Tbool], Tbool))] 
+  
+  let type_binop = function
+    | Beq | Bneq ->                            assert false
+    | Blt | Bleq | Bgt | Bgeq ->               ([Tint;  Tint],  Tbool)
+    | Bplus | Bminus | Btimes | Bdiv | Brem -> ([Tint;  Tint],  Tint)
+    | Band | Band_then | Bor | Bor_else ->     ([Tbool; Tbool], Tbool)
+  let binops = List.map (fun b -> (print_to_string print_binop b,
+                                   add_in (type_binop b)))
+                 [Blt; Bleq; Bgt; Bgeq; Bplus; Bminus; Btimes; Bdiv; Brem;
+                  Band; Band_then; Bor; Bor_else]
+                 
+  let new_env = (Smap.of_list (reserved @ unops @ binops),
+                 Smap.of_list [("integer",       Tint);
+                               ("character",     Tchar);
+                               ("boolean",       Tbool);
+                              ])
 
 
   let search_map map key name =
@@ -84,31 +113,18 @@ end
 (** Typing of expressions *)
 
 let type_ident env id =
-  (replace_deco id (Env.get_id_type env id) : typ ident)
-
-
-let type_unop = function
-  | Unot  -> Tfunc ([(Tbool, In)], Tbool)
-  | Uminus-> Tfunc ([(Tint, In)],  Tint)
-
-let type_binop = function
-  | Beq | Bneq -> assert false
-  | Blt | Bleq | Bgt | Bgeq -> Tfunc ([(Tint, In); (Tint, In)], Tbool)
-  | Bplus | Bminus | Btimes | Bdiv | Brem ->
-    Tfunc ([(Tint, In); (Tint, In)], Tint)
-  | Band | Band_then | Bor | Bor_else ->
-    Tfunc ([(Tbool, In); (Tbool, In)], Tbool)
+  (replace_deco id (Env.get_id_type env id) : T.ident)
 
 
 let type_type_annot env ta =
   let type_typ typ =
-    (replace_deco typ (Env.get_typ_annot_type env typ) : typ ident)
+    (replace_deco typ (Env.get_typ_annot_type env typ) : T.ident)
   in
   match ta with
   | Aident id -> let id' = type_typ id in
-    (Aident id', id'.deco)
+    (T.Aident id', id'.deco)
   | Aaccess id -> let id' = type_typ id in
-    (Aaccess id', ensure_record id'.deco id.deco)
+    (T.Aaccess id', ensure_record id'.deco id.deco)
 
 
 let type_const = function
@@ -117,7 +133,7 @@ let type_const = function
   | Cbool _ -> Tbool
   | Cnull   -> Tnull
 
-let type_field env r (f : loc ident) =
+let type_field env r (f : ident) =
   try
     let t_name = List.assoc f.desc r.fields in
     Env.get_typ_annot_type env (decorate t_name f.deco)
@@ -128,256 +144,188 @@ let type_field env r (f : loc ident) =
 
 let rec type_expr env expr =
   match expr.desc with
-  | Econst c -> decorate (Econst c) (type_const c)
-  | Eleft_val lv -> let (lv', t) = type_leftval env lv in
-    decorate (Eleft_val lv') t
-  | Eunop (u, e) ->
+  | Econst c -> decorate (T.Econst c) (type_const c)
+  | Eleft_val lv -> let (lv', t) = type_left_val env lv in
+    decorate (T.Eleft_val lv') t
+  | Enot e ->
+    let ([e'], t) = type_proc_func env
+                      (decorate "not" expr.deco) [e] in
+    decorate (T.Enot e') t
+  | Ebinop (e1, b, e2) ->
     begin
-      match type_app_func env (print_to_string print_unop u) (type_unop u)
-              expr.deco [e] with
-      | ([e'], t) -> decorate (Eunop (u, e')) t
-      | _ -> assert false
-    end
-  | Ebinop (e1, o, e2) ->
-    begin
-      match o with
+      match b with
       | Beq | Bneq -> let e1' = type_expr env e1 in
         let e2' = type_expr env e2 in
         ensure_equiv e1'.deco e2'.deco e2.deco;
-        decorate (Ebinop (e1', o, e2')) Tbool
-      | _ ->
-        begin
-          match type_app_func env (print_to_string print_binop o) (type_binop o)
-                  expr.deco [e1; e2] with
-          | ([e1'; e2'], t) -> decorate (Ebinop (e1', o, e2')) t
-          | _ -> assert false
-        end
+        decorate (T.Ebinop (e1', b, e2')) Tbool
+      | _ ->  let ([e1'; e2'], t) =
+                type_proc_func env
+                  (decorate (print_to_string print_binop b) expr.deco)
+                  [e1; e2] in
+        decorate (T.Ebinop (e1', b, e2')) t
     end
   | Enew id -> let (id', t) = type_type_annot env (Aident id) in
     let t' = ensure_record t id.deco in
-    decorate (Enew (typ_annot_id id')) t'
-  | Eapp_func (f, params) -> let f' = type_ident env f in
-    let (params', t) = type_app_func env f'.desc f'.deco f.deco params in
-    decorate (Eapp_func (f', params')) t
-  | Echar_val e ->
-    begin
-      match type_app_func env "character'val" (Tfunc ([(Tchar, In)], Tint))
-              expr.deco [e] with
-      | ([e'], t) -> decorate (Echar_val e') t
-      | _ -> assert false
-    end
+    decorate (T.Enew (T.typ_annot_id id')) t'
+  | Eapp_func (f, params) -> 
+    let (params', t) = type_proc_func env f params in
+    decorate (T.Eapp_func (type_ident env f, params')) t
       
 
-and type_leftval env = function
+and type_left_val ?(ensure_lv = false) env lv =
+  let not_left_val loc = error "This expression should be a left value" loc in
+  match lv with
   | Lident id -> let id' = type_ident env id in
     let t = match id'.deco with
-      | Tfunc ([], t) | t -> t (* cannot be a function here *)
+      | Tproc_func ([], t) -> if ensure_lv then not_left_val id.deco else t
+      | t -> t
     in
-    (Lident (replace_deco id' t), t)
+    (T.Lident (replace_deco id' t), t)
   | Lmember (e, f) ->
     begin
       let e' = type_expr env e in
       match e'.deco with
       | Trecord r | Taccess r ->
         let t = type_field env (ensure_defined r e.deco) f in
-        (Lmember (e', replace_deco f t), t)
+        if ensure_lv && not (is_access e'.deco)
+        then ignore(ensure_left_val env e);
+        (T.Lmember (e', replace_deco f t), t)
       | _ -> error (Format.sprintf "This expression should be a record or an access")
                e.deco
     end
 
-and type_app_func env f_name f_type f_loc params =
-  match f_type with
-    | Tfunc (l, r) ->
-      begin
-        try
-          let params' = List.map2 (fun (t, _) e -> let e' = type_expr env e in
-                                    ensure_equiv t e'.deco e.deco;
-                                    e') l params in
-          (params', r)
-        with
-        | Invalid_argument "List.map2" ->
-          error (Format.sprintf "%s expects %d arguments but is given %d here" f_name
-                   (List.length l) (List.length params)) f_loc
-      end
-    | Tproc _ -> error "A procedure cannot be called in an expression" f_loc
-    | _ -> error (Format.sprintf "%s is not a function, it cannot be applied" f_name)
-             f_loc
+and ensure_left_val env e =
+  match e.desc with
+  | Eleft_val lv -> let (lv', t) = type_left_val ~ensure_lv:true env lv in
+    decorate (T.Eleft_val lv') t
+  | _ -> error "This expression should be a left value" e.deco
+           
+
+and type_proc_func ?(expr = true) env name params =
+  let typ = Env.get_id_type env name in
+  match (typ, expr) with
+  | (Tproc_func (_, Tnull), true) ->
+    error "A procedure cannot be called in an expression" name.deco
+  | (Tproc_func (_, t), false) when t <> Tnull ->
+    error "A function cannot be applied in a statement" name.deco
+  | (Tproc_func (l, r), _) ->
+    begin
+      try
+        let params' = List.map2
+                        (fun (t, m) e -> let type_func env e = match m with
+                                            | In -> type_expr env e
+                                            | InOut -> ensure_left_val env e
+                           in
+                           let e' = type_func env e in
+                           ensure_equiv t e'.deco e.deco;
+                           e') l params in
+        (params', r)
+      with
+      | Invalid_argument _ (* "List.map2" *) ->
+        error (Format.sprintf "%s expects %d arguments but is given %d here"
+                 name.desc (List.length l) (List.length params)) name.deco
+    end
+  | _ -> let (fp, v) = if expr then ("function", "applied")
+           else ("procedure", "called") in
+    error (Format.sprintf "%s is not a %s, it cannot be %s" name.desc fp v) name.deco
 
 
 (** Typing of statements *)
 
-let type_call_proc env p_name p_type p_loc params =
-  match p_type with
-    | Tproc l ->
-      begin
-        try
-          List.map2 (fun (t, _) e -> let e' = type_expr env e in
-                      ensure_equiv t e'.deco e.deco;
-                      e') l params
-        with
-        | Invalid_argument "List.map2" ->
-          error (Format.sprintf "%s expects %d arguments but is given %d here" p_name
-                   (List.length l) (List.length params)) p_loc
-      end
-    | Tfunc _ -> error "A function cannot be called in a statement" p_loc
-    | _ -> error (Format.sprintf "%s is not a procedure, it cannot be called" p_name)
-             p_loc
-
-let rec desc_type_stmt env return_type stmt =
+let rec desc_type_stmt env return_type const stmt =
   match stmt.desc with
-  | Saffect (lv, e) -> let (lv', t) = type_leftval env lv in
+  | Saffect (lv, e) -> let (lv', t) = type_left_val env lv in
     let e' = type_expr env e in
     ensure_equiv t e'.deco e.deco;
-    Saffect (lv', e')
-  | Scall_proc (p, params) -> let p' = type_ident env p in
-    let params' = type_call_proc env p.desc p'.deco p.deco params in
-    Scall_proc (p', params')
-  | Sput e ->
-    begin
-      match type_call_proc env "put" (Tproc [(Tchar, In)]) stmt.deco [e] with
-      | [e'] -> Sput e'
-      | _ -> assert false
-    end
-  | Snew_line -> Snew_line
+    T.Saffect (lv', e')
+  | Scall_proc (p, params) ->
+    let (params', _) = type_proc_func ~expr:false env p params in
+    T.Scall_proc (type_ident env p, params')
   | Sreturn e -> let e' = type_expr env e in
     let ensure = if return_type = Tnull then ensure_equal else ensure_equiv in
     ensure return_type e'.deco e.deco;
-    Sreturn e'
-  | Sblock l -> Sblock (List.map (type_stmt env return_type) l)
+    T.Sreturn e'
+  | Sblock l -> T.Sblock (List.map (type_stmt env return_type const) l)
   | Scond (e, s1, s2) -> let e' = type_expr env e in
     ensure_equal Tbool e'.deco e.deco;
-    let s1' = type_stmt env return_type s1 in
-    let s2' = type_stmt env return_type s2 in
-    Scond (e', s1', s2')
+    let s1' = type_stmt env return_type const s1 in
+    let s2' = type_stmt env return_type const s2 in
+    T.Scond (e', s1', s2')
   | Swhile (e, s) -> let e' = type_expr env e in
     ensure_equal Tbool e'.deco e.deco;
-    let s' = type_stmt env return_type s in
-    Swhile (e', s')
+    let s' = type_stmt env return_type const s in
+    T.Swhile (e', s')
   | Sfor (id, rev, lb, ub, s) -> let id' = type_ident env id in
     let lb' = type_expr env lb in
     let ub' = type_expr env ub in
     ensure_equal Tint lb'.deco lb.deco;
     ensure_equal Tint ub'.deco ub.deco;
-    let s' = type_stmt (Env.set_id_type env id.desc id'.deco) return_type s in
-    Sfor (id', rev, lb', ub', s')
+    let s' = type_stmt (Env.set_id_type env id.desc id'.deco) return_type const s in
+    T.Sfor (id', rev, lb', ub', s')
     
-and type_stmt env return_type stmt =
-  decorate_dummy_typ (desc_type_stmt env return_type stmt)
+and type_stmt env return_type const stmt =
+  decorate (desc_type_stmt env return_type const stmt) ()
 
 
 (** Typing of declarations *)
 
-module Wf_typs : sig
-  type t
-
-  val empty : t
-
-  val is_wf : t -> 'a type_annot -> bool
-  val set_wf : t -> 'a type_annot -> t
-  val set_wf_all : t -> 'a ident -> t
-end = struct  
-  module OrderedTyp = struct
-    type t = unit type_annot   
-    let compare = Pervasives.compare
-  end
-  module Tset = Set.Make(OrderedTyp)
-      
-  type t = Tset.t
-
-
-  let build s =
-    Aident (decorate s ())
-  
-  let empty = Tset.of_list (List.map build ["integer"; "character"; "boolean"])
-
-
-  let strip = function
-    | Aident id -> Aident (replace_deco id ())
-    | Aaccess id -> Aaccess (replace_deco id ())
-                
-  let is_wf set x =
-    Tset.mem (strip x) set
-
-  let set_wf set x =
-    Tset.add (strip x) set
-
-  let set_wf_all set x =
-    set_wf (set_wf set (Aident x)) (Aaccess x)
-end
-
-
-let ensure_wf wf t =
-   if not (Wf_typs.is_wf wf t)
-   then error (Format.sprintf "%a is not well-formed"
-                 print_type_annot_to_str t) (typ_annot_id t).deco
-
-
-let rec type_decls env wf = function
-  (* env contains all declared records, 
-     they do not need to have already been defined *)
-  | [] -> env
-  | d :: ds ->
+let ensure_well_formed env = function
+  | Aident id ->
     begin
-      match d with
-      | Dtype (id, None) ->
-        type_decls (Env.set_typ_annot_type env id.desc
-                      (Trecord (Decl id.desc)))
-          (Wf_typs.set_wf wf (Aaccess id)) ds
-      | Dtype (_, Some (Aident _)) -> assert false
-      | Dtype (id, Some (Aaccess r)) ->
-        let _ = Env.get_typ_annot_type env r in (* ensures r is declared *)
-        type_decls (Env.set_typ_annot_type env id.desc
-                      (Taccess (Decl r.desc)))
-          (Wf_typs.set_wf wf (Aaccess id)) ds
-      | Dtype_record (id, fields) ->
-        let wf' = Wf_typs.set_wf wf (Aaccess id) in
-        List.iter (fun (_, t) -> ensure_wf wf' t) fields;
-        type_decls (Env.set_typ_annot_type env id.desc
-                      (Trecord
-                         (Def { ident = id.desc;
-                                fields =
-                                  List.map
-                                    (fun (id, t) ->
-                                       (id.desc, (typ_annot_id t).desc))
-                                    fields
-                              })))
-          (Wf_typs.set_wf_all wf id) ds
-      | Dvar_decl (id, t, None) -> ensure_wf wf t;
-        let (_, typ) = type_type_annot env t in
-        type_decls (Env.set_id_type env id.desc typ) wf ds
-      | Dvar_decl (id, t, Some e) -> ensure_wf wf t;
-        let (_, typ) = type_type_annot env t in
-        let e' = type_expr env e in
-        ensure_equiv typ e'.deco e.deco;
-        type_decls (Env.set_id_type env id.desc typ) wf ds
-      | Dproc p ->
-        let params' = List.map (fun (id, m, t) -> ensure_wf wf t;
-                                 (id, m, snd (type_type_annot env t)))
-                        p.params in
-        let env' = Env.set_id_type env p.name.desc
-                     (Tproc (List.map (fun (_, m, t) -> (t, m)) params')) in
-        let env'' = List.fold_left (fun env (id, _, t) ->
-                                    Env.set_id_type env id.desc t) env params' in
-        let env'' = type_decls env'' wf p.decls in
-        let stmt' = type_stmt env'' Tnull p.stmt in
-        type_decls env' wf ds
-      | Dfunc f ->
-        ensure_wf wf f.return;
-        let return' = snd (type_type_annot env f.return) in
-        let params' = List.map (fun (id, m, t) -> ensure_wf wf t;
-                                 (id, m, snd (type_type_annot env t)))
-                        f.params in
-        let env' = Env.set_id_type env f.name.desc
-                     (Tfunc (List.map (fun (_, m, t) -> (t, m)) params', return')) in
-        let env'' = List.fold_left (fun env (id, _, t) ->
-                                    Env.set_id_type env id.desc t) env params' in
-        let env'' = type_decls env'' wf f.decls in
-        let stmt' = type_stmt env'' return' f.stmt in
-        type_decls env' wf ds
+      match Env.get_typ_annot_type env id with
+      | Trecord r -> Trecord (Def (ensure_defined r id.deco))
+      | t -> t
     end
+  | Aaccess id -> ensure_record (Env.get_typ_annot_type env id) id.deco
+
+
+let rec type_decl env = function
+  | Dtype (id, None) -> Env.set_typ_annot_type env id.desc
+                          (Trecord (Decl id.desc))
+  | Dtype (_, Some (Aident _)) -> assert false
+  | Dtype (id, Some (Aaccess r)) ->
+    let t = Env.get_typ_annot_type env r in (* ensures r is declared *)
+    let t' = ensure_record t r.deco in
+    Env.set_typ_annot_type env id.desc t'
+  | Dtype_record (id, fields) ->
+    List.iter (fun (_, t) ->
+                ignore (ensure_well_formed
+                          (Env.set_typ_annot_type env id.desc
+                             (Trecord (Decl id.desc))) t);)
+      fields;
+    let fields' = List.map (fun (id, t) -> (id.desc, (typ_annot_id t).desc))
+                    fields in
+    Env.set_typ_annot_type env id.desc
+      (Trecord (Def { ident = id.desc; fields = fields' }))
+  | Dvar_decl (id, t, None) -> let typ = ensure_well_formed env t in
+    Env.set_id_type env id.desc typ
+  | Dvar_decl (id, t, Some e) -> let typ = ensure_well_formed env t in
+    let e' = type_expr env e in
+    ensure_equiv typ e'.deco e.deco;
+    Env.set_id_type env id.desc typ
+  | Dproc_func pf ->
+    let return' = match pf.return with
+      | None -> Tnull
+      | Some r -> ensure_well_formed env r in
+    let params' = List.map (fun (id, m, t) ->
+                             let typ = ensure_well_formed env t in
+                             (id, m, typ))
+                    pf.params in
+    let env' = Env.set_id_type env pf.name.desc
+                 (Tproc_func (List.map
+                                (fun (_, m, t) -> (t, m)) params', return')) in
+    let env'' = List.fold_left (fun env (id, _, t) ->
+                                 Env.set_id_type env id.desc t) env' params' in
+    let env'' = type_decls env'' pf.decls in
+    let stmt' = type_stmt env'' return' [] pf.stmt in
+    env'
+
+and type_decls env = function
+  | [] -> env
+  | d :: ds -> type_decls (type_decl env d) ds
 
 
 (** Typing of a program *)
 
 let type_ast a =
-  ignore (type_decls Env.new_env Wf_typs.empty [Dproc a])
+  ignore (type_decls Env.new_env [Dproc_func a])
