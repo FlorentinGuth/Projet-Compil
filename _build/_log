@@ -2,19 +2,19 @@
 # Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules main.ml > main.ml.depends
 # Target: ast.ml.depends, tags: { extension:ml, file:ast.ml, ocaml, ocamldep, quiet }
-/home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules ast.ml > ast.ml.depends
+/home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules ast.ml > ast.ml.depends # cached
 # Target: printer.ml.depends, tags: { extension:ml, file:printer.ml, ocaml, ocamldep, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules printer.ml > printer.ml.depends # cached
 # Target: printer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:printer.cmo, file:printer.ml, implem, ocaml, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o printer.cmo printer.ml # cached
+# Target: ast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:ast.cmo, file:ast.ml, implem, ocaml, quiet }
+/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o ast.cmo ast.ml # cached
 # Target: lexer.mll, tags: { extension:mll, file:lexer.mll, lexer, ocaml, ocamllex, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamllex.opt -q lexer.mll # cached
 # Target: lexer.ml.depends, tags: { extension:ml, file:lexer.ml, ocaml, ocamldep, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules lexer.ml > lexer.ml.depends # cached
 # Target: parser.mly.depends, tags: { extension:mly, file:parser.mly, infer, menhir_ocamldep, ocaml, ocamldep, quiet }
 menhir --raw-depend --ocamldep '/home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules' parser.mly > parser.mly.depends # cached
-# Target: ast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:ast.cmo, file:ast.ml, implem, ocaml, quiet }
-/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o ast.cmo ast.ml
 # Target: utils.ml.depends, tags: { extension:ml, file:utils.ml, ocaml, ocamldep, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules utils.ml > utils.ml.depends # cached
 # Target: utils.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:utils.cmo, file:utils.ml, implem, ocaml, quiet }
@@ -25,10 +25,10 @@ menhir --ocamlc '/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -g -w +A-4-52' -v --
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules parser.mli > parser.mli.depends # cached
 # Target: parser.cmi, tags: { byte, compile, extension:mli, file:parser.mli, interf, ocaml, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o parser.cmi parser.mli # cached
-# Target: lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
-/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o lexer.cmo lexer.ml # cached
 # Target: typer.ml.depends, tags: { extension:ml, file:typer.ml, ocaml, ocamldep, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules typer.ml > typer.ml.depends
+# Target: lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
+/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o lexer.cmo lexer.ml
 # Target: typer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:typer.cmo, file:typer.ml, implem, ocaml, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o typer.cmo typer.ml
 + /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o typer.cmo typer.ml
@@ -40,10 +40,30 @@ File "typer.ml", line 161, characters 18-33:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 ([], _)
+File "typer.ml", line 332, characters 14-246:
+Warning 45: this open statement shadows the label name (which is later used)
+File "typer.ml", line 332, characters 14-246:
+Warning 45: this open statement shadows the label params (which is later used)
+File "typer.ml", line 332, characters 14-246:
+Warning 45: this open statement shadows the label return (which is later used)
+File "typer.ml", line 332, characters 14-246:
+Warning 45: this open statement shadows the label decls (which is later used)
+File "typer.ml", line 332, characters 14-246:
+Warning 45: this open statement shadows the label stmt (which is later used)
+File "typer.ml", line 332, characters 14-246:
+Warning 41: these field labels belong to several types: T.proc_func A.proc_func
+The first one was selected. Please disambiguate if this is wrong.
+File "typer.ml", line 332, characters 41-45:
+Warning 42: this use of name relies on type-directed disambiguation,
+it will not compile with OCaml 4.00 or earlier.
 File "typer.ml", line 2, characters 0-8:
 Warning 33: unused open Ast.Loc.
-File "typer.ml", line 320, characters 8-13:
-Warning 26: unused variable stmt'.
+File "typer.ml", line 322, characters 33-36:
+Warning 26: unused variable typ.
+File "typer.ml", line 327, characters 39-40:
+Warning 27: unused variable a.
+File "typer.ml", line 328, characters 49-50:
+Warning 27: unused variable m.
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o main.cmo main.ml
 + /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-52 -o main.cmo main.ml

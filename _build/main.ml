@@ -54,7 +54,7 @@ let compile file =
     (*print_tokens ();*)
     let a = Parser.file Lexer.token buf in
     (*print_ast a;*)
-    if not !parse_only then Typer.type_ast a;
+    if not !parse_only then ignore (Typer.type_ast a);
     print_endline "Everything went fine!";
     close_in ch
   with

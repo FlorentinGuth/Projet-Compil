@@ -34,6 +34,7 @@ let decorate desc deco =
 let replace_deco node deco =
   decorate node.desc deco
 let decorate_dummy_loc desc = decorate desc (Lexing.dummy_pos, Lexing.dummy_pos)
+let decorate_dummy_typ desc = decorate desc Typ.Tnull
 
 
 (** Adding functions to standard library modules *)

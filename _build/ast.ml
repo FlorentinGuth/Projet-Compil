@@ -2,7 +2,7 @@ open Format
 open Printer
 
 
-(** Types idenpendant of decoration outside to allow conversion *)
+(** Types idenpendant of decoration outside to allow conversion, and printers *)
 
 type ident_desc = string (* only lowercase letters, can be "put", "new_line", 
                             "character'val"... *)
@@ -22,6 +22,59 @@ type const =
 type mode = In | InOut
 
 
+type 'ident typ_annot = (* Type annotated by the user *)
+  {
+    typ_ident : 'ident;
+    is_access : bool;
+  }
+type 'ident annotated =
+  {
+    ident : 'ident;
+    ta    : 'ident typ_annot;
+  }
+
+
+
+let print_ident_desc fmt (id : ident_desc) =
+  fprintf fmt "%s" id
+    
+let print_binop fmt b =
+  fprintf fmt (match b with
+                | Beq       -> "="
+                | Bneq      -> "/="
+                | Blt       -> "<"
+                | Bleq      -> "<="
+                | Bgt       -> ">"
+                | Bgeq      -> ">="
+                | Bplus     -> "+"
+                | Bminus    -> "-"
+                | Btimes    -> "*"
+                | Bdiv      -> "/"
+                | Brem      -> "rem"
+                | Band      -> "and"
+                | Band_then -> "and then"
+                | Bor       -> "or"
+                | Bor_else  -> "or else"
+              )
+    
+let print_const fmt = function
+  | Cint  n -> fprintf fmt "%d" n
+  | Cchar c -> fprintf fmt "%c" c
+  | Cbool b -> fprintf fmt "%b" b
+  | Cnull   -> fprintf fmt "null"
+
+let print_mode fmt = function
+  | In    -> fprintf fmt "in"
+  | InOut -> fprintf fmt "@[in@ out@]"
+
+
+let print_typ_annot fmt ta =
+  fprintf fmt "@[%a%s@]" print_if ("access ", ta.is_access) ta.typ_ident
+    
+let print_annotated fmt a =
+  fprintf fmt "@[%s: %a@]" a.ident print_typ_annot a.ta
+
+
 (** The type of a decorated type *)
 type ('desc, 'deco) node =
   {
@@ -34,6 +87,7 @@ type ('desc, 'deco) node =
 module type DECO =
 sig
   type ident_deco
+  type ident_decl_deco
   type expr_deco
   type stmt_deco
 end
@@ -45,13 +99,8 @@ struct
   (** The types of the AST *)
 
   type ident = (ident_desc, D.ident_deco) node
-
-  type type_annot = (* type annotated by the user, is only the name of the type *)
-    | Aident  of ident
-    | Aaccess of ident
-
-  type param = ident * mode * type_annot (* Can come from multiple params declared 
-                                            with same type, and default mode is In *)
+  type ident_decl = (ident_desc, D.ident_decl_deco) node
+  (* Not same types because makes sense to decorate with loc but not with a type *)
 
   
   type expr_desc = 
@@ -59,7 +108,7 @@ struct
     | Eleft_val of left_val
     | Ebinop    of expr * binop * expr
     | Enot      of expr
-    | Enew      of ident
+    | Enew      of ident_decl
     | Eapp_func of ident * (expr list) (* list is non-empty *)
   and expr = (expr_desc, D.expr_deco) node
 
@@ -68,27 +117,12 @@ struct
     | Lmember of expr * ident
 
 
-  type decl =
-    | Dtype        of ident * type_annot option
-    (* Allows aliasing of types, and can not be initialised *)
-    | Dtype_record of ident * (ident * type_annot) list
-    (* list must be non-empty, multiple fields could have been declared 
-       simultaneously *)
-    | Dvar_decl    of ident * type_annot * expr option
-    (* Can come from a declaration of multiple vars with the same value *)
-    | Dproc_func   of proc_func
+  type nonrec typ_annot = ident_decl typ_annot
+  type nonrec annotated = ident_decl annotated
+  type param = annotated * mode (* Can come from multiple params declared 
+                                   with same type, and default mode is In *)
 
-  and proc_func = {
-    name   : ident;
-    params : param list;
-    return : type_annot option; (* being None for a procedure 
-                                   and Some typ for a function *)
-    decls  : decl list;
-    stmt   : stmt;
-  }
-
-
-  and stmt_desc =
+  type stmt_desc =
     | Saffect    of left_val * expr
     | Scall_proc of ident * (expr list) (* includes empty list *)
     | Sreturn    of expr (* includes return without expression *)
@@ -101,59 +135,37 @@ struct
        Really tempting to convert in while loop, but would need a new variable, and
        the declarations aren't available during parsing... *)
   and stmt = (stmt_desc, D.stmt_deco) node
+               
+
+  type decl =
+    | Dtype_decl  of ident_decl * typ_annot option
+    (* Allows aliasing of types *)
+    | Drecord_def of ident_decl * annotated list
+    (* list must be non-empty, multiple fields could have been declared 
+       simultaneously *)
+    | Dvar_decl   of annotated * expr option
+    (* Can come from a declaration of multiple vars with the same value *)
+    | Dproc_func  of proc_func
+
+  and proc_func =
+    {
+      name   : ident_decl;
+      params : param list;
+      return : typ_annot option; (* being None for a procedure 
+                                     and Some typ for a function *)
+      decls  : decl list;
+      stmt   : stmt;
+    }
 
 
   type ast = proc_func
-
-
-  (** General functions on AST types *)
-
-  let typ_annot_id = function
-    | Aident id | Aaccess id -> id
       
 
   (** AST Printers *)
 
-  let print_ident fmt (id : ident) =
+  let print_ident fmt id =
     fprintf fmt "%s" id.desc
-
-  let print_binop fmt b =
-    fprintf fmt (match b with
-                  | Beq       -> "="
-                  | Bneq      -> "/="
-                  | Blt       -> "<"
-                  | Bleq      -> "<="
-                  | Bgt       -> ">"
-                  | Bgeq      -> ">="
-                  | Bplus     -> "+"
-                  | Bminus    -> "-"
-                  | Btimes    -> "*"
-                  | Bdiv      -> "/"
-                  | Brem      -> "rem"
-                  | Band      -> "and"
-                  | Band_then -> "and then"
-                  | Bor       -> "or"
-                  | Bor_else  -> "or else"
-                )
-
-  let print_type_annot fmt = function
-    | Aident  id -> fprintf fmt "%a" print_ident id
-    | Aaccess id -> fprintf fmt "@[access@ %a@]" print_ident id
-
-
-  let print_mode fmt = function
-    | In    -> fprintf fmt "in"
-    | InOut -> fprintf fmt "@[in@ out@]"
-
-  let print_param fmt ((id, m, t) : param) =
-    fprintf fmt "@[%a@ :@ %a@ %a@]" print_ident id print_mode m print_type_annot t
-  let print_param_list fmt ps = print_list (print_sep ",@ ") print_param fmt ps
-
-  let print_const fmt = function
-    | Cint  n -> fprintf fmt "%d" n
-    | Cchar c -> fprintf fmt "%c" c
-    | Cbool b -> fprintf fmt "%b" b
-    | Cnull   -> fprintf fmt "null"
+      
 
   let rec print_expr fmt e =
     match e.desc with
@@ -170,9 +182,23 @@ struct
     | Lmember (e, id) -> fprintf fmt "@[%a.%a@]" print_expr e print_ident id
   and print_expr_list fmt es = print_list (print_sep ",@ ") print_expr fmt es
 
-  let print_field fmt ((id : ident), t) =
-    fprintf fmt "@[%a@ :@ %a@]" print_ident id print_type_annot t
-  let print_fields fmt fs = print_list (print_sep ";\n") print_field fmt fs
+
+  let strip_deco_ta ta =
+    { typ_ident = ta.typ_ident.desc; is_access = ta.is_access }
+  let print_typ_annot fmt ta =
+    print_typ_annot fmt (strip_deco_ta ta)
+
+  let strip_deco_a a =
+    { ident = a.ident.desc; ta = strip_deco_ta a.ta }
+  let print_annotated fmt a =
+    print_annotated fmt (strip_deco_a a)
+
+  
+  let print_param fmt ((a, m) : param) =
+    fprintf fmt "@[%a@ :@ %a@ %a@]" print_ident a.ident print_mode m
+      print_typ_annot a.ta
+  let print_param_list fmt ps = print_list (print_sep ", ") print_param fmt ps
+  let print_fields fmt fs = print_list (print_sep "; ") print_annotated fmt fs
 
   let rec print_stmt fmt s =
     match s.desc with
@@ -192,22 +218,19 @@ struct
   and print_stmt_list fmt ss = print_list (print_sep "\n") print_stmt fmt ss
 
   let rec print_decl fmt = function
-    | Dtype (id, None) -> fprintf fmt "@[type@ %a;@]" print_ident id
-    | Dtype (id, Some t) -> fprintf fmt "@[type@ %a@ is@ %a;@]" print_ident id
-                              print_type_annot t
-    | Dtype_record (id, fs) -> fprintf fmt
+    | Dtype_decl (id, ta_opt) -> fprintf fmt "@[type@ %a%a;@]" print_ident id
+                              (print_option print_typ_annot) (" is ", ta_opt)
+    | Drecord_def (id, fs) -> fprintf fmt
                                  "@[type@ %a@ is@ @[record@ %a@ end@ record@];@]"
                                  print_ident id print_fields fs
-    | Dvar_decl (id, t, None) -> fprintf fmt "@[%a@ :@ %a;@]" print_ident id
-                                   print_type_annot t
-    | Dvar_decl (id, t, Some e) -> fprintf fmt "@[%a@ :@ %a@ :=@ %a;@]"
-                                     print_ident id print_type_annot t print_expr e
+    | Dvar_decl (a, e_opt) -> fprintf fmt "@[%a@ :=@ %a;@]" print_annotated a
+                                (print_option print_expr) (" := ", e_opt)
     | Dproc_func pf -> fprintf fmt "%a" print_proc_func pf
   and print_proc_func fmt pf =
     let (name, return_printer) = match pf.return with
       | None ->   ("procedure", (fun _ () -> ()))
       | Some t -> ("function",  (fun fmt () -> fprintf fmt "@ return@ %a"
-                                                 print_type_annot t))
+                                                 print_typ_annot t))
     in
     fprintf fmt "@[%s@ %a(%a)%a@ is@ @[%a@]@ @[%a@]@]"
       name print_ident pf.name print_param_list pf.params return_printer ()
@@ -228,9 +251,10 @@ struct
   type pos = Lexing.position
   type loc = pos * pos (* (start, end) *)
 
-  type ident_deco = loc
-  type expr_deco  = loc
-  type stmt_deco  = loc
+  type ident_deco      = loc
+  type ident_decl_deco = loc
+  type expr_deco       = loc
+  type stmt_deco       = loc
 
   let print_loc fmt ((s, e) : loc) =
     let open Lexing in
@@ -246,8 +270,8 @@ module Typ =
 struct
   type record_def =
     {
-      ident  : ident_desc;
-      fields : (ident_desc * ident_desc) list; (* list is non-empty *)
+      r_ident : ident_desc;
+      fields  : ident_desc annotated list; (* list is non-empty *)
     }
   type record =
     | Decl of ident_desc
@@ -259,20 +283,30 @@ struct
     | Tchar 
     | Tbool
     | Trecord of record
-    | Taccess of record
+    | Taccess of ident_desc
     | Tproc_func of (typ * mode) list * typ (* typ = Tnull for a procedure *)
 
-  type ident_deco = typ
-  type expr_deco  = typ
-  type stmt_deco  = unit
+  type ident_deco      = typ
+  type ident_decl_deco = unit
+  type expr_deco       = typ
+  type stmt_deco       = unit
+
+
+  let get_record_id = function
+    | Decl id -> id
+    | Def  r  -> r.r_ident
+
+  let to_access = function
+    | Decl id -> Taccess id
+    | Def  r  -> Taccess r.r_ident
 
 
   let print_record fmt r =
     match r with
-    | Def r -> let print_field fmt (n, t) = fprintf fmt "@[%s:@ %s@]" n t in
-      let print_fields fmt l = print_list (print_sep "; ") print_field fmt l in
+    | Def r ->
+      let print_fields fmt l = print_list (print_sep "; ") print_annotated fmt l in
       fprintf fmt "@[%s@ is@ record@ @[%a@]@ end@ record@]"
-        r.ident print_fields r.fields
+        r.r_ident print_fields r.fields
     | Decl s -> fprintf fmt "%s" s
                   
   let print_typ fmt t =
@@ -282,7 +316,7 @@ struct
     | Tchar -> fprintf fmt "character"
     | Tbool -> fprintf fmt "boolean"
     | Trecord r -> print_record fmt r
-    | Taccess r -> fprintf fmt "@[access@ %a@]" print_record r
+    | Taccess s -> fprintf fmt "@[access@ %s@]" s
     | Tproc_func _ -> assert false
 end
 

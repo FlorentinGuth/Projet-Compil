@@ -59,49 +59,49 @@
 file:
   WITH; ada1 = ident; DOT; text_io1 = ident; SEMICOLON;
   USE;  ada2 = ident; DOT; text_io2 = ident; SEMICOLON; 
-  PROC; p = proc; EOF 
-    { if not (ada1.desc = "ada" && text_io1.desc = "text_io" &&
-        ada2.desc = "ada" && text_io2.desc = "text_io")
-      then error "Wrong header, should be \"with Ada.Text_IO; use Ada.Text_IO;\""
-             $startpos $endpos;
-      if p.params <> []
-      then error "Main procedure can't take any parameters" $startpos $endpos;
-      p }
-
-
+  PROC; p = proc; EOF;
+  { if not (ada1.desc = "ada" && text_io1.desc = "text_io" &&
+              ada2.desc = "ada" && text_io2.desc = "text_io")
+    then error "Wrong header, should be \"with Ada.Text_IO; use Ada.Text_IO;\""
+         $startpos $endpos;
+    if p.params <> []
+    then error "Main procedure can't take any parameters" $startpos $endpos;
+    p }
+    
+    
 %inline decorated(X):
-  | x = X { decorate x ($startpos, $endpos) }
+| x = X; { decorate x ($startpos, $endpos) }
 
 
 ident_desc:
-  | id = IDENT { id }
+  | id = IDENT; { id }
 ident:
-  | id = decorated(ident_desc) { id }
+  | id = decorated(ident_desc); { id }
 
-type_annot:
-  | id = ident { Aident id }
-  | ACCESS; id = ident { Aaccess id }
+typ_annot:
+  | id = ident;         { { typ_ident = id; is_access = false } }
+  | ACCESS; id = ident; { { typ_ident = id; is_access = true  } }
 
 mode:
-  | | IN { In } (* Default mode is In *)
-  | IN; OUT { InOut }
+  | ; | IN;  { In } (* Default mode is In *)
+  | IN; OUT; { InOut }
 
 param:
-  | ids = separated_nonempty_list(COMMA, ident); COLON; m = mode; typ = type_annot
-    { List.map (fun id -> (id, m, typ)) ids }
+  | ids = separated_nonempty_list(COMMA, ident); COLON; m = mode; typ = typ_annot;
+    { List.map (fun id -> ({ ident = id; ta = typ }, m)) ids }
 
 params:
-  | LPAREN; p = separated_nonempty_list(SEMICOLON, param); RPAREN
+  | LPAREN; p = separated_nonempty_list(SEMICOLON, param); RPAREN;
     { List.flatten p }
 
 fields:
-  | ids = separated_nonempty_list(COMMA, ident); COLON; typ = type_annot; SEMICOLON
-    { developp (ids, typ) }
+  | ids = separated_nonempty_list(COMMA, ident); COLON; typ = typ_annot; SEMICOLON;
+    { List.map (fun id -> { ident = id; ta = typ }) ids }
 
 
 proc_or_func:
-  | name = ident; ps = option(params); rt = option(preceded(RETURN, type_annot));
-    IS; decls = decls; BEGIN; stmt = stmts; END; end_id = option(ident); SEMICOLON
+  | name = ident; ps = option(params); rt = option(preceded(RETURN, typ_annot));
+    IS; decls = decls; BEGIN; stmt = stmts; END; end_id = option(ident); SEMICOLON;
     { if name.desc <> (to_some name end_id).desc
       then
         error
@@ -114,50 +114,50 @@ proc_or_func:
         stmt } }
 
 proc:
-  | p = proc_or_func { if p.return <> None
-                       then error "A procedure cannot have a return type"
-                            $startpos $endpos;
-                       p }
+  | p = proc_or_func; { if p.return <> None
+                        then error "A procedure cannot have a return type"
+                             $startpos $endpos;
+                        p }
 func:
-  | f = proc_or_func { match f.return with
-                       | Some _ -> f
-                       | None ->
-                          error "A function must have an annotated return type"
-                          $startpos $endpos }
+  | f = proc_or_func; { match f.return with
+                        | Some _ -> f
+                        | None ->
+                           error "A function must have an annotated return type"
+                           $startpos $endpos }
 
 
 decl:
-  | TYPE; id = ident; typ = option(preceded(IS, type_annot)); SEMICOLON 
-    { [Dtype (id, typ)] }
-  | TYPE; id = ident; IS; RECORD; r = nonempty_list(fields); END; RECORD; SEMICOLON
-    { [Dtype_record (id, List.flatten r)] }
-  | lv_list = separated_nonempty_list(COMMA, ident); COLON; typ = type_annot;
+  | TYPE; id = ident; typ = option(preceded(IS, typ_annot)); SEMICOLON;
+    { [Dtype_decl (id, typ)] }
+  | TYPE; id = ident; IS; RECORD; r = nonempty_list(fields); END; RECORD; SEMICOLON;
+    { [Drecord_def (id, List.flatten r)] }
+  | lv_list = separated_nonempty_list(COMMA, ident); COLON; typ = typ_annot;
     e = option(preceded(AFFECT, expr)); SEMICOLON;
-    { List.map (fun lv -> Dvar_decl (lv, typ, e)) lv_list }
-  | PROC; p = proc { [Dproc_func p] }
-  | FUNC; f = func { [Dproc_func f] }
+    { List.map (fun lv -> Dvar_decl ({ ident = lv; ta = typ }, e)) lv_list }
+  | PROC; p = proc; { [Dproc_func p] }
+  | FUNC; f = func; { [Dproc_func f] }
 
 decls:
-  | ds = list(decl) { List.flatten ds }
+  | ds = list(decl); { List.flatten ds }
 
 
 const:
-  | n = INT  { Cint  n }
-  | c = CHAR { Cchar c }
-  | b = BOOL { Cbool b }
-  | NULL     { Cnull }
+  | n = INT;  { Cint  n }
+  | c = CHAR; { Cchar c }
+  | b = BOOL; { Cbool b }
+  | NULL;     { Cnull }
 
 %inline left_val:
-  | id = ident { Lident id } (* Can be a function !! *)
-  | e = expr; DOT; field = ident { Lmember (e, field) }
+  | id = ident; { Lident id } (* Can be a function !! *)
+  | e = expr; DOT; field = ident; { Lmember (e, field) }
 
 
 expr_desc:
-  | c = const { Econst c }
-  | LPAREN; e = expr; RPAREN { e.desc }
-  | lv = left_val { Eleft_val lv }
-  | NOT; e = expr { Enot e }
-  | MINUS; e = expr { Ebinop (decorate_dummy_loc (Econst (Cint 0)),
+  | c = const; { Econst c }
+  | LPAREN; e = expr; RPAREN; { e.desc }
+  | lv = left_val; { Eleft_val lv }
+  | NOT; e = expr; { Enot e }
+  | MINUS; e = expr; { Ebinop (decorate_dummy_loc (Econst (Cint 0)),
                               Bminus, e) } %prec UNARY_MINUS
   | e1 = expr; EQ; e2 = expr { Ebinop (e1, Beq, e2) }
   | e1 = expr; NEQ; e2 = expr { Ebinop (e1, Bneq, e2) }

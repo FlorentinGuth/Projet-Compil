@@ -16,7 +16,7 @@ let error msg loc =
 
 let ensure_record typ loc =
   match typ with
-  | Trecord r -> Taccess r
+  | Trecord r -> r
   | _ -> error "Only a record can have an access type" loc
 
 let ensure_defined r loc =
@@ -116,16 +116,15 @@ let type_ident env id =
   (replace_deco id (Env.get_id_type env id) : T.ident)
 
 
-let type_type_annot env ta =
-  let type_typ typ =
-    (replace_deco typ (Env.get_typ_annot_type env typ) : T.ident)
-  in
-  match ta with
-  | Aident id -> let id' = type_typ id in
-    (T.Aident id', id'.deco)
-  | Aaccess id -> let id' = type_typ id in
-    (T.Aaccess id', ensure_record id'.deco id.deco)
+let type_typ_annot env (ta : A.typ_annot) =
+  (({ typ_ident = replace_deco ta.typ_ident ();
+      is_access = ta.is_access } : T.typ_annot),
+   Env.get_typ_annot_type env ta.typ_ident)
 
+let type_annotated env (a : A.annotated) =
+  let (ta', t) = type_typ_annot env a.ta in
+  (({ ident = replace_deco a.ident ();
+      ta    = ta' } : T.annotated), t)
 
 let type_const = function
   | Cint  _ -> Tint
@@ -133,13 +132,14 @@ let type_const = function
   | Cbool _ -> Tbool
   | Cnull   -> Tnull
 
-let type_field env r (f : ident) =
+let type_field env r (f : ident_decl) =
   try
-    let t_name = List.assoc f.desc r.fields in
-    Env.get_typ_annot_type env (decorate t_name f.deco)
+    let a = List.find (fun a -> f.desc = a.ident) r.fields in
+    Env.get_typ_annot_type env (decorate a.ta.typ_ident f.deco)
   with
   | Not_found -> error
-                   (Format.sprintf "Record %s has no field %s" r.ident f.desc) f.deco
+                   (Format.sprintf "Record %s has no field %s" r.r_ident f.desc)
+                   f.deco
 
 
 let rec type_expr env expr =
@@ -164,9 +164,9 @@ let rec type_expr env expr =
                   [e1; e2] in
         decorate (T.Ebinop (e1', b, e2')) t
     end
-  | Enew id -> let (id', t) = type_type_annot env (Aident id) in
-    let t' = ensure_record t id.deco in
-    decorate (T.Enew (T.typ_annot_id id')) t'
+  | Enew id -> let t = Env.get_typ_annot_type env id in
+    let t' = to_access (ensure_record t id.deco) in
+    decorate (T.Enew (replace_deco id ())) t'
   | Eapp_func (f, params) -> 
     let (params', t) = type_proc_func env f params in
     decorate (T.Eapp_func (type_ident env f, params')) t
@@ -184,14 +184,18 @@ and type_left_val ?(ensure_lv = false) env lv =
   | Lmember (e, f) ->
     begin
       let e' = type_expr env e in
-      match e'.deco with
-      | Trecord r | Taccess r ->
-        let t = type_field env (ensure_defined r e.deco) f in
-        if ensure_lv && not (is_access e'.deco)
-        then ignore(ensure_left_val env e);
-        (T.Lmember (e', replace_deco f t), t)
-      | _ -> error (Format.sprintf "This expression should be a record or an access")
-               e.deco
+      let r = match e'.deco with
+        | Trecord r -> r
+        | Taccess r -> ensure_record
+                         (Env.get_typ_annot_type env (decorate r e.deco)) e.deco
+        | _ -> error
+                 (Format.sprintf "This expression should be a record or an access")
+                 e.deco
+      in
+      let t = type_field env (ensure_defined r e.deco) f in
+      if ensure_lv && not (is_access e'.deco)
+      then ignore(ensure_left_val env e);
+      (T.Lmember (e', replace_deco f t), t)
     end
 
 and ensure_left_val env e =
@@ -269,63 +273,79 @@ and type_stmt env return_type const stmt =
 
 (** Typing of declarations *)
 
-let ensure_well_formed env = function
-  | Aident id ->
-    begin
-      match Env.get_typ_annot_type env id with
-      | Trecord r -> Trecord (Def (ensure_defined r id.deco))
-      | t -> t
-    end
-  | Aaccess id -> ensure_record (Env.get_typ_annot_type env id) id.deco
+let ensure_well_formed env ta =
+  if ta.is_access
+  then to_access (ensure_record (Env.get_typ_annot_type env ta.typ_ident)
+                    ta.typ_ident.deco)
+  else match Env.get_typ_annot_type env ta.typ_ident with
+    | Trecord r -> Trecord (Def (ensure_defined r ta.typ_ident.deco))
+    | t -> t
 
 
 let rec type_decl env = function
-  | Dtype (id, None) -> Env.set_typ_annot_type env id.desc
-                          (Trecord (Decl id.desc))
-  | Dtype (_, Some (Aident _)) -> assert false
-  | Dtype (id, Some (Aaccess r)) ->
-    let t = Env.get_typ_annot_type env r in (* ensures r is declared *)
-    let t' = ensure_record t r.deco in
-    Env.set_typ_annot_type env id.desc t'
-  | Dtype_record (id, fields) ->
-    List.iter (fun (_, t) ->
+  | Dtype_decl (id, None) -> let env' = Env.set_typ_annot_type env id.desc
+                                          (Trecord (Decl id.desc)) in
+    (T.Dtype_decl (replace_deco id (), None), env')
+  | Dtype_decl (id, Some ta) -> (* ta.is_access = true because no aliasing *)
+    let t = Env.get_typ_annot_type env ta.typ_ident in (* ensures r is declared *)
+    let t' = ensure_record t ta.typ_ident.deco in
+    let env' = Env.set_typ_annot_type env id.desc (to_access t') in
+    (T.Dtype_decl (replace_deco id (),
+                   Some { typ_ident = replace_deco ta.typ_ident ();
+                          is_access = true }), env')
+  | Drecord_def (id, fields) ->
+    List.iter (fun a ->
                 ignore (ensure_well_formed
                           (Env.set_typ_annot_type env id.desc
-                             (Trecord (Decl id.desc))) t);)
+                             (Trecord (Decl id.desc))) a.ta);)
       fields;
-    let fields' = List.map (fun (id, t) -> (id.desc, (typ_annot_id t).desc))
+    let fields' = List.map (fun a -> { ident = replace_deco id ();
+                                       ta = fst (type_typ_annot env a.ta) })
                     fields in
-    Env.set_typ_annot_type env id.desc
-      (Trecord (Def { ident = id.desc; fields = fields' }))
-  | Dvar_decl (id, t, None) -> let typ = ensure_well_formed env t in
-    Env.set_id_type env id.desc typ
-  | Dvar_decl (id, t, Some e) -> let typ = ensure_well_formed env t in
+    let env' = Env.set_typ_annot_type env id.desc
+                 (Trecord (Def { r_ident = id.desc;
+                                 fields = List.map strip_deco_a fields' })) in
+    (T.Drecord_def (replace_deco id (), fields'), env')
+  | Dvar_decl (a, None) -> let typ = ensure_well_formed env a.ta in
+    let env' = Env.set_id_type env a.ident.desc typ in
+    (T.Dvar_decl (fst (type_annotated env' a), None), env')
+  | Dvar_decl (a, Some e) -> let typ = ensure_well_formed env a.ta in
     let e' = type_expr env e in
     ensure_equiv typ e'.deco e.deco;
-    Env.set_id_type env id.desc typ
+    let env' = Env.set_id_type env a.ident.desc typ in
+    (T.Dvar_decl (fst (type_annotated env' a), Some e'), env')
   | Dproc_func pf ->
-    let return' = match pf.return with
-      | None -> Tnull
-      | Some r -> ensure_well_formed env r in
-    let params' = List.map (fun (id, m, t) ->
-                             let typ = ensure_well_formed env t in
-                             (id, m, typ))
+    let (return', ret) = match pf.return with
+      | None -> (Tnull, None)
+      | Some ta -> (ensure_well_formed env ta, Some (fst (type_typ_annot env ta))) in
+    let params' = List.map (fun (a, m) ->
+                             let typ = ensure_well_formed env a.ta in (* needed? *)
+                             (type_annotated env a, m))
                     pf.params in
     let env' = Env.set_id_type env pf.name.desc
                  (Tproc_func (List.map
-                                (fun (_, m, t) -> (t, m)) params', return')) in
-    let env'' = List.fold_left (fun env (id, _, t) ->
-                                 Env.set_id_type env id.desc t) env' params' in
-    let env'' = type_decls env'' pf.decls in
+                                (fun ((a, t), m) -> (t, m)) params', return')) in
+    let env'' = List.fold_left (fun env ((a, t), m) ->
+                                 Env.set_id_type env a.ident.desc t) env' params' in
+    let (decls', env'') = type_decls env'' pf.decls in
     let stmt' = type_stmt env'' return' [] pf.stmt in
-    env'
+    let pf' = T.{ name = replace_deco pf.name ();
+                  params = List.map (fun ((a, _), m) -> (a, m)) params';
+                  return = ret;
+                  decls = decls'; (* embed environment? *)
+                  stmt = stmt' } in
+    (T.Dproc_func pf', env')
 
 and type_decls env = function
-  | [] -> env
-  | d :: ds -> type_decls (type_decl env d) ds
+  | [] -> ([], env)
+  | d :: ds -> let (d', env') = type_decl env d in
+    let (ds', env'') = type_decls env' ds in
+    (d' :: ds', env'')
 
 
 (** Typing of a program *)
 
-let type_ast a =
-  ignore (type_decls Env.new_env [Dproc_func a])
+let type_ast (a : A.ast) =
+  match fst (type_decls Env.new_env [Dproc_func a]) with
+  | [T.Dproc_func a'] -> (a' : T.ast)
+  | _ -> assert false

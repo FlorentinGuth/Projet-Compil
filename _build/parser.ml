@@ -163,7 +163,7 @@ let rec _menhir_goto_elsif_desc : _menhir_env -> 'ttv_tail -> Lexing.position ->
       let x = x0 in
       let _endpos = _endpos_x_ in
       let _startpos = _startpos_x_ in
-                ( decorate x (_startpos, _endpos) )
+               ( decorate x (_startpos, _endpos) )
     in
                                   ( e ) in
     match _menhir_s with
@@ -309,7 +309,7 @@ and _menhir_goto_list_decl_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
         let (ds : (Ast.AST.decl list list)) = _v in
-        let _v : (Ast.AST.decl list) =                     ( List.flatten ds ) in
+        let _v : (Ast.AST.decl list) =                      ( List.flatten ds ) in
         let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
         let _menhir_stack = Obj.magic _menhir_stack in
         assert (not _menhir_env._menhir_error);
@@ -404,7 +404,7 @@ and _menhir_goto_nonempty_list_stmt_ : _menhir_env -> 'ttv_tail -> Lexing.positi
           let x = x0 in
           let _endpos = _endpos_x_ in
           let _startpos = _startpos_x_ in
-                    ( decorate x (_startpos, _endpos) )
+                   ( decorate x (_startpos, _endpos) )
         in
                                       ( s ) in
         let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
@@ -734,7 +734,7 @@ and _menhir_goto_const : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_
     let _startpos_c_ = _startpos in
     let _startpos = _startpos_c_ in
     let _endpos = _endpos_c_ in
-    let _v : (Ast.AST.expr_desc) =               ( Econst c ) in
+    let _v : (Ast.AST.expr_desc) =                ( Econst c ) in
     _menhir_goto_expr_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
 
 and _menhir_goto_stmt_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state -> (Ast.AST.stmt_desc) -> Lexing.position -> 'ttv_return =
@@ -752,7 +752,7 @@ and _menhir_goto_stmt_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
       let x = x0 in
       let _endpos = _endpos_x_ in
       let _startpos = _startpos_x_ in
-                ( decorate x (_startpos, _endpos) )
+               ( decorate x (_startpos, _endpos) )
     in
                                  ( s ) in
     let _menhir_stack = (_menhir_stack, _endpos, _menhir_s, _v, _startpos) in
@@ -1530,10 +1530,10 @@ and _menhir_goto_option_preceded_AFFECT_expr__ : _menhir_env -> 'ttv_tail -> (As
         let _menhir_env = _menhir_discard _menhir_env in
         let _menhir_stack = Obj.magic _menhir_stack in
         let _endpos__5_ = _endpos in
-        let (((_menhir_stack, _menhir_s, (lv_list : (Ast.AST.ident list))), _, (typ : (Ast.AST.type_annot))), (e : (Ast.AST.expr option))) = _menhir_stack in
+        let (((_menhir_stack, _menhir_s, (lv_list : (Ast.AST.ident_decl list))), _, (typ : (Ast.AST.typ_annot))), (e : (Ast.AST.expr option))) = _menhir_stack in
         let _5 = () in
         let _2 = () in
-        let _v : (Ast.AST.decl list) =     ( List.map (fun lv -> Dvar_decl (lv, typ, e)) lv_list ) in
+        let _v : (Ast.AST.decl list) =     ( List.map (fun lv -> Dvar_decl ({ ident = lv; ta = typ }, e)) lv_list ) in
         _menhir_goto_decl _menhir_env _menhir_stack _menhir_s _v
     | _ ->
         assert (not _menhir_env._menhir_error);
@@ -1542,7 +1542,7 @@ and _menhir_goto_option_preceded_AFFECT_expr__ : _menhir_env -> 'ttv_tail -> (As
         let ((_menhir_stack, _menhir_s, _), _) = _menhir_stack in
         _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
 
-and _menhir_goto_nonempty_list_fields_ : _menhir_env -> 'ttv_tail -> _menhir_state -> ((Ast.AST.ident * Ast.AST.type_annot) list list) -> 'ttv_return =
+and _menhir_goto_nonempty_list_fields_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.AST.annotated list list) -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s _v ->
     let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
     match _menhir_s with
@@ -1569,14 +1569,14 @@ and _menhir_goto_nonempty_list_fields_ : _menhir_env -> 'ttv_tail -> _menhir_sta
                     let _menhir_env = _menhir_discard _menhir_env in
                     let _menhir_stack = Obj.magic _menhir_stack in
                     let _endpos__8_ = _endpos in
-                    let (((((_menhir_stack, _menhir_s), _endpos_id_, _, (id : (Ast.AST.ident)), _startpos_id_), _), _, (r : ((Ast.AST.ident * Ast.AST.type_annot) list list))), _startpos__6_) = _menhir_stack in
+                    let (((((_menhir_stack, _menhir_s), _endpos_id_, _, (id : (Ast.AST.ident)), _startpos_id_), _), _, (r : (Ast.AST.annotated list list))), _startpos__6_) = _menhir_stack in
                     let _8 = () in
                     let _7 = () in
                     let _6 = () in
                     let _4 = () in
                     let _3 = () in
                     let _1 = () in
-                    let _v : (Ast.AST.decl list) =     ( [Dtype_record (id, List.flatten r)] ) in
+                    let _v : (Ast.AST.decl list) =     ( [Drecord_def (id, List.flatten r)] ) in
                     _menhir_goto_decl _menhir_env _menhir_stack _menhir_s _v
                 | _ ->
                     assert (not _menhir_env._menhir_error);
@@ -1599,8 +1599,8 @@ and _menhir_goto_nonempty_list_fields_ : _menhir_env -> 'ttv_tail -> _menhir_sta
     | MenhirState54 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
-        let ((_menhir_stack, _menhir_s, (x : ((Ast.AST.ident * Ast.AST.type_annot) list))), _, (xs : ((Ast.AST.ident * Ast.AST.type_annot) list list))) = _menhir_stack in
-        let _v : ((Ast.AST.ident * Ast.AST.type_annot) list list) =     ( x :: xs ) in
+        let ((_menhir_stack, _menhir_s, (x : (Ast.AST.annotated list))), _, (xs : (Ast.AST.annotated list list))) = _menhir_stack in
+        let _v : (Ast.AST.annotated list list) =     ( x :: xs ) in
         _menhir_goto_nonempty_list_fields_ _menhir_env _menhir_stack _menhir_s _v
     | _ ->
         _menhir_fail ()
@@ -1645,7 +1645,7 @@ and _menhir_goto_separated_nonempty_list_SEMICOLON_param_ : _menhir_env -> 'ttv_
     | _ ->
         _menhir_fail ()
 
-and _menhir_goto_option_preceded_RETURN_type_annot__ : _menhir_env -> 'ttv_tail -> (Ast.AST.type_annot option) -> 'ttv_return =
+and _menhir_goto_option_preceded_RETURN_typ_annot__ : _menhir_env -> 'ttv_tail -> (Ast.AST.typ_annot option) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
     let _menhir_stack = Obj.magic _menhir_stack in
@@ -1696,7 +1696,7 @@ and _menhir_goto_option_ident_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (A
         let _menhir_env = _menhir_discard _menhir_env in
         let _menhir_stack = Obj.magic _menhir_stack in
         let _endpos__10_ = _endpos in
-        let ((((((((_menhir_stack, _endpos_name_, _menhir_s, (name : (Ast.AST.ident)), _startpos_name_), (ps : (Ast.AST.param list option))), (rt : (Ast.AST.type_annot option))), _, (decls : (Ast.AST.decl list))), _startpos__6_), _, (stmt : (Ast.AST.stmt))), _startpos__8_), _, (end_id : (Ast.AST.ident option))) = _menhir_stack in
+        let ((((((((_menhir_stack, _endpos_name_, _menhir_s, (name : (Ast.AST.ident)), _startpos_name_), (ps : (Ast.AST.param list option))), (rt : (Ast.AST.typ_annot option))), _, (decls : (Ast.AST.decl list))), _startpos__6_), _, (stmt : (Ast.AST.stmt))), _startpos__8_), _, (end_id : (Ast.AST.ident option))) = _menhir_stack in
         let _10 = () in
         let _8 = () in
         let _6 = () in
@@ -1724,10 +1724,10 @@ and _menhir_goto_option_ident_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (A
             let _startpos_p_ = _startpos in
             let _v : (Ast.AST.proc_func) = let _endpos = _endpos_p_ in
             let _startpos = _startpos_p_ in
-                                 ( if p.return <> None
-                       then error "A procedure cannot have a return type"
-                            _startpos _endpos;
-                       p ) in
+                                  ( if p.return <> None
+                        then error "A procedure cannot have a return type"
+                             _startpos _endpos;
+                        p ) in
             let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
             (match _menhir_s with
             | MenhirState13 ->
@@ -1751,13 +1751,13 @@ and _menhir_goto_option_ident_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (A
                     let _1 = () in
                     let _v : (Ast.AST.ast) = let _endpos = _endpos__13_ in
                     let _startpos = _startpos__1_ in
-                        ( if not (ada1.desc = "ada" && text_io1.desc = "text_io" &&
-        ada2.desc = "ada" && text_io2.desc = "text_io")
-      then error "Wrong header, should be \"with Ada.Text_IO; use Ada.Text_IO;\""
-             _startpos _endpos;
-      if p.params <> []
-      then error "Main procedure can't take any parameters" _startpos _endpos;
-      p ) in
+                      ( if not (ada1.desc = "ada" && text_io1.desc = "text_io" &&
+              ada2.desc = "ada" && text_io2.desc = "text_io")
+    then error "Wrong header, should be \"with Ada.Text_IO; use Ada.Text_IO;\""
+         _startpos _endpos;
+    if p.params <> []
+    then error "Main procedure can't take any parameters" _startpos _endpos;
+    p ) in
                     let _menhir_stack = Obj.magic _menhir_stack in
                     let _menhir_stack = Obj.magic _menhir_stack in
                     let (_1 : (Ast.AST.ast)) = _v in
@@ -1773,7 +1773,7 @@ and _menhir_goto_option_ident_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (A
                 let _menhir_stack = Obj.magic _menhir_stack in
                 let ((_menhir_stack, _menhir_s), _, (p : (Ast.AST.proc_func))) = _menhir_stack in
                 let _1 = () in
-                let _v : (Ast.AST.decl list) =                    ( [Dproc_func p] ) in
+                let _v : (Ast.AST.decl list) =                     ( [Dproc_func p] ) in
                 _menhir_goto_decl _menhir_env _menhir_stack _menhir_s _v
             | _ ->
                 _menhir_fail ())
@@ -1785,17 +1785,17 @@ and _menhir_goto_option_ident_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (A
             let _startpos_f_ = _startpos in
             let _v : (Ast.AST.proc_func) = let _endpos = _endpos_f_ in
             let _startpos = _startpos_f_ in
-                                 ( match f.return with
-                       | Some _ -> f
-                       | None ->
-                          error "A function must have an annotated return type"
-                          _startpos _endpos ) in
+                                  ( match f.return with
+                        | Some _ -> f
+                        | None ->
+                           error "A function must have an annotated return type"
+                           _startpos _endpos ) in
             let _menhir_stack = Obj.magic _menhir_stack in
             let _menhir_stack = Obj.magic _menhir_stack in
             let (f : (Ast.AST.proc_func)) = _v in
             let (_menhir_stack, _menhir_s) = _menhir_stack in
             let _1 = () in
-            let _v : (Ast.AST.decl list) =                    ( [Dproc_func f] ) in
+            let _v : (Ast.AST.decl list) =                     ( [Dproc_func f] ) in
             _menhir_goto_decl _menhir_env _menhir_stack _menhir_s _v
         | _ ->
             _menhir_fail ())
@@ -1872,9 +1872,9 @@ and _menhir_reduce19 : _menhir_env -> (('ttv_tail * Lexing.position * _menhir_st
       let field = field0 in
       let _2 = _20 in
       let e = e0 in
-                                       ( Lmember (e, field) )
+                                        ( Lmember (e, field) )
     in
-                      ( Eleft_val lv ) in
+                       ( Eleft_val lv ) in
     _menhir_goto_expr_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
 
 and _menhir_reduce18 : _menhir_env -> 'ttv_tail * Lexing.position * _menhir_state * (Ast.AST.ident) * Lexing.position -> 'ttv_return =
@@ -1884,9 +1884,9 @@ and _menhir_reduce18 : _menhir_env -> 'ttv_tail * Lexing.position * _menhir_stat
     let _endpos = _endpos_id0_ in
     let _v : (Ast.AST.expr_desc) = let lv =
       let id = id0 in
-                     ( Lident id )
+                      ( Lident id )
     in
-                      ( Eleft_val lv ) in
+                       ( Eleft_val lv ) in
     _menhir_goto_expr_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
 
 and _menhir_run78 : _menhir_env -> 'ttv_tail * Lexing.position * _menhir_state * (Ast.AST.ident) * Lexing.position -> 'ttv_return =
@@ -1910,7 +1910,7 @@ and _menhir_run68 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state
     let _1 = () in
     let _startpos = _startpos__1_ in
     let _endpos = _endpos__1_ in
-    let _v : (Ast.const) =              ( Cnull ) in
+    let _v : (Ast.const) =               ( Cnull ) in
     _menhir_goto_const _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
 
 and _menhir_run69 : _menhir_env -> 'ttv_tail -> _menhir_state -> Lexing.position -> 'ttv_return =
@@ -2022,7 +2022,7 @@ and _menhir_run74 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state
     let _startpos_n_ = _startpos in
     let _startpos = _startpos_n_ in
     let _endpos = _endpos_n_ in
-    let _v : (Ast.const) =              ( Cint  n ) in
+    let _v : (Ast.const) =               ( Cint  n ) in
     _menhir_goto_const _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
 
 and _menhir_run75 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state -> (char) -> Lexing.position -> 'ttv_return =
@@ -2034,7 +2034,7 @@ and _menhir_run75 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state
     let _startpos_c_ = _startpos in
     let _startpos = _startpos_c_ in
     let _endpos = _endpos_c_ in
-    let _v : (Ast.const) =              ( Cchar c ) in
+    let _v : (Ast.const) =               ( Cchar c ) in
     _menhir_goto_const _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
 
 and _menhir_run76 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state -> (bool) -> Lexing.position -> 'ttv_return =
@@ -2046,7 +2046,7 @@ and _menhir_run76 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state
     let _startpos_b_ = _startpos in
     let _startpos = _startpos_b_ in
     let _endpos = _endpos_b_ in
-    let _v : (Ast.const) =              ( Cbool b ) in
+    let _v : (Ast.const) =               ( Cbool b ) in
     _menhir_goto_const _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
 
 and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state -> (Ast.AST.expr_desc) -> Lexing.position -> 'ttv_return =
@@ -2064,7 +2064,7 @@ and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
       let x = x0 in
       let _endpos = _endpos_x_ in
       let _startpos = _startpos_x_ in
-                ( decorate x (_startpos, _endpos) )
+               ( decorate x (_startpos, _endpos) )
     in
                                  ( e ) in
     let _menhir_stack = (_menhir_stack, _endpos, _menhir_s, _v, _startpos) in
@@ -2737,7 +2737,7 @@ and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
             let _1 = () in
             let _startpos = _startpos__1_ in
             let _endpos = _endpos__3_ in
-            let _v : (Ast.AST.expr_desc) =                              ( e.desc ) in
+            let _v : (Ast.AST.expr_desc) =                               ( e.desc ) in
             _menhir_goto_expr_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
         | TIMES ->
             _menhir_run83 _menhir_env (Obj.magic _menhir_stack)
@@ -2760,7 +2760,7 @@ and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
             let _1 = () in
             let _startpos = _startpos__1_ in
             let _endpos = _endpos_e_ in
-            let _v : (Ast.AST.expr_desc) =                     ( Ebinop (decorate_dummy_loc (Econst (Cint 0)),
+            let _v : (Ast.AST.expr_desc) =                      ( Ebinop (decorate_dummy_loc (Econst (Cint 0)),
                               Bminus, e) ) in
             _menhir_goto_expr_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
         | _ ->
@@ -2804,7 +2804,7 @@ and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
             let _1 = () in
             let _startpos = _startpos__1_ in
             let _endpos = _endpos_e_ in
-            let _v : (Ast.AST.expr_desc) =                   ( Enot e ) in
+            let _v : (Ast.AST.expr_desc) =                    ( Enot e ) in
             _menhir_goto_expr_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
         | _ ->
             assert (not _menhir_env._menhir_error);
@@ -3244,7 +3244,7 @@ and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
             let _endpos = _endpos__4_ in
             let _v : (Ast.AST.stmt_desc) = let lv =
               let id = id0 in
-                             ( Lident id )
+                              ( Lident id )
             in
                                                            ( Saffect (lv, e) ) in
             _menhir_goto_stmt_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
@@ -3351,7 +3351,7 @@ and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
               let field = field0 in
               let _2 = _20 in
               let e = e0 in
-                                               ( Lmember (e, field) )
+                                                ( Lmember (e, field) )
             in
                                                            ( Saffect (lv, e) ) in
             _menhir_goto_stmt_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
@@ -3442,7 +3442,7 @@ and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
     | _ ->
         _menhir_fail ()
 
-and _menhir_goto_option_preceded_IS_type_annot__ : _menhir_env -> 'ttv_tail -> (Ast.AST.type_annot option) -> 'ttv_return =
+and _menhir_goto_option_preceded_IS_typ_annot__ : _menhir_env -> 'ttv_tail -> (Ast.AST.typ_annot option) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
     let _menhir_stack = Obj.magic _menhir_stack in
@@ -3455,10 +3455,10 @@ and _menhir_goto_option_preceded_IS_type_annot__ : _menhir_env -> 'ttv_tail -> (
         let _menhir_env = _menhir_discard _menhir_env in
         let _menhir_stack = Obj.magic _menhir_stack in
         let _endpos__4_ = _endpos in
-        let (((_menhir_stack, _menhir_s), _endpos_id_, _, (id : (Ast.AST.ident)), _startpos_id_), (typ : (Ast.AST.type_annot option))) = _menhir_stack in
+        let (((_menhir_stack, _menhir_s), _endpos_id_, _, (id : (Ast.AST.ident)), _startpos_id_), (typ : (Ast.AST.typ_annot option))) = _menhir_stack in
         let _4 = () in
         let _1 = () in
-        let _v : (Ast.AST.decl list) =     ( [Dtype (id, typ)] ) in
+        let _v : (Ast.AST.decl list) =     ( [Dtype_decl (id, typ)] ) in
         _menhir_goto_decl _menhir_env _menhir_stack _menhir_s _v
     | _ ->
         assert (not _menhir_env._menhir_error);
@@ -3480,7 +3480,7 @@ and _menhir_run26 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
         _menhir_env._menhir_error <- true;
         _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState26
 
-and _menhir_goto_separated_nonempty_list_COMMA_ident_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.AST.ident list) -> 'ttv_return =
+and _menhir_goto_separated_nonempty_list_COMMA_ident_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.AST.ident_decl list) -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s _v ->
     let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
     match _menhir_s with
@@ -3505,12 +3505,12 @@ and _menhir_goto_separated_nonempty_list_COMMA_ident_ : _menhir_env -> 'ttv_tail
                     let _menhir_stack = Obj.magic _menhir_stack in
                     let _2 = () in
                     let _1 = () in
-                    let _v : (Ast.mode) =             ( InOut ) in
+                    let _v : (Ast.mode) =              ( InOut ) in
                     _menhir_goto_mode _menhir_env _menhir_stack _v
                 | ACCESS | IDENT _ ->
                     let _menhir_stack = Obj.magic _menhir_stack in
                     let _1 = () in
-                    let _v : (Ast.mode) =          ( In ) in
+                    let _v : (Ast.mode) =              ( In ) in
                     _menhir_goto_mode _menhir_env _menhir_stack _v
                 | _ ->
                     assert (not _menhir_env._menhir_error);
@@ -3519,7 +3519,7 @@ and _menhir_goto_separated_nonempty_list_COMMA_ident_ : _menhir_env -> 'ttv_tail
                     raise _eRR)
             | ACCESS | IDENT _ ->
                 let _menhir_stack = Obj.magic _menhir_stack in
-                let _v : (Ast.mode) =          ( In ) in
+                let _v : (Ast.mode) =              ( In ) in
                 _menhir_goto_mode _menhir_env _menhir_stack _v
             | _ ->
                 assert (not _menhir_env._menhir_error);
@@ -3536,9 +3536,9 @@ and _menhir_goto_separated_nonempty_list_COMMA_ident_ : _menhir_env -> 'ttv_tail
     | MenhirState34 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
-        let ((_menhir_stack, _endpos_x_, _menhir_s, (x : (Ast.AST.ident)), _startpos_x_), _, (xs : (Ast.AST.ident list))) = _menhir_stack in
+        let ((_menhir_stack, _endpos_x_, _menhir_s, (x : (Ast.AST.ident)), _startpos_x_), _, (xs : (Ast.AST.ident_decl list))) = _menhir_stack in
         let _2 = () in
-        let _v : (Ast.AST.ident list) =     ( x :: xs ) in
+        let _v : (Ast.AST.ident_decl list) =     ( x :: xs ) in
         _menhir_goto_separated_nonempty_list_COMMA_ident_ _menhir_env _menhir_stack _menhir_s _v
     | MenhirState54 | MenhirState45 ->
         let _menhir_stack = Obj.magic _menhir_stack in
@@ -3591,16 +3591,16 @@ and _menhir_goto_separated_nonempty_list_COMMA_ident_ : _menhir_env -> 'ttv_tail
     | _ ->
         _menhir_fail ()
 
-and _menhir_goto_type_annot : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.AST.type_annot) -> 'ttv_return =
+and _menhir_goto_typ_annot : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.AST.typ_annot) -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s _v ->
     let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
     match _menhir_s with
     | MenhirState25 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
-        let (((_menhir_stack, _menhir_s, (ids : (Ast.AST.ident list))), (m : (Ast.mode))), _, (typ : (Ast.AST.type_annot))) = _menhir_stack in
+        let (((_menhir_stack, _menhir_s, (ids : (Ast.AST.ident_decl list))), (m : (Ast.mode))), _, (typ : (Ast.AST.typ_annot))) = _menhir_stack in
         let _2 = () in
-        let _v : (Ast.AST.param list) =     ( List.map (fun id -> (id, m, typ)) ids ) in
+        let _v : (Ast.AST.param list) =     ( List.map (fun id -> ({ ident = id; ta = typ }, m)) ids ) in
         let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
         let _menhir_stack = Obj.magic _menhir_stack in
         assert (not _menhir_env._menhir_error);
@@ -3633,15 +3633,15 @@ and _menhir_goto_type_annot : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.
     | MenhirState38 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
-        let ((_menhir_stack, _startpos__10_), _, (x0 : (Ast.AST.type_annot))) = _menhir_stack in
+        let ((_menhir_stack, _startpos__10_), _, (x0 : (Ast.AST.typ_annot))) = _menhir_stack in
         let _10 = () in
-        let _v : (Ast.AST.type_annot option) = let x =
+        let _v : (Ast.AST.typ_annot option) = let x =
           let x = x0 in
           let _1 = _10 in
               ( x )
         in
             ( Some x ) in
-        _menhir_goto_option_preceded_RETURN_type_annot__ _menhir_env _menhir_stack _v
+        _menhir_goto_option_preceded_RETURN_typ_annot__ _menhir_env _menhir_stack _v
     | MenhirState47 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         assert (not _menhir_env._menhir_error);
@@ -3653,10 +3653,10 @@ and _menhir_goto_type_annot : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.
             let _menhir_env = _menhir_discard _menhir_env in
             let _menhir_stack = Obj.magic _menhir_stack in
             let _endpos__4_ = _endpos in
-            let ((_menhir_stack, _menhir_s, (ids : (Ast.AST.ident list))), _, (typ : (Ast.AST.type_annot))) = _menhir_stack in
+            let ((_menhir_stack, _menhir_s, (ids : (Ast.AST.ident_decl list))), _, (typ : (Ast.AST.typ_annot))) = _menhir_stack in
             let _4 = () in
             let _2 = () in
-            let _v : ((Ast.AST.ident * Ast.AST.type_annot) list) =     ( developp (ids, typ) ) in
+            let _v : (Ast.AST.annotated list) =     ( List.map (fun id -> { ident = id; ta = typ }) ids ) in
             let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
             let _menhir_stack = Obj.magic _menhir_stack in
             assert (not _menhir_env._menhir_error);
@@ -3666,8 +3666,8 @@ and _menhir_goto_type_annot : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.
                 _menhir_run2 _menhir_env (Obj.magic _menhir_stack) _menhir_env._menhir_lexbuf.Lexing.lex_curr_p MenhirState54 _v _menhir_env._menhir_lexbuf.Lexing.lex_start_p
             | END ->
                 let _menhir_stack = Obj.magic _menhir_stack in
-                let (_menhir_stack, _menhir_s, (x : ((Ast.AST.ident * Ast.AST.type_annot) list))) = _menhir_stack in
-                let _v : ((Ast.AST.ident * Ast.AST.type_annot) list list) =     ( [ x ] ) in
+                let (_menhir_stack, _menhir_s, (x : (Ast.AST.annotated list))) = _menhir_stack in
+                let _v : (Ast.AST.annotated list list) =     ( [ x ] ) in
                 _menhir_goto_nonempty_list_fields_ _menhir_env _menhir_stack _menhir_s _v
             | _ ->
                 assert (not _menhir_env._menhir_error);
@@ -3682,15 +3682,15 @@ and _menhir_goto_type_annot : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.
     | MenhirState44 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
-        let (_menhir_stack, _, (x0 : (Ast.AST.type_annot))) = _menhir_stack in
+        let (_menhir_stack, _, (x0 : (Ast.AST.typ_annot))) = _menhir_stack in
         let _10 = () in
-        let _v : (Ast.AST.type_annot option) = let x =
+        let _v : (Ast.AST.typ_annot option) = let x =
           let x = x0 in
           let _1 = _10 in
               ( x )
         in
             ( Some x ) in
-        _menhir_goto_option_preceded_IS_type_annot__ _menhir_env _menhir_stack _v
+        _menhir_goto_option_preceded_IS_typ_annot__ _menhir_env _menhir_stack _v
     | MenhirState65 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         assert (not _menhir_env._menhir_error);
@@ -3760,8 +3760,8 @@ and _menhir_goto_option_params_ : _menhir_env -> 'ttv_tail -> (Ast.AST.param lis
             _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState38)
     | IS ->
         let _menhir_stack = Obj.magic _menhir_stack in
-        let _v : (Ast.AST.type_annot option) =     ( None ) in
-        _menhir_goto_option_preceded_RETURN_type_annot__ _menhir_env _menhir_stack _v
+        let _v : (Ast.AST.typ_annot option) =     ( None ) in
+        _menhir_goto_option_preceded_RETURN_typ_annot__ _menhir_env _menhir_stack _v
     | _ ->
         assert (not _menhir_env._menhir_error);
         _menhir_env._menhir_error <- true;
@@ -4050,7 +4050,7 @@ and _menhir_run2 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state 
     let _startpos_id_ = _startpos in
     let _startpos = _startpos_id_ in
     let _endpos = _endpos_id_ in
-    let _v : (Ast.ident_desc) =                ( id ) in
+    let _v : (Ast.ident_desc) =                 ( id ) in
     let _menhir_stack = Obj.magic _menhir_stack in
     let _menhir_stack = Obj.magic _menhir_stack in
     let _endpos_x0_ = _endpos in
@@ -4064,9 +4064,9 @@ and _menhir_run2 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state 
       let x = x0 in
       let _endpos = _endpos_x_ in
       let _startpos = _startpos_x_ in
-                ( decorate x (_startpos, _endpos) )
+               ( decorate x (_startpos, _endpos) )
     in
-                                   ( id ) in
+                                    ( id ) in
     let _menhir_stack = (_menhir_stack, _endpos, _menhir_s, _v, _startpos) in
     match _menhir_s with
     | MenhirState1 ->
@@ -4216,14 +4216,14 @@ and _menhir_run2 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state 
         let _menhir_stack = Obj.magic _menhir_stack in
         let ((_menhir_stack, _menhir_s), _endpos_id_, _, (id : (Ast.AST.ident)), _startpos_id_) = _menhir_stack in
         let _1 = () in
-        let _v : (Ast.AST.type_annot) =                        ( Aaccess id ) in
-        _menhir_goto_type_annot _menhir_env _menhir_stack _menhir_s _v
+        let _v : (Ast.AST.typ_annot) =                         ( { typ_ident = id; is_access = true  } ) in
+        _menhir_goto_typ_annot _menhir_env _menhir_stack _menhir_s _v
     | MenhirState65 | MenhirState44 | MenhirState47 | MenhirState38 | MenhirState25 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
         let (_menhir_stack, _endpos_id_, _menhir_s, (id : (Ast.AST.ident)), _startpos_id_) = _menhir_stack in
-        let _v : (Ast.AST.type_annot) =                ( Aident id ) in
-        _menhir_goto_type_annot _menhir_env _menhir_stack _menhir_s _v
+        let _v : (Ast.AST.typ_annot) =                         ( { typ_ident = id; is_access = false } ) in
+        _menhir_goto_typ_annot _menhir_env _menhir_stack _menhir_s _v
     | MenhirState205 | MenhirState41 | MenhirState54 | MenhirState45 | MenhirState18 | MenhirState34 | MenhirState31 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         assert (not _menhir_env._menhir_error);
@@ -4243,7 +4243,7 @@ and _menhir_run2 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state 
         | COLON ->
             let _menhir_stack = Obj.magic _menhir_stack in
             let (_menhir_stack, _endpos_x_, _menhir_s, (x : (Ast.AST.ident)), _startpos_x_) = _menhir_stack in
-            let _v : (Ast.AST.ident list) =     ( [ x ] ) in
+            let _v : (Ast.AST.ident_decl list) =     ( [ x ] ) in
             _menhir_goto_separated_nonempty_list_COMMA_ident_ _menhir_env _menhir_stack _menhir_s _v
         | _ ->
             assert (not _menhir_env._menhir_error);
@@ -4284,8 +4284,8 @@ and _menhir_run2 : _menhir_env -> 'ttv_tail -> Lexing.position -> _menhir_state 
                 _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState44)
         | SEMICOLON ->
             let _menhir_stack = Obj.magic _menhir_stack in
-            let _v : (Ast.AST.type_annot option) =     ( None ) in
-            _menhir_goto_option_preceded_IS_type_annot__ _menhir_env _menhir_stack _v
+            let _v : (Ast.AST.typ_annot option) =     ( None ) in
+            _menhir_goto_option_preceded_IS_typ_annot__ _menhir_env _menhir_stack _v
         | _ ->
             assert (not _menhir_env._menhir_error);
             _menhir_env._menhir_error <- true;

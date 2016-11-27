@@ -137,7 +137,7 @@ file -> WITH ident DOT ident SEMICOLON USE ident DOT ident SEMICOLON PROC proc E
 -- On # reduce production file -> WITH ident DOT ident SEMICOLON USE ident DOT ident SEMICOLON PROC proc EOF 
 
 State 17:
-proc_or_func -> ident . option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident . option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On LPAREN shift to state 18
 -- On params shift to state 36
 -- On option(params) shift to state 37
@@ -163,11 +163,11 @@ params -> LPAREN separated_nonempty_list(SEMICOLON,param) RPAREN . [ RETURN IS ]
 -- On IS reduce production params -> LPAREN separated_nonempty_list(SEMICOLON,param) RPAREN 
 
 State 21:
-param -> separated_nonempty_list(COMMA,ident) . COLON mode type_annot [ SEMICOLON RPAREN ]
+param -> separated_nonempty_list(COMMA,ident) . COLON mode typ_annot [ SEMICOLON RPAREN ]
 -- On COLON shift to state 22
 
 State 22:
-param -> separated_nonempty_list(COMMA,ident) COLON . mode type_annot [ SEMICOLON RPAREN ]
+param -> separated_nonempty_list(COMMA,ident) COLON . mode typ_annot [ SEMICOLON RPAREN ]
 -- On IN shift to state 23
 -- On mode shift to state 25
 -- On IDENT reduce production mode -> 
@@ -186,37 +186,37 @@ mode -> IN OUT . [ IDENT ACCESS ]
 -- On ACCESS reduce production mode -> IN OUT 
 
 State 25:
-param -> separated_nonempty_list(COMMA,ident) COLON mode . type_annot [ SEMICOLON RPAREN ]
+param -> separated_nonempty_list(COMMA,ident) COLON mode . typ_annot [ SEMICOLON RPAREN ]
 -- On IDENT shift to state 2
 -- On ACCESS shift to state 26
--- On type_annot shift to state 28
+-- On typ_annot shift to state 28
 -- On ident_desc shift to state 3
 -- On ident shift to state 29
 
 State 26:
-type_annot -> ACCESS . ident [ SEMICOLON RPAREN IS AFFECT ]
+typ_annot -> ACCESS . ident [ SEMICOLON RPAREN IS AFFECT ]
 -- On IDENT shift to state 2
 -- On ident_desc shift to state 3
 -- On ident shift to state 27
 
 State 27:
-type_annot -> ACCESS ident . [ SEMICOLON RPAREN IS AFFECT ]
--- On SEMICOLON reduce production type_annot -> ACCESS ident 
--- On RPAREN reduce production type_annot -> ACCESS ident 
--- On IS reduce production type_annot -> ACCESS ident 
--- On AFFECT reduce production type_annot -> ACCESS ident 
+typ_annot -> ACCESS ident . [ SEMICOLON RPAREN IS AFFECT ]
+-- On SEMICOLON reduce production typ_annot -> ACCESS ident 
+-- On RPAREN reduce production typ_annot -> ACCESS ident 
+-- On IS reduce production typ_annot -> ACCESS ident 
+-- On AFFECT reduce production typ_annot -> ACCESS ident 
 
 State 28:
-param -> separated_nonempty_list(COMMA,ident) COLON mode type_annot . [ SEMICOLON RPAREN ]
--- On SEMICOLON reduce production param -> separated_nonempty_list(COMMA,ident) COLON mode type_annot 
--- On RPAREN reduce production param -> separated_nonempty_list(COMMA,ident) COLON mode type_annot 
+param -> separated_nonempty_list(COMMA,ident) COLON mode typ_annot . [ SEMICOLON RPAREN ]
+-- On SEMICOLON reduce production param -> separated_nonempty_list(COMMA,ident) COLON mode typ_annot 
+-- On RPAREN reduce production param -> separated_nonempty_list(COMMA,ident) COLON mode typ_annot 
 
 State 29:
-type_annot -> ident . [ SEMICOLON RPAREN IS AFFECT ]
--- On SEMICOLON reduce production type_annot -> ident 
--- On RPAREN reduce production type_annot -> ident 
--- On IS reduce production type_annot -> ident 
--- On AFFECT reduce production type_annot -> ident 
+typ_annot -> ident . [ SEMICOLON RPAREN IS AFFECT ]
+-- On SEMICOLON reduce production typ_annot -> ident 
+-- On RPAREN reduce production typ_annot -> ident 
+-- On IS reduce production typ_annot -> ident 
+-- On AFFECT reduce production typ_annot -> ident 
 
 State 30:
 separated_nonempty_list(SEMICOLON,param) -> param . [ RPAREN ]
@@ -260,29 +260,29 @@ option(params) -> params . [ RETURN IS ]
 -- On IS reduce production option(params) -> params 
 
 State 37:
-proc_or_func -> ident option(params) . option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident option(params) . option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On RETURN shift to state 38
--- On option(preceded(RETURN,type_annot)) shift to state 40
--- On IS reduce production option(preceded(RETURN,type_annot)) -> 
+-- On option(preceded(RETURN,typ_annot)) shift to state 40
+-- On IS reduce production option(preceded(RETURN,typ_annot)) -> 
 
 State 38:
-option(preceded(RETURN,type_annot)) -> RETURN . type_annot [ IS ]
+option(preceded(RETURN,typ_annot)) -> RETURN . typ_annot [ IS ]
 -- On IDENT shift to state 2
 -- On ACCESS shift to state 26
--- On type_annot shift to state 39
+-- On typ_annot shift to state 39
 -- On ident_desc shift to state 3
 -- On ident shift to state 29
 
 State 39:
-option(preceded(RETURN,type_annot)) -> RETURN type_annot . [ IS ]
--- On IS reduce production option(preceded(RETURN,type_annot)) -> RETURN type_annot 
+option(preceded(RETURN,typ_annot)) -> RETURN typ_annot . [ IS ]
+-- On IS reduce production option(preceded(RETURN,typ_annot)) -> RETURN typ_annot 
 
 State 40:
-proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) . IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) . IS decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On IS shift to state 41
 
 State 41:
-proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS . decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS . decls BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On TYPE shift to state 42
 -- On PROC shift to state 59
 -- On IDENT shift to state 2
@@ -296,26 +296,26 @@ proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS . de
 -- On BEGIN reduce production list(decl) -> 
 
 State 42:
-decl -> TYPE . ident option(preceded(IS,type_annot)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> TYPE . ident option(preceded(IS,typ_annot)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 decl -> TYPE . ident IS RECORD nonempty_list(fields) END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 -- On IDENT shift to state 2
 -- On ident_desc shift to state 3
 -- On ident shift to state 43
 
 State 43:
-decl -> TYPE ident . option(preceded(IS,type_annot)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> TYPE ident . option(preceded(IS,typ_annot)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 decl -> TYPE ident . IS RECORD nonempty_list(fields) END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 -- On IS shift to state 44
--- On option(preceded(IS,type_annot)) shift to state 57
--- On SEMICOLON reduce production option(preceded(IS,type_annot)) -> 
+-- On option(preceded(IS,typ_annot)) shift to state 57
+-- On SEMICOLON reduce production option(preceded(IS,typ_annot)) -> 
 
 State 44:
 decl -> TYPE ident IS . RECORD nonempty_list(fields) END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
-option(preceded(IS,type_annot)) -> IS . type_annot [ SEMICOLON ]
+option(preceded(IS,typ_annot)) -> IS . typ_annot [ SEMICOLON ]
 -- On RECORD shift to state 45
 -- On IDENT shift to state 2
 -- On ACCESS shift to state 26
--- On type_annot shift to state 56
+-- On typ_annot shift to state 56
 -- On ident_desc shift to state 3
 -- On ident shift to state 29
 
@@ -329,25 +329,25 @@ decl -> TYPE ident IS RECORD . nonempty_list(fields) END RECORD SEMICOLON [ TYPE
 -- On fields shift to state 54
 
 State 46:
-fields -> separated_nonempty_list(COMMA,ident) . COLON type_annot SEMICOLON [ IDENT END ]
+fields -> separated_nonempty_list(COMMA,ident) . COLON typ_annot SEMICOLON [ IDENT END ]
 -- On COLON shift to state 47
 
 State 47:
-fields -> separated_nonempty_list(COMMA,ident) COLON . type_annot SEMICOLON [ IDENT END ]
+fields -> separated_nonempty_list(COMMA,ident) COLON . typ_annot SEMICOLON [ IDENT END ]
 -- On IDENT shift to state 2
 -- On ACCESS shift to state 26
--- On type_annot shift to state 48
+-- On typ_annot shift to state 48
 -- On ident_desc shift to state 3
 -- On ident shift to state 29
 
 State 48:
-fields -> separated_nonempty_list(COMMA,ident) COLON type_annot . SEMICOLON [ IDENT END ]
+fields -> separated_nonempty_list(COMMA,ident) COLON typ_annot . SEMICOLON [ IDENT END ]
 -- On SEMICOLON shift to state 49
 
 State 49:
-fields -> separated_nonempty_list(COMMA,ident) COLON type_annot SEMICOLON . [ IDENT END ]
--- On IDENT reduce production fields -> separated_nonempty_list(COMMA,ident) COLON type_annot SEMICOLON 
--- On END reduce production fields -> separated_nonempty_list(COMMA,ident) COLON type_annot SEMICOLON 
+fields -> separated_nonempty_list(COMMA,ident) COLON typ_annot SEMICOLON . [ IDENT END ]
+-- On IDENT reduce production fields -> separated_nonempty_list(COMMA,ident) COLON typ_annot SEMICOLON 
+-- On END reduce production fields -> separated_nonempty_list(COMMA,ident) COLON typ_annot SEMICOLON 
 
 State 50:
 decl -> TYPE ident IS RECORD nonempty_list(fields) . END RECORD SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
@@ -385,20 +385,20 @@ nonempty_list(fields) -> fields nonempty_list(fields) . [ END ]
 -- On END reduce production nonempty_list(fields) -> fields nonempty_list(fields) 
 
 State 56:
-option(preceded(IS,type_annot)) -> IS type_annot . [ SEMICOLON ]
--- On SEMICOLON reduce production option(preceded(IS,type_annot)) -> IS type_annot 
+option(preceded(IS,typ_annot)) -> IS typ_annot . [ SEMICOLON ]
+-- On SEMICOLON reduce production option(preceded(IS,typ_annot)) -> IS typ_annot 
 
 State 57:
-decl -> TYPE ident option(preceded(IS,type_annot)) . SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> TYPE ident option(preceded(IS,typ_annot)) . SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 -- On SEMICOLON shift to state 58
 
 State 58:
-decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON . [ TYPE PROC IDENT FUNC BEGIN ]
--- On TYPE reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
--- On PROC reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
--- On IDENT reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
--- On FUNC reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
--- On BEGIN reduce production decl -> TYPE ident option(preceded(IS,type_annot)) SEMICOLON 
+decl -> TYPE ident option(preceded(IS,typ_annot)) SEMICOLON . [ TYPE PROC IDENT FUNC BEGIN ]
+-- On TYPE reduce production decl -> TYPE ident option(preceded(IS,typ_annot)) SEMICOLON 
+-- On PROC reduce production decl -> TYPE ident option(preceded(IS,typ_annot)) SEMICOLON 
+-- On IDENT reduce production decl -> TYPE ident option(preceded(IS,typ_annot)) SEMICOLON 
+-- On FUNC reduce production decl -> TYPE ident option(preceded(IS,typ_annot)) SEMICOLON 
+-- On BEGIN reduce production decl -> TYPE ident option(preceded(IS,typ_annot)) SEMICOLON 
 
 State 59:
 decl -> PROC . proc [ TYPE PROC IDENT FUNC BEGIN ]
@@ -441,19 +441,19 @@ decl -> FUNC func . [ TYPE PROC IDENT FUNC BEGIN ]
 -- On BEGIN reduce production decl -> FUNC func 
 
 State 64:
-decl -> separated_nonempty_list(COMMA,ident) . COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> separated_nonempty_list(COMMA,ident) . COLON typ_annot option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 -- On COLON shift to state 65
 
 State 65:
-decl -> separated_nonempty_list(COMMA,ident) COLON . type_annot option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> separated_nonempty_list(COMMA,ident) COLON . typ_annot option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 -- On IDENT shift to state 2
 -- On ACCESS shift to state 26
--- On type_annot shift to state 66
+-- On typ_annot shift to state 66
 -- On ident_desc shift to state 3
 -- On ident shift to state 29
 
 State 66:
-decl -> separated_nonempty_list(COMMA,ident) COLON type_annot . option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> separated_nonempty_list(COMMA,ident) COLON typ_annot . option(preceded(AFFECT,expr)) SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 -- On AFFECT shift to state 67
 -- On option(preceded(AFFECT,expr)) shift to state 128
 -- On SEMICOLON reduce production option(preceded(AFFECT,expr)) -> 
@@ -1930,27 +1930,27 @@ option(preceded(AFFECT,expr)) -> AFFECT expr . [ SEMICOLON ]
 -- On SEMICOLON reduce production option(preceded(AFFECT,expr)) -> AFFECT expr 
 
 State 128:
-decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) . SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
+decl -> separated_nonempty_list(COMMA,ident) COLON typ_annot option(preceded(AFFECT,expr)) . SEMICOLON [ TYPE PROC IDENT FUNC BEGIN ]
 -- On SEMICOLON shift to state 129
 
 State 129:
-decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON . [ TYPE PROC IDENT FUNC BEGIN ]
--- On TYPE reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
--- On PROC reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
--- On IDENT reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
--- On FUNC reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
--- On BEGIN reduce production decl -> separated_nonempty_list(COMMA,ident) COLON type_annot option(preceded(AFFECT,expr)) SEMICOLON 
+decl -> separated_nonempty_list(COMMA,ident) COLON typ_annot option(preceded(AFFECT,expr)) SEMICOLON . [ TYPE PROC IDENT FUNC BEGIN ]
+-- On TYPE reduce production decl -> separated_nonempty_list(COMMA,ident) COLON typ_annot option(preceded(AFFECT,expr)) SEMICOLON 
+-- On PROC reduce production decl -> separated_nonempty_list(COMMA,ident) COLON typ_annot option(preceded(AFFECT,expr)) SEMICOLON 
+-- On IDENT reduce production decl -> separated_nonempty_list(COMMA,ident) COLON typ_annot option(preceded(AFFECT,expr)) SEMICOLON 
+-- On FUNC reduce production decl -> separated_nonempty_list(COMMA,ident) COLON typ_annot option(preceded(AFFECT,expr)) SEMICOLON 
+-- On BEGIN reduce production decl -> separated_nonempty_list(COMMA,ident) COLON typ_annot option(preceded(AFFECT,expr)) SEMICOLON 
 
 State 130:
 decls -> list(decl) . [ BEGIN ]
 -- On BEGIN reduce production decls -> list(decl) 
 
 State 131:
-proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls . BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls . BEGIN stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On BEGIN shift to state 132
 
 State 132:
-proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN . stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN . stmts END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On WHILE shift to state 133
 -- On RETURN shift to state 136
 -- On NULL shift to state 68
@@ -3096,11 +3096,11 @@ stmt_desc -> WHILE expr LOOP stmts END LOOP SEMICOLON . [ WHILE RETURN NULL NOT 
 -- On BEGIN reduce production stmt_desc -> WHILE expr LOOP stmts END LOOP SEMICOLON 
 
 State 200:
-proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts . END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts . END option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On END shift to state 201
 
 State 201:
-proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END . option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END . option(ident) SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On IDENT shift to state 2
 -- On option(ident) shift to state 202
 -- On ident_desc shift to state 3
@@ -3108,17 +3108,17 @@ proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decl
 -- On SEMICOLON reduce production option(ident) -> 
 
 State 202:
-proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) . SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
+proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) . SEMICOLON [ TYPE PROC IDENT FUNC EOF BEGIN ]
 -- On SEMICOLON shift to state 203
 
 State 203:
-proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON . [ TYPE PROC IDENT FUNC EOF BEGIN ]
--- On TYPE reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
--- On PROC reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
--- On IDENT reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
--- On FUNC reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
--- On EOF reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
--- On BEGIN reduce production proc_or_func -> ident option(params) option(preceded(RETURN,type_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON . [ TYPE PROC IDENT FUNC EOF BEGIN ]
+-- On TYPE reduce production proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On PROC reduce production proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On IDENT reduce production proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On FUNC reduce production proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On EOF reduce production proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
+-- On BEGIN reduce production proc_or_func -> ident option(params) option(preceded(RETURN,typ_annot)) IS decls BEGIN stmts END option(ident) SEMICOLON 
 
 State 204:
 option(ident) -> ident . [ SEMICOLON ]
