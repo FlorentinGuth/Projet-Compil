@@ -39,7 +39,29 @@ let decorate_dummy_typ desc = decorate desc Typ.Tnull
 
 (** Adding functions to standard library modules *)
 
-module Map = struct
+module List =
+struct
+  include List
+
+  let find_duplicates cmp l =
+    let rec find_adj = function
+      | [] | [_] -> None
+      | x :: ((y :: _) as tl) -> if cmp x y = 0 then Some (x, y) else find_adj tl
+    in
+    find_adj (List.stable_sort cmp l)
+
+  (* In module Option? See when refactoring *)
+  let remove_none l =
+    let rec aux acc = function
+      | [] -> acc
+      | None :: tl -> aux acc tl
+      | (Some x) :: tl -> aux (x :: acc) tl
+    in
+    List.rev (aux [] l)
+end
+  
+module Map =
+struct
   include (Map : module type of Map with module Make := Map.Make)
           
   module Make(O : Map.OrderedType) =
@@ -52,7 +74,8 @@ module Map = struct
   end
 end
 
-module Set = struct
+module Set =
+struct
   include (Set : module type of Set with module Make := Set.Make)
           
   module Make(O : Set.OrderedType) =

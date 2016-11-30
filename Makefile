@@ -1,6 +1,4 @@
 FLAGS = -I _build/ -verbose 1 -use-menhir -yaccflags -v -lflags -g -cflags -g,-w,+A-4-52
-TARGET_SUFFIX = byte
-TARGET = main.$(TARGET_SUFFIX)
 
 all: main.byte
 
@@ -8,8 +6,12 @@ all: main.byte
 
 main.native:
 	ocamlbuild $(FLAGS) $@
-main.byte:
+	mv $@ adac
+	./test.sh -2 adac
+main.byte: 
 	ocamlbuild $(FLAGS) $@
+	mv $@ adac
+	./test.sh -2 adac
 
 
 clean:
