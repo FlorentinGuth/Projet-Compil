@@ -55,7 +55,7 @@ let compile file =
     let a = Parser.file Lexer.token buf in
     (*print_ast a;*)
     if not !parse_only then ignore (Typer.type_ast a);
-    print_endline "Everything went fine!";
+    print_endline "\n\nEverything went fine!";
     close_in ch
   with
   | Utils.Lexing_error  (msg, l) -> report "Lexical" file msg l; exit 1

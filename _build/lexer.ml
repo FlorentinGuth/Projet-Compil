@@ -44,7 +44,7 @@ let reserved = assoc_to_hashtbl
                   ("use",           USE);
                   ("while",         WHILE);
                   ("with",          WITH);
-                  ("character'val", IDENT "character'val")
+                  ("character'val", IDENT "character'val");
                  ]
 
 let to_token s =
