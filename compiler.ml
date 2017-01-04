@@ -34,7 +34,7 @@ let rec compile_expr env e =
       
   | Eleft_val lv ->
     let ofs = compile_left_val env lv in
-    movq (ind ~ofs rbp) (reg rax)
+    pushq (ind ~ofs rbp)
       
   | Ebinop (e1, o, e2) ->
     let c1 = compile_expr env e1 in
@@ -92,7 +92,7 @@ let rec compile_expr env e =
 
   | Eapp_func (f, args) -> (* Parameters mode to do *)
     let args_code = List.fold_left (fun c e -> c ++ compile_expr env e) nop args in
-    args_code ++ pushq (reg rbp) (* %rbp père normalement *) ++
+    args_code ++ pushq (reg r15) (* %rbp père normalement *) ++
     call f.desc ++ popn (8 + 8 * (List.length args)) ++ pushq (reg rax)
 
 and compile_left_val env = function
@@ -112,11 +112,11 @@ let rec compile_stmt env s =
 
   | Scall_proc (p, args) -> (* Parameters mode to do *)
     let args_code = List.fold_left (fun c e -> c ++ compile_expr env e) nop args in
-    args_code ++ pushq (reg rbp) (* %rbp père normalement *) ++
+    args_code ++ pushq (reg r15) (* %rbp père normalement *) ++
     call p.desc ++ popn (8 + 8 * (List.length args))
 
   | Sreturn e ->
-    failwith "Not implemented"
+    compile_expr env e ++ popq rax ++ movq (reg rbp) (reg rsp) ++ popq rbp ++ ret
 
   | Sblock b ->
     List.fold_left (fun c s -> c ++ compile_stmt env s) nop b
@@ -133,7 +133,7 @@ let rec compile_stmt env s =
     let l_loop = get_unique_label () in
     jmp l_cond ++ label l_loop ++ compile_stmt env s ++
     label l_cond ++ compile_expr env loop ++ popq rax ++
-    testq (reg rax) (reg rax) ++ je l_loop
+    testq (reg rax) (reg rax) ++ jne l_loop
 
   | Sfor (i, rev, lb, ub, s) ->(*
     let l_cond = get_unique_label () in
@@ -148,7 +148,8 @@ let rec compile_stmt env s =
     failwith "Not implemented"
 
 
-let compile_decl env = function
+let rec compile_decl env next (codefun, codemain) = function
+  (* next is the offset (from rbp) of the next free block on the stack *)
   | Dtype_decl (t, ta_opt) ->
     failwith "Not implemented"
 
@@ -156,21 +157,40 @@ let compile_decl env = function
     failwith "Not implemented"
 
   | Dvar_decl (annot, e_opt) ->
-    failwith "Not implemented"
+    let e = to_some (decorate (Econst (Cint 0)) Typ.int) e_opt in
+    let env' = Smap.add annot.ident.desc next env in
+    (codefun, codemain ++ compile_expr env e, env', next - 8)
 
   | Dproc_func pf ->
-    failwith "Not implemented"
+    let (env', next') =
+      List.fold_left
+        (fun (env, next) (a, _) ->
+           (Smap.add a.ident.desc next env, next - 8))
+        (env, next) pf.params in
+    let (cf, cm, env'') = compile_decls env' next' pf.decls in
+    let stmt = decorate
+                 (Sblock
+                    [pf.stmt;
+                     decorate (Sreturn (decorate (Econst Cnull) Typ.null)) ()])
+                 () in
+    let code = label pf.name.desc ++ pushq (reg rbp) ++ movq (reg rsp) (reg rbp) ++
+               cm ++ compile_stmt env'' stmt in
+    (codefun ++ code ++ cf, codemain, env, next)
 
+and compile_decls env next ds = 
+  let (cf, cm, env, _) =
+    List.fold_left (fun (cf, cm, env, next) d -> compile_decl env next (cf, cm) d)
+      (nop, nop, env, next) ds in
+  (cf, cm, env)
 
 
 let compile_program p file =
+  let (codefun, codemain, _) = compile_decls Smap.empty (-8) [Dproc_func p] in
   let asm = { text =
                 glabel "main" ++
-                label p.name.desc ++
-                movq (reg rsp) (reg rbp) ++
-                compile_stmt Smap.empty p.stmt ++
-                xorq (reg rax) (reg rax) ++ (* exit 0 *)
-                ret ++
+                jmp p.name.desc ++
+
+                codemain ++ codefun ++
                 
                 label "put" ++
                 movslq (ind ~ofs:16 rsp) rsi ++

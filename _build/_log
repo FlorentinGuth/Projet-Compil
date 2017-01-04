@@ -2,7 +2,7 @@
 # Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules main.ml > main.ml.depends # cached
 # Target: compiler.ml.depends, tags: { extension:ml, file:compiler.ml, ocaml, ocamldep, quiet }
-/home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules compiler.ml > compiler.ml.depends
+/home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules compiler.ml > compiler.ml.depends # cached
 # Target: ast.ml.depends, tags: { extension:ml, file:ast.ml, ocaml, ocamldep, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules ast.ml > ast.ml.depends # cached
 # Target: printer.ml.depends, tags: { extension:ml, file:printer.ml, ocaml, ocamldep, quiet }
@@ -19,6 +19,8 @@
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules x86_64.mli > x86_64.mli.depends # cached
 # Target: x86_64.cmi, tags: { byte, compile, extension:mli, file:x86_64.mli, interf, ocaml, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-50-52 -o x86_64.cmi x86_64.mli # cached
+# Target: compiler.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:compiler.cmo, file:compiler.ml, implem, ocaml, quiet }
+/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-50-52 -o compiler.cmo compiler.ml # cached
 # Target: lexer.mll, tags: { extension:mll, file:lexer.mll, lexer, ocaml, ocamllex, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamllex.opt -q lexer.mll # cached
 # Target: lexer.ml.depends, tags: { extension:ml, file:lexer.ml, ocaml, ocamldep, quiet }
@@ -37,47 +39,8 @@ menhir --ocamlc '/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -g -w +A-4-50-52' -v
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules typer.ml > typer.ml.depends # cached
 # Target: typer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:typer.cmo, file:typer.ml, implem, ocaml, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-50-52 -o typer.cmo typer.ml # cached
-# Target: compiler.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:compiler.cmo, file:compiler.ml, implem, ocaml, quiet }
-/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-50-52 -o compiler.cmo compiler.ml
-+ /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-50-52 -o compiler.cmo compiler.ml
-File "compiler.ml", line 90, characters 9-10:
-Warning 27: unused variable r.
-File "compiler.ml", line 51, characters 18-25:
-Warning 27: unused variable lazy_op.
-File "compiler.ml", line 103, characters 13-14:
-Warning 27: unused variable e.
-File "compiler.ml", line 103, characters 16-17:
-Warning 27: unused variable f.
-File "compiler.ml", line 118, characters 12-13:
-Warning 27: unused variable e.
-File "compiler.ml", line 138, characters 10-11:
-Warning 27: unused variable i.
-File "compiler.ml", line 138, characters 13-16:
-Warning 27: unused variable rev.
-File "compiler.ml", line 138, characters 18-20:
-Warning 27: unused variable lb.
-File "compiler.ml", line 138, characters 22-24:
-Warning 27: unused variable ub.
-File "compiler.ml", line 138, characters 26-27:
-Warning 27: unused variable s.
-File "compiler.ml", line 151, characters 17-20:
-Warning 27: unused variable env.
-File "compiler.ml", line 152, characters 16-17:
-Warning 27: unused variable t.
-File "compiler.ml", line 152, characters 19-25:
-Warning 27: unused variable ta_opt.
-File "compiler.ml", line 155, characters 17-18:
-Warning 27: unused variable r.
-File "compiler.ml", line 155, characters 20-22:
-Warning 27: unused variable fs.
-File "compiler.ml", line 158, characters 15-20:
-Warning 27: unused variable annot.
-File "compiler.ml", line 158, characters 22-27:
-Warning 27: unused variable e_opt.
-File "compiler.ml", line 161, characters 15-17:
-Warning 27: unused variable pf.
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
-/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-50-52 -o main.cmo main.ml
+/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-50-52 -o main.cmo main.ml # cached
 # Target: parser.ml.depends, tags: { extension:ml, file:parser.ml, ocaml, ocamldep, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamldep.opt -modules parser.ml > parser.ml.depends # cached
 # Target: parser.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:parser.cmo, file:parser.ml, implem, ocaml, quiet }
@@ -87,5 +50,5 @@ Warning 27: unused variable pf.
 # Target: x86_64.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:x86_64.cmo, file:x86_64.ml, implem, ocaml, quiet }
 /home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -c -g -w +A-4-50-52 -o x86_64.cmo x86_64.ml # cached
 # Target: main.byte, tags: { byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
-/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -g printer.cmo ast.cmo utils.cmo x86_64.cmo compiler.cmo parser.cmo lexer.cmo typer.cmo main.cmo -o main.byte
+/home/kegnarok/.opam/4.04.0/bin/ocamlc.opt -g printer.cmo ast.cmo utils.cmo x86_64.cmo compiler.cmo parser.cmo lexer.cmo typer.cmo main.cmo -o main.byte # cached
 # Compilation successful.
