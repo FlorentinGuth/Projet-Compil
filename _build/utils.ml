@@ -1,10 +1,20 @@
 open Ast
+open Format
 
 (** Errors *)
 
 exception Lexing_error  of string * Loc.loc
 exception Parsing_error of string * Loc.loc
 exception Typing_error  of string * Loc.loc
+
+let report ?(warning = false) h msg (s, e) =
+  let err = if warning then "Warning" else h ^ " error" in
+  eprintf "%a:\n%s: %s" Ast.Loc.print_loc (s, e) err msg;
+  pp_print_flush err_formatter ()
+
+let error s =
+  eprintf "%s" s;
+  pp_print_flush err_formatter ()
 
 
 (** Helper functions *)
@@ -14,27 +24,9 @@ let assoc_to_hashtbl l =
   List.iter (fun (k, v) -> Hashtbl.add t k v) l;
   t
 
-
-let developp (l, y) = 
-  List.map (fun x -> (x, y)) l
-    
-let developp_full l =
-  List.flatten (List.map developp l)
-    
-let verify x = function
-  | None -> true
-  | Some y -> x = y
-              
 let to_some default = function
   | None -> default
-  | Some x -> x
-                                 
-let decorate desc deco = 
-  { desc; deco }
-let replace_deco node deco =
-  decorate node.desc deco
-let decorate_dummy_loc desc = decorate desc (Lexing.dummy_pos, Lexing.dummy_pos)
-let decorate_dummy_typ desc = decorate desc Typ.Tnull
+  | Some x -> x             
 
 
 (** Adding functions to standard library modules *)
@@ -50,7 +42,6 @@ struct
     in
     find_adj (List.stable_sort cmp l)
 
-  (* In module Option? See when refactoring *)
   let remove_none l =
     let rec aux acc = function
       | [] -> acc
@@ -87,3 +78,7 @@ struct
       | x :: xs -> add x (of_list xs)
   end
 end
+
+
+module Sset = Set.Make(String)
+module Smap = Map.Make(String)

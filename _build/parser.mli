@@ -54,6 +54,7 @@ type token =
   | BEGIN
   | AND_THEN
   | AND
+  | ALL
   | AFFECT
   | ACCESS
 

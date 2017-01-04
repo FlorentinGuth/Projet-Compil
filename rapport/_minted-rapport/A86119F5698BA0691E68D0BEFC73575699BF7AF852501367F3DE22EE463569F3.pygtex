@@ -1,0 +1,228 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGcolorful{o}{\PYGcolorfulZpc{}\PYGcolorfulZob{}}
+    \PYGcolorful{k}{open} \PYGcolorful{n+nc}{Utils}
+    \PYGcolorful{k}{open} \PYGcolorful{n+nc}{Ast}
+    \PYGcolorful{k}{open} \PYGcolorful{n+nc}{AST}
+
+    \PYGcolorful{k}{let} \PYGcolorful{n}{error} \PYGcolorful{n}{m} \PYGcolorful{n}{s} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{k}{raise} \PYGcolorful{o}{(}\PYGcolorful{n+nc}{Parsing\PYGcolorfulZus{}error} \PYGcolorful{o}{(}\PYGcolorful{n}{m}\PYGcolorful{o}{,} \PYGcolorful{o}{(}\PYGcolorful{n}{s}\PYGcolorful{o}{,} \PYGcolorful{n}{e}\PYGcolorful{o}{)))}
+\PYGcolorful{o}{\PYGcolorfulZpc{}\PYGcolorfulZcb{}}
+
+\PYGcolorful{c}{(** List of tokens *)}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{WITH} \PYGcolorful{n+nc}{USE}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{PROC} \PYGcolorful{n+nc}{FUNC} \PYGcolorful{n+nc}{RETURN} \PYGcolorful{n+nc}{IS} \PYGcolorful{n+nc}{BEGIN} \PYGcolorful{n+nc}{END}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{TYPE} \PYGcolorful{n+nc}{ACCESS} \PYGcolorful{n+nc}{RECORD} \PYGcolorful{n+nc}{ALL}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{o}{\PYGcolorfulZlt{}}\PYGcolorful{k+kt}{int}\PYGcolorful{o}{\PYGcolorfulZgt{}}  \PYGcolorful{n+nc}{INT}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{o}{\PYGcolorfulZlt{}}\PYGcolorful{k+kt}{char}\PYGcolorful{o}{\PYGcolorfulZgt{}} \PYGcolorful{n+nc}{CHAR}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{o}{\PYGcolorfulZlt{}}\PYGcolorful{k+kt}{bool}\PYGcolorful{o}{\PYGcolorfulZgt{}} \PYGcolorful{n+nc}{BOOL}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token}        \PYGcolorful{n+nc}{NULL}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{o}{\PYGcolorfulZlt{}}\PYGcolorful{k+kt}{string}\PYGcolorful{o}{\PYGcolorfulZgt{}} \PYGcolorful{n+nc}{IDENT}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{OR} \PYGcolorful{n+nc}{OR\PYGcolorfulZus{}ELSE} \PYGcolorful{n+nc}{AND} \PYGcolorful{n+nc}{AND\PYGcolorfulZus{}THEN} \PYGcolorful{n+nc}{NOT}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{EQ} \PYGcolorful{n+nc}{NEQ} \PYGcolorful{n+nc}{GT} \PYGcolorful{n+nc}{GEQ} \PYGcolorful{n+nc}{LT} \PYGcolorful{n+nc}{LEQ}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{PLUS} \PYGcolorful{n+nc}{MINUS} \PYGcolorful{n+nc}{TIMES} \PYGcolorful{n+nc}{DIV} \PYGcolorful{n+nc}{REM} \PYGcolorful{n+nc}{UNARY\PYGcolorfulZus{}MINUS}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{NEW}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{IF} \PYGcolorful{n+nc}{THEN} \PYGcolorful{n+nc}{ELSIF} \PYGcolorful{n+nc}{ELSE}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{WHILE} \PYGcolorful{n+nc}{FOR} \PYGcolorful{n+nc}{REVERSE} \PYGcolorful{n+nc}{LOOP}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{COMMA} \PYGcolorful{n+nc}{SEMICOLON} \PYGcolorful{n+nc}{COLON} \PYGcolorful{n+nc}{AFFECT} \PYGcolorful{n+nc}{DOT} \PYGcolorful{n+nc}{DOTDOT} \PYGcolorful{n+nc}{QUOTE}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{LPAREN} \PYGcolorful{n+nc}{RPAREN}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{IN} \PYGcolorful{n+nc}{OUT}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{token} \PYGcolorful{n+nc}{EOF}
+
+
+\PYGcolorful{c}{(** Associativities and precedences *)}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{left}     \PYGcolorful{n+nc}{OR} \PYGcolorful{n+nc}{OR\PYGcolorfulZus{}ELSE}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{left}     \PYGcolorful{n+nc}{AND} \PYGcolorful{n+nc}{AND\PYGcolorfulZus{}THEN}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{nonassoc} \PYGcolorful{n+nc}{NOT}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{nonassoc} \PYGcolorful{n+nc}{EQ} \PYGcolorful{n+nc}{NEQ}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{nonassoc} \PYGcolorful{n+nc}{GT} \PYGcolorful{n+nc}{GEQ} \PYGcolorful{n+nc}{LT} \PYGcolorful{n+nc}{LEQ}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{left}     \PYGcolorful{n+nc}{PLUS} \PYGcolorful{n+nc}{MINUS}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{left}     \PYGcolorful{n+nc}{TIMES} \PYGcolorful{n+nc}{DIV} \PYGcolorful{n+nc}{REM}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{nonassoc} \PYGcolorful{n+nc}{UNARY\PYGcolorfulZus{}MINUS}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{left}     \PYGcolorful{n+nc}{DOT}
+
+
+\PYGcolorful{c}{(** Entry point *)}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{start} \PYGcolorful{o}{\PYGcolorfulZlt{}}\PYGcolorful{n+nn}{Ast}\PYGcolorful{p}{.}\PYGcolorful{n+nn}{AST}\PYGcolorful{p}{.}\PYGcolorful{n}{ast}\PYGcolorful{o}{\PYGcolorfulZgt{}} \PYGcolorful{n}{file}
+
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}\PYGcolorfulZpc{}} \PYGcolorful{c}{(** Beginning of rules *)}
+
+\PYGcolorful{n}{file}\PYGcolorful{o}{:}
+  \PYGcolorful{n+nc}{WITH}\PYGcolorful{o}{;} \PYGcolorful{n}{ada1} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{DOT}\PYGcolorful{o}{;} \PYGcolorful{n}{text\PYGcolorfulZus{}io1} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;}
+  \PYGcolorful{n+nc}{USE}\PYGcolorful{o}{;}  \PYGcolorful{n}{ada2} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{DOT}\PYGcolorful{o}{;} \PYGcolorful{n}{text\PYGcolorfulZus{}io2} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;} 
+  \PYGcolorful{n+nc}{PROC}\PYGcolorful{o}{;} \PYGcolorful{n}{p} \PYGcolorful{o}{=} \PYGcolorful{n}{proc}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{EOF}\PYGcolorful{o}{;}
+  \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{k}{if} \PYGcolorful{n}{not} \PYGcolorful{o}{(}\PYGcolorful{n}{ada1}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}ada\PYGcolorfulZdq{}} \PYGcolorful{o}{\PYGcolorfulZam{}\PYGcolorfulZam{}} \PYGcolorful{n}{text\PYGcolorfulZus{}io1}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}text\PYGcolorfulZus{}io\PYGcolorfulZdq{}} \PYGcolorful{o}{\PYGcolorfulZam{}\PYGcolorfulZam{}}
+              \PYGcolorful{n}{ada2}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}ada\PYGcolorfulZdq{}} \PYGcolorful{o}{\PYGcolorfulZam{}\PYGcolorfulZam{}} \PYGcolorful{n}{text\PYGcolorfulZus{}io2}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}text\PYGcolorfulZus{}io\PYGcolorfulZdq{}}\PYGcolorful{o}{)}
+    \PYGcolorful{k}{then} \PYGcolorful{n}{error} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}Wrong header, should be }\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}\PYGcolorfulZdq{}}\PYGcolorful{l+s+s2}{with Ada.Text\PYGcolorfulZus{}IO; use Ada.Text\PYGcolorfulZus{}IO;}\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}\PYGcolorfulZdq{}}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}}
+         \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}\PYGcolorful{o}{;}
+    \PYGcolorful{k}{if} \PYGcolorful{n}{p}\PYGcolorful{o}{.}\PYGcolorful{n}{params} \PYGcolorful{o}{\PYGcolorfulZlt{}\PYGcolorfulZgt{}} \PYGcolorful{n+nb+bp}{[]}
+    \PYGcolorful{k}{then} \PYGcolorful{n}{error} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}Main procedure can\PYGcolorfulZsq{}t take any parameters\PYGcolorfulZdq{}} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}\PYGcolorful{o}{;}
+    \PYGcolorful{n}{p} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+\PYGcolorful{c}{(* Rule modifier to decorate a production *)}
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{inline} \PYGcolorful{n}{decorated}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{X}\PYGcolorful{o}{):}
+\PYGcolorful{o}{|} \PYGcolorful{n}{x} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{X}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{decorate} \PYGcolorful{n}{x} \PYGcolorful{o}{(\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos}\PYGcolorful{o}{,} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+\PYGcolorful{n}{ident\PYGcolorfulZus{}desc}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{IDENT}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{id} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\PYGcolorful{n}{ident}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{decorated}\PYGcolorful{o}{(}\PYGcolorful{n}{ident\PYGcolorfulZus{}desc}\PYGcolorful{o}{);} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{id} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{typ\PYGcolorfulZus{}annot}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;}         \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{typ\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{id}\PYGcolorful{o}{;} \PYGcolorful{n}{is\PYGcolorfulZus{}access} \PYGcolorful{o}{=} \PYGcolorful{n+nb+bp}{false} \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{ACCESS}\PYGcolorful{o}{;} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{typ\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{id}\PYGcolorful{o}{;} \PYGcolorful{n}{is\PYGcolorfulZus{}access} \PYGcolorful{o}{=} \PYGcolorful{n+nb+bp}{true}  \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{mode}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{o}{;} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{IN}\PYGcolorful{o}{;}  \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{In} \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{c}{(* Default mode is In *)}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{IN}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{OUT}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{InOut} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{param}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{ids} \PYGcolorful{o}{=} \PYGcolorful{n}{separated\PYGcolorfulZus{}nonempty\PYGcolorfulZus{}list}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{COMMA}\PYGcolorful{o}{,} \PYGcolorful{n}{ident}\PYGcolorful{o}{);} \PYGcolorful{n+nc}{COLON}\PYGcolorful{o}{;} \PYGcolorful{n}{m} \PYGcolorful{o}{=} \PYGcolorful{n}{mode}\PYGcolorful{o}{;} \PYGcolorful{n}{typ} \PYGcolorful{o}{=} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nn}{List}\PYGcolorful{p}{.}\PYGcolorful{n}{map} \PYGcolorful{o}{(}\PYGcolorful{k}{fun} \PYGcolorful{n}{id} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{o}{(\PYGcolorfulZob{}} \PYGcolorful{n}{ident} \PYGcolorful{o}{=} \PYGcolorful{n}{id}\PYGcolorful{o}{;} \PYGcolorful{n}{ta} \PYGcolorful{o}{=} \PYGcolorful{n}{typ} \PYGcolorful{o}{\PYGcolorfulZcb{},} \PYGcolorful{n}{m}\PYGcolorful{o}{))} \PYGcolorful{n}{ids} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{params}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{LPAREN}\PYGcolorful{o}{;} \PYGcolorful{n}{p} \PYGcolorful{o}{=} \PYGcolorful{n}{separated\PYGcolorfulZus{}nonempty\PYGcolorfulZus{}list}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{,} \PYGcolorful{n}{param}\PYGcolorful{o}{);} \PYGcolorful{n+nc}{RPAREN}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nn}{List}\PYGcolorful{p}{.}\PYGcolorful{n}{flatten} \PYGcolorful{n}{p} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{fields}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{ids} \PYGcolorful{o}{=} \PYGcolorful{n}{separated\PYGcolorfulZus{}nonempty\PYGcolorfulZus{}list}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{COMMA}\PYGcolorful{o}{,} \PYGcolorful{n}{ident}\PYGcolorful{o}{);} \PYGcolorful{n+nc}{COLON}\PYGcolorful{o}{;} \PYGcolorful{n}{typ} \PYGcolorful{o}{=} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nn}{List}\PYGcolorful{p}{.}\PYGcolorful{n}{map} \PYGcolorful{o}{(}\PYGcolorful{k}{fun} \PYGcolorful{n}{id} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{ident} \PYGcolorful{o}{=} \PYGcolorful{n}{id}\PYGcolorful{o}{;} \PYGcolorful{n}{ta} \PYGcolorful{o}{=} \PYGcolorful{n}{typ} \PYGcolorful{o}{\PYGcolorfulZcb{})} \PYGcolorful{n}{ids} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+\PYGcolorful{n}{proc\PYGcolorfulZus{}or\PYGcolorfulZus{}func}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{name} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n}{ps} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{option}\PYGcolorful{o}{(}\PYGcolorful{n}{params}\PYGcolorful{o}{);} \PYGcolorful{n}{rt} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{option}\PYGcolorful{o}{(}\PYGcolorful{n}{preceded}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{RETURN}\PYGcolorful{o}{,} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot}\PYGcolorful{o}{));}
+    \PYGcolorful{n+nc}{IS}\PYGcolorful{o}{;} \PYGcolorful{n}{decls} \PYGcolorful{o}{=} \PYGcolorful{n}{decls}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{BEGIN}\PYGcolorful{o}{;} \PYGcolorful{n}{stmt} \PYGcolorful{o}{=} \PYGcolorful{n}{stmts}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{END}\PYGcolorful{o}{;} \PYGcolorful{n}{end\PYGcolorfulZus{}id} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{option}\PYGcolorful{o}{(}\PYGcolorful{n}{ident}\PYGcolorful{o}{);} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{k}{if} \PYGcolorful{n}{name}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{\PYGcolorfulZlt{}\PYGcolorfulZgt{}} \PYGcolorful{o}{(}\PYGcolorful{n}{to\PYGcolorfulZus{}some} \PYGcolorful{n}{name} \PYGcolorful{n}{end\PYGcolorfulZus{}id}\PYGcolorful{o}{).}\PYGcolorful{n}{desc}
+      \PYGcolorful{k}{then}
+        \PYGcolorful{n}{error}
+          \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}Ident following }\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}\PYGcolorfulZdq{}}\PYGcolorful{l+s+s2}{end}\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}\PYGcolorfulZdq{}}\PYGcolorful{l+s+s2}{ must have same name than the function/procedure\PYGcolorfulZdq{}}
+          \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}\PYGcolorful{o}{;}
+      \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{name}\PYGcolorful{o}{;}
+        \PYGcolorful{n}{params} \PYGcolorful{o}{=} \PYGcolorful{n}{to\PYGcolorfulZus{}some} \PYGcolorful{n+nb+bp}{[]} \PYGcolorful{n}{ps}\PYGcolorful{o}{;}
+        \PYGcolorful{n}{return} \PYGcolorful{o}{=} \PYGcolorful{n}{to\PYGcolorfulZus{}some} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{typ\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{decorate\PYGcolorfulZus{}dummy\PYGcolorfulZus{}loc} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZdq{}}\PYGcolorful{o}{;} \PYGcolorful{n}{is\PYGcolorfulZus{}access} \PYGcolorful{o}{=} \PYGcolorful{n+nb+bp}{false} \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{n}{rt}\PYGcolorful{o}{;}
+        \PYGcolorful{n}{decls}\PYGcolorful{o}{;}
+        \PYGcolorful{n}{stmt} \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{proc}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{p} \PYGcolorful{o}{=} \PYGcolorful{n}{proc\PYGcolorfulZus{}or\PYGcolorfulZus{}func}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{k}{if} \PYGcolorful{n}{p}\PYGcolorful{o}{.}\PYGcolorful{n}{return}\PYGcolorful{o}{.}\PYGcolorful{n}{typ\PYGcolorfulZus{}ident}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{\PYGcolorfulZlt{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZdq{}}
+                        \PYGcolorful{k}{then} \PYGcolorful{n}{error} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}A procedure cannot have a return type\PYGcolorfulZdq{}}
+                             \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}\PYGcolorful{o}{;}
+                        \PYGcolorful{n}{p} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\PYGcolorful{n}{func}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{f} \PYGcolorful{o}{=} \PYGcolorful{n}{proc\PYGcolorfulZus{}or\PYGcolorfulZus{}func}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{k}{if} \PYGcolorful{n}{f}\PYGcolorful{o}{.}\PYGcolorful{n}{return}\PYGcolorful{o}{.}\PYGcolorful{n}{typ\PYGcolorfulZus{}ident}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZdq{}}
+                        \PYGcolorful{k}{then} \PYGcolorful{n}{error} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}A function must have an annotated return type\PYGcolorfulZdq{}}
+                             \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}\PYGcolorful{o}{;}
+                        \PYGcolorful{n}{f} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+\PYGcolorful{n}{decl}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{TYPE}\PYGcolorful{o}{;} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{o}{[}\PYGcolorful{n+nc}{Dtype\PYGcolorfulZus{}decl} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{None}\PYGcolorful{o}{)]} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{TYPE}\PYGcolorful{o}{;} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{IS}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{ACCESS}\PYGcolorful{o}{;} \PYGcolorful{n}{ta} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{o}{[}\PYGcolorful{n+nc}{Dtype\PYGcolorfulZus{}decl} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Some} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{typ\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{ta}\PYGcolorful{o}{;} \PYGcolorful{n}{is\PYGcolorfulZus{}access} \PYGcolorful{o}{=} \PYGcolorful{n+nb+bp}{true} \PYGcolorful{o}{\PYGcolorfulZcb{})]} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{TYPE}\PYGcolorful{o}{;} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{IS}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{NEW}\PYGcolorful{o}{;} \PYGcolorful{n}{ta} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{o}{[}\PYGcolorful{n+nc}{Dtype\PYGcolorfulZus{}decl} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Some} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{typ\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{ta}\PYGcolorful{o}{;} \PYGcolorful{n}{is\PYGcolorfulZus{}access} \PYGcolorful{o}{=} \PYGcolorful{n+nb+bp}{false} \PYGcolorful{o}{\PYGcolorfulZcb{})]} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{TYPE}\PYGcolorful{o}{;} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{IS}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{RECORD}\PYGcolorful{o}{;} \PYGcolorful{n}{r} \PYGcolorful{o}{=} \PYGcolorful{n}{nonempty\PYGcolorfulZus{}list}\PYGcolorful{o}{(}\PYGcolorful{n}{fields}\PYGcolorful{o}{);} \PYGcolorful{n+nc}{END}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{RECORD}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{o}{[}\PYGcolorful{n+nc}{Drecord\PYGcolorfulZus{}def} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n+nn}{List}\PYGcolorful{p}{.}\PYGcolorful{n}{flatten} \PYGcolorful{n}{r}\PYGcolorful{o}{)]} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{lv\PYGcolorfulZus{}list} \PYGcolorful{o}{=} \PYGcolorful{n}{separated\PYGcolorfulZus{}nonempty\PYGcolorfulZus{}list}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{COMMA}\PYGcolorful{o}{,} \PYGcolorful{n}{ident}\PYGcolorful{o}{);} \PYGcolorful{n+nc}{COLON}\PYGcolorful{o}{;} \PYGcolorful{n}{typ} \PYGcolorful{o}{=} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot}\PYGcolorful{o}{;}
+    \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{option}\PYGcolorful{o}{(}\PYGcolorful{n}{preceded}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{AFFECT}\PYGcolorful{o}{,} \PYGcolorful{n}{expr}\PYGcolorful{o}{));} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nn}{List}\PYGcolorful{p}{.}\PYGcolorful{n}{map} \PYGcolorful{o}{(}\PYGcolorful{k}{fun} \PYGcolorful{n}{lv} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n+nc}{Dvar\PYGcolorfulZus{}decl} \PYGcolorful{o}{(\PYGcolorfulZob{}} \PYGcolorful{n}{ident} \PYGcolorful{o}{=} \PYGcolorful{n}{lv}\PYGcolorful{o}{;} \PYGcolorful{n}{ta} \PYGcolorful{o}{=} \PYGcolorful{n}{typ} \PYGcolorful{o}{\PYGcolorfulZcb{},} \PYGcolorful{n}{e}\PYGcolorful{o}{))} \PYGcolorful{n}{lv\PYGcolorfulZus{}list} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{PROC}\PYGcolorful{o}{;} \PYGcolorful{n}{p} \PYGcolorful{o}{=} \PYGcolorful{n}{proc}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{o}{[}\PYGcolorful{n+nc}{Dproc\PYGcolorfulZus{}func} \PYGcolorful{n}{p}\PYGcolorful{o}{]} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{FUNC}\PYGcolorful{o}{;} \PYGcolorful{n}{f} \PYGcolorful{o}{=} \PYGcolorful{n}{func}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{o}{[}\PYGcolorful{n+nc}{Dproc\PYGcolorfulZus{}func} \PYGcolorful{n}{f}\PYGcolorful{o}{]} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{decls}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{ds} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{list}\PYGcolorful{o}{(}\PYGcolorful{n}{decl}\PYGcolorful{o}{);} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nn}{List}\PYGcolorful{p}{.}\PYGcolorful{n}{flatten} \PYGcolorful{n}{ds} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+\PYGcolorful{n}{const}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{n} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{INT}\PYGcolorful{o}{;}  \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Cint}  \PYGcolorful{n}{n} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{c} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{CHAR}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Cchar} \PYGcolorful{n}{c} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{b} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{BOOL}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Cbool} \PYGcolorful{n}{b} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{NULL}\PYGcolorful{o}{;}     \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Cnull} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{inline} \PYGcolorful{n}{left\PYGcolorfulZus{}val}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Lident} \PYGcolorful{n}{id} \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{c}{(* Can be a function!! *)}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{DOT}\PYGcolorful{o}{;} \PYGcolorful{n}{field} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Lmember} \PYGcolorful{o}{(}\PYGcolorful{n}{e}\PYGcolorful{o}{,} \PYGcolorful{n}{field}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{DOT}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{ALL}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Lmember} \PYGcolorful{o}{(}\PYGcolorful{n}{e}\PYGcolorful{o}{,} \PYGcolorful{n}{decorate\PYGcolorfulZus{}dummy\PYGcolorfulZus{}loc} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}all\PYGcolorfulZdq{}}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+\PYGcolorful{n}{expr\PYGcolorfulZus{}desc}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{c} \PYGcolorful{o}{=} \PYGcolorful{n}{const}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Econst} \PYGcolorful{n}{c} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{LPAREN}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{RPAREN}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{e}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{lv} \PYGcolorful{o}{=} \PYGcolorful{n}{left\PYGcolorfulZus{}val}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Eleft\PYGcolorfulZus{}val} \PYGcolorful{n}{lv} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{NOT}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Enot} \PYGcolorful{n}{e} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{MINUS}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{decorate\PYGcolorfulZus{}dummy\PYGcolorfulZus{}loc} \PYGcolorful{o}{(}\PYGcolorful{n+nc}{Econst} \PYGcolorful{o}{(}\PYGcolorful{n+nc}{Cint} \PYGcolorful{l+m+mi}{0}\PYGcolorful{o}{)),}
+                              \PYGcolorful{n+nc}{Bminus}\PYGcolorful{o}{,} \PYGcolorful{n}{e}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{prec} \PYGcolorful{n+nc}{UNARY\PYGcolorfulZus{}MINUS}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{EQ}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Beq}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{NEQ}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bneq}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{LT}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Blt}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{LEQ}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bleq}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{GT}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bgt}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{GEQ}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bgeq}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{PLUS}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bplus}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{MINUS}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bminus}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{TIMES}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Btimes}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{DIV}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bdiv}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{REM}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Brem}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{AND}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Band}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{AND}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{THEN}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Band\PYGcolorfulZus{}then}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{prec} \PYGcolorful{n+nc}{AND\PYGcolorfulZus{}THEN}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{OR}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bor}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e1} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{OR}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{ELSE}\PYGcolorful{o}{;} \PYGcolorful{n}{e2} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n+nc}{Bor\PYGcolorfulZus{}else}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}} \PYGcolorful{o}{\PYGcolorfulZpc{}}\PYGcolorful{n}{prec} \PYGcolorful{n+nc}{OR\PYGcolorfulZus{}ELSE}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{NEW}\PYGcolorful{o}{;} \PYGcolorful{n}{id} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Enew} \PYGcolorful{n}{id} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{f} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{LPAREN}\PYGcolorful{o}{;} \PYGcolorful{n}{ps} \PYGcolorful{o}{=} \PYGcolorful{n}{separated\PYGcolorfulZus{}nonempty\PYGcolorfulZus{}list}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{COMMA}\PYGcolorful{o}{,} \PYGcolorful{n}{expr}\PYGcolorful{o}{);} \PYGcolorful{n+nc}{RPAREN}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Eapp\PYGcolorfulZus{}func} \PYGcolorful{o}{(}\PYGcolorful{n}{f}\PYGcolorful{o}{,} \PYGcolorful{n}{ps}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{k+kt}{char} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{QUOTE}\PYGcolorful{o}{;} \PYGcolorful{n}{v} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{LPAREN}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{RPAREN}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{k}{if} \PYGcolorful{n}{not} \PYGcolorful{o}{(}\PYGcolorful{k+kt}{char}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}character\PYGcolorfulZdq{}} \PYGcolorful{o}{\PYGcolorfulZam{}\PYGcolorfulZam{}} \PYGcolorful{n}{v}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}val\PYGcolorfulZdq{}}\PYGcolorful{o}{)}
+      \PYGcolorful{k}{then} \PYGcolorful{n}{error} \PYGcolorful{o}{(}\PYGcolorful{n+nn}{Format}\PYGcolorful{p}{.}\PYGcolorful{n}{sprintf} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}Unknown identifier: \PYGcolorfulZpc{}s\PYGcolorfulZsq{}\PYGcolorfulZpc{}s\PYGcolorfulZdq{}} \PYGcolorful{k+kt}{char}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{n}{v}\PYGcolorful{o}{.}\PYGcolorful{n}{desc}\PYGcolorful{o}{)}
+             \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}
+      \PYGcolorful{k}{else} \PYGcolorful{n+nc}{Eapp\PYGcolorfulZus{}func} \PYGcolorful{o}{(}\PYGcolorful{n}{decorate} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}character\PYGcolorfulZsq{}val\PYGcolorfulZdq{}} \PYGcolorful{o}{(\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos}\PYGcolorful{o}{(}\PYGcolorful{k+kt}{char}\PYGcolorful{o}{),} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}\PYGcolorful{o}{(}\PYGcolorful{n}{v}\PYGcolorful{o}{)),} \PYGcolorful{o}{[}\PYGcolorful{n}{e}\PYGcolorful{o}{])} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\PYGcolorful{n}{expr}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{decorated}\PYGcolorful{o}{(}\PYGcolorful{n}{expr\PYGcolorfulZus{}desc}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{e} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+\PYGcolorful{n}{elsif\PYGcolorfulZus{}desc}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{END}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{IF}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Sblock} \PYGcolorful{n+nb+bp}{[]} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{ELSE}\PYGcolorful{o}{;} \PYGcolorful{n}{s} \PYGcolorful{o}{=} \PYGcolorful{n}{stmts}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{END}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{IF}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{s}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{ELSIF}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{THEN}\PYGcolorful{o}{;} \PYGcolorful{n}{s} \PYGcolorful{o}{=} \PYGcolorful{n}{stmts}\PYGcolorful{o}{;} \PYGcolorful{n}{tl} \PYGcolorful{o}{=} \PYGcolorful{n}{elsif} 
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Scond} \PYGcolorful{o}{(}\PYGcolorful{n}{e}\PYGcolorful{o}{,} \PYGcolorful{n}{s}\PYGcolorful{o}{,} \PYGcolorful{n}{tl}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}                 
+\PYGcolorful{n}{elsif}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{decorated}\PYGcolorful{o}{(}\PYGcolorful{n}{elsif\PYGcolorfulZus{}desc}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{e} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{stmt\PYGcolorfulZus{}desc}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{lv} \PYGcolorful{o}{=} \PYGcolorful{n}{left\PYGcolorfulZus{}val}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{AFFECT}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Saffect} \PYGcolorful{o}{(}\PYGcolorful{n}{lv}\PYGcolorful{o}{,} \PYGcolorful{n}{e}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{p} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n}{ps} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{option}\PYGcolorful{o}{(}\PYGcolorful{n}{delimited}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{LPAREN}\PYGcolorful{o}{,} \PYGcolorful{n}{separated\PYGcolorfulZus{}nonempty\PYGcolorfulZus{}list}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{COMMA}\PYGcolorful{o}{,} \PYGcolorful{n}{expr}\PYGcolorful{o}{),}
+                                     \PYGcolorful{n+nc}{RPAREN}\PYGcolorful{o}{));} \PYGcolorful{n+nc}{SEMICOLON}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Scall\PYGcolorfulZus{}proc} \PYGcolorful{o}{(}\PYGcolorful{n}{p}\PYGcolorful{o}{,} \PYGcolorful{n}{to\PYGcolorfulZus{}some} \PYGcolorful{n+nb+bp}{[]} \PYGcolorful{n}{ps}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{RETURN}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{option}\PYGcolorful{o}{(}\PYGcolorful{n}{expr}\PYGcolorful{o}{);} \PYGcolorful{n+nc}{SEMICOLON} 
+   \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Sreturn} \PYGcolorful{o}{(}\PYGcolorful{n}{to\PYGcolorfulZus{}some} \PYGcolorful{o}{(}\PYGcolorful{n}{decorate} \PYGcolorful{o}{(}\PYGcolorful{n+nc}{Econst} \PYGcolorful{n+nc}{Cnull}\PYGcolorful{o}{)} \PYGcolorful{o}{(\PYGcolorfulZdl{}}\PYGcolorful{n}{startpos}\PYGcolorful{o}{,} \PYGcolorful{o}{\PYGcolorfulZdl{}}\PYGcolorful{n}{endpos}\PYGcolorful{o}{))} \PYGcolorful{n}{e}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{BEGIN}\PYGcolorful{o}{;} \PYGcolorful{n}{s} \PYGcolorful{o}{=} \PYGcolorful{n}{stmts}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{END}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{s}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{IF}\PYGcolorful{o}{;} \PYGcolorful{n}{c} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{THEN}\PYGcolorful{o}{;} \PYGcolorful{n}{t} \PYGcolorful{o}{=} \PYGcolorful{n}{stmts}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{elsif}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Scond} \PYGcolorful{o}{(}\PYGcolorful{n}{c}\PYGcolorful{o}{,} \PYGcolorful{n}{t}\PYGcolorful{o}{,} \PYGcolorful{n}{e}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{WHILE}\PYGcolorful{o}{;} \PYGcolorful{n}{e} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{LOOP}\PYGcolorful{o}{;} \PYGcolorful{n}{s} \PYGcolorful{o}{=} \PYGcolorful{n}{stmts}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{END}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{LOOP}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON} 
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Swhile} \PYGcolorful{o}{(}\PYGcolorful{n}{e}\PYGcolorful{o}{,} \PYGcolorful{n}{s}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{FOR}\PYGcolorful{o}{;} \PYGcolorful{n}{i} \PYGcolorful{o}{=} \PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{IN}\PYGcolorful{o}{;} \PYGcolorful{n}{r} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{option}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{REVERSE}\PYGcolorful{o}{);} \PYGcolorful{n}{el} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{DOTDOT}\PYGcolorful{o}{;} \PYGcolorful{n}{eu} \PYGcolorful{o}{=} \PYGcolorful{n}{expr}\PYGcolorful{o}{;}
+    \PYGcolorful{n+nc}{LOOP}\PYGcolorful{o}{;} \PYGcolorful{n}{s} \PYGcolorful{o}{=} \PYGcolorful{n}{stmts}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{END}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{LOOP}\PYGcolorful{o}{;} \PYGcolorful{n+nc}{SEMICOLON}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{k}{let} \PYGcolorful{n}{r} \PYGcolorful{o}{=} \PYGcolorful{k}{match} \PYGcolorful{n}{r} \PYGcolorful{k}{with}
+        \PYGcolorful{o}{|} \PYGcolorful{n+nc}{None} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n+nb+bp}{false}
+        \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Some} \PYGcolorful{n+nb+bp}{()} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n+nb+bp}{true}
+      \PYGcolorful{k}{in}
+      \PYGcolorful{n+nc}{Sfor} \PYGcolorful{o}{(}\PYGcolorful{n}{i}\PYGcolorful{o}{,} \PYGcolorful{n}{r}\PYGcolorful{o}{,} \PYGcolorful{n}{el}\PYGcolorful{o}{,} \PYGcolorful{n}{eu}\PYGcolorful{o}{,} \PYGcolorful{n}{s}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\PYGcolorful{n}{stmt}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{s} \PYGcolorful{o}{=} \PYGcolorful{n}{decorated}\PYGcolorful{o}{(}\PYGcolorful{n}{stmt\PYGcolorfulZus{}desc}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{s} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{n}{stmts\PYGcolorfulZus{}desc}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{l} \PYGcolorful{o}{=} \PYGcolorful{n}{nonempty\PYGcolorfulZus{}list}\PYGcolorful{o}{(}\PYGcolorful{n}{stmt}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n+nc}{Sblock} \PYGcolorful{n}{l} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\PYGcolorful{n}{stmts}\PYGcolorful{o}{:}
+  \PYGcolorful{o}{|} \PYGcolorful{n}{s} \PYGcolorful{o}{=} \PYGcolorful{n}{decorated}\PYGcolorful{o}{(}\PYGcolorful{n}{stmts\PYGcolorfulZus{}desc}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{s} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\end{Verbatim}

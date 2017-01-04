@@ -1,35 +1,20 @@
-open Format
-    
-
 let parse_only = ref false
 let type_only  = ref false
-
-
-let report h file msg (s, e) =
-  let loc = ({ s with Lexing.pos_fname = file }, e) in
-  eprintf "%a:\n%s%s%s" Ast.Loc.print_loc loc h " erorr: " msg;
-  pp_print_flush err_formatter ()
-
-let error s =
-  Format.eprintf "%s" s;
-  Format.pp_print_flush Format.err_formatter ()
     
 
 let compile file =
-  let ch = open_in file in
-  let buf = Lexing.from_channel ch in
-  let out = Format.std_formatter in
-  
-  let print_file () =
-    print_endline "Original Ada file:";
+  let print_file file =
+    let ch = open_in file in
     try
       while true do
         print_endline (input_line ch)
       done;
-    with End_of_file -> print_string "\n\n"; seek_in ch 0
+    with End_of_file -> print_string "\n\n"; close_in ch
   in
-
+  
   (*
+  let out = Format.std_formatter in
+     
   let rec token_list () =
     match Lexer.token buf with
     | Parser.EOF -> []
@@ -41,29 +26,45 @@ let compile file =
     print_string "\n\n";
     Lexing.flush_input buf
   in
-
+     
   let print_ast a =
     print_endline "AST:";
     Printer.print_ast out a;
     print_string "\n\n"
   in
   *)
- 
+
+  let ch = open_in file in
+  let buf = Lexing.from_channel ch in
+  buf.Lexing.lex_start_p <- { buf.Lexing.lex_start_p with Lexing.pos_fname = file };
+  buf.Lexing.lex_curr_p  <- { buf.Lexing.lex_curr_p  with Lexing.pos_fname = file };
+  
   try
-    print_file ();
+    print_string "Original Ada file:\n\n";
+    print_file file;
     (*print_tokens ();*)
+    
     let a = Parser.file Lexer.token buf in
     (*print_ast a;*)
-    if not !parse_only then ignore (Typer.type_ast a);
-    print_endline "\n\nEverything went fine!";
+    
+    if not !parse_only then begin
+      let ta = Typer.type_ast a in
+      if not !type_only then begin
+        let output = (Filename.chop_suffix file ".exp") ^ ".s" in
+        Compiler.compile_program ta output;
+
+        print_string "Compiled x86-64 file:\n\n";
+        print_file output;
+      end;
+    end;
     close_in ch
   with
-  | Utils.Lexing_error  (msg, l) -> report "Lexical" file msg l; exit 1
-  | Utils.Parsing_error (msg, l) -> report "Syntax"  file msg l; exit 1
-  | Utils.Typing_error  (msg, l) -> report "Typing"  file msg l; exit 1
-  | Parser.Error -> report "Syntax" file "Undocumented syntax error"
+  | Utils.Lexing_error  (msg, l) -> Utils.report "Lexical" msg l; exit 1
+  | Utils.Parsing_error (msg, l) -> Utils.report "Syntax"  msg l; exit 1
+  | Utils.Typing_error  (msg, l) -> Utils.report "Typing"  msg l; exit 1
+  | Parser.Error -> Utils.report "Syntax" "Undocumented syntax error"
                       (Lexing.lexeme_start_p buf, Lexing.lexeme_end_p buf); exit 1
-  | _ ->            error "Unknown compiler error";    exit 2
+  | _ ->            Utils.error "Unknown compiler error"; exit 2
            
 
 let () =

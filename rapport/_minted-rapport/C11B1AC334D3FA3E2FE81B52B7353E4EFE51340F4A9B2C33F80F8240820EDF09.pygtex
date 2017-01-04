@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYGcolorful{k+kd}{procedure} \PYGcolorful{n+nf}{P} \PYGcolorful{k+kr}{is}
+    \PYGcolorful{k+kd}{type} \PYGcolorful{k+kt}{R} \PYGcolorful{k+kr}{is} \PYGcolorful{k+kr}{record} \PYGcolorful{n}{X} \PYGcolorful{p}{:} \PYGcolorful{k+kt}{Integer}\PYGcolorful{p}{;} \PYGcolorful{k+kr}{end record}\PYGcolorful{p}{;}
+    \PYGcolorful{n}{X} \PYGcolorful{p}{:} \PYGcolorful{k+kr}{access} \PYGcolorful{n}{R} \PYGcolorful{p}{:=} \PYGcolorful{k+kr}{new} \PYGcolorful{n}{R}\PYGcolorful{p}{;}
+    \PYGcolorful{k+kd}{function} \PYGcolorful{n+nf}{F} \PYGcolorful{n+nf}{return} \PYGcolorful{n+nf}{access} \PYGcolorful{n+nf}{R} \PYGcolorful{k+kr}{is}
+    \PYGcolorful{k+kr}{begin}
+      \PYGcolorful{k+kr}{return} \PYGcolorful{n}{X}\PYGcolorful{p}{;}
+   \PYGcolorful{k+kr}{end}\PYGcolorful{p}{;}
+   \PYGcolorful{n}{Y} \PYGcolorful{p}{:} \PYGcolorful{n}{R}\PYGcolorful{p}{;}
+\PYGcolorful{k+kr}{begin}
+   \PYGcolorful{n}{F}\PYGcolorful{p}{.}\PYGcolorful{k+kr}{all} \PYGcolorful{p}{:=} \PYGcolorful{n}{Y}\PYGcolorful{p}{;}
+\PYGcolorful{k+kr}{end}\PYGcolorful{p}{;}
+\end{Verbatim}

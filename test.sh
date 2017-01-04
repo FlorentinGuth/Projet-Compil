@@ -265,6 +265,10 @@ case $option in
     "-v3" )
     	verbose=1;
         partie3;;
+    "-o2" )
+        cd opt/
+        compilo="../"$compilo
+        partie2;;
     "-all" )
     	partie1;
     	partie2;
@@ -280,6 +284,7 @@ case $option in
         echo "-v1     : tester la partie 1 (verbose)"
         echo "-v2     : tester la partie 2 (verbose)"
         echo "-v3     : tester la partie 3 (verbose)"
+        echo "-o2     : tester la partie 2 (optionnel)"
         echo "-gnat   : vérifier que gnat a le bon comportement"
         echo "-all    : tout tester";;
 

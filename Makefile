@@ -1,17 +1,19 @@
-FLAGS = -I _build/ -verbose 1 -use-menhir -yaccflags -v -lflags -g -cflags -g,-w,+A-4-52
+FLAGS = -I _build/ -verbose 1 -use-menhir -yaccflags -v -lflags -g -cflags -g,-w,+A-4-50-52
 
-all: main.byte
+TESTDIR = ./tests/perso/
 
-.PHONY: main.byte main.native regen_msg update_msg clean
+all: test
 
-main.native:
-	ocamlbuild $(FLAGS) $@
-	mv $@ adac
-	./test.sh -2 adac
+test: main.byte
+	./adac $(TESTDIR)test.adb
+	gcc -g $(TESTDIR)test.s -o $(TESTDIR)a.out
+	./$(TESTDIR)a.out
+
+.PHONY: main.byte regen_msg update_msg clean
+
 main.byte: 
 	ocamlbuild $(FLAGS) $@
 	mv $@ adac
-	./test.sh -2 adac
 
 
 clean:

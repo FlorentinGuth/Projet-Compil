@@ -3,19 +3,16 @@
 open Utils
 open Parser
 open Lexing
+open Printer
+open Format
 
 
 let error lexbuf s = raise (Lexing_error (s, (lexeme_start_p lexbuf,
                                               lexeme_end_p   lexbuf)))
-(*
-let new_line lexbuf =
-  let pos = lexbuf.lex_curr_p in
-  lexbuf.lex_curr_p <- { pos with pos_lnum = pos.pos_lnum + 1;
-                                  pos_bol = pos.pos_cnum
-                       }*)
 
 let reserved = assoc_to_hashtbl
                  [("access",        ACCESS);
+                  ("all",           ALL);
                   ("and",           AND);
                   ("begin",         BEGIN);
                   ("else",          ELSE);
@@ -44,7 +41,6 @@ let reserved = assoc_to_hashtbl
                   ("use",           USE);
                   ("while",         WHILE);
                   ("with",          WITH);
-                  ("character'val", IDENT "character'val");
                  ]
 
 let to_token s =
@@ -61,9 +57,9 @@ let to_int lexbuf s =
     INT n
   with
   | Failure _ | Assert_failure _ ->
-    error lexbuf (Format.sprintf "Integer too big: %s" s)
+    error lexbuf (sprintf "Integer too big: %s" s)
 
-# 67 "lexer.ml"
+# 63 "lexer.ml"
 let __ocaml_lex_tables = {
   Lexing.lex_base = 
    "\000\000\229\255\230\255\231\255\232\255\017\000\003\000\238\255\
@@ -224,159 +220,159 @@ let rec token lexbuf =
 and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 81 "lexer.mll"
+# 77 "lexer.mll"
                             ( token lexbuf )
-# 230 "lexer.ml"
+# 226 "lexer.ml"
 
   | 1 ->
-# 82 "lexer.mll"
+# 78 "lexer.mll"
                             ( new_line lexbuf; token lexbuf )
-# 235 "lexer.ml"
+# 231 "lexer.ml"
 
   | 2 ->
-# 83 "lexer.mll"
+# 79 "lexer.mll"
                             ( comment lexbuf )
-# 240 "lexer.ml"
+# 236 "lexer.ml"
 
   | 3 ->
 let
-# 84 "lexer.mll"
+# 80 "lexer.mll"
              s
-# 246 "lexer.ml"
+# 242 "lexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 84 "lexer.mll"
+# 80 "lexer.mll"
                             ( to_token s )
-# 250 "lexer.ml"
+# 246 "lexer.ml"
 
   | 4 ->
 let
-# 85 "lexer.mll"
+# 81 "lexer.mll"
                n
-# 256 "lexer.ml"
+# 252 "lexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 85 "lexer.mll"
+# 81 "lexer.mll"
                             ( to_int lexbuf n )
-# 260 "lexer.ml"
+# 256 "lexer.ml"
 
   | 5 ->
 let
-# 86 "lexer.mll"
+# 82 "lexer.mll"
                    c
-# 266 "lexer.ml"
+# 262 "lexer.ml"
 = Lexing.sub_lexeme_char lexbuf (lexbuf.Lexing.lex_start_pos + 1) in
-# 86 "lexer.mll"
+# 82 "lexer.mll"
                             ( CHAR c )
-# 270 "lexer.ml"
+# 266 "lexer.ml"
 
   | 6 ->
-# 87 "lexer.mll"
+# 83 "lexer.mll"
          ( EQ )
-# 275 "lexer.ml"
+# 271 "lexer.ml"
 
   | 7 ->
-# 88 "lexer.mll"
+# 84 "lexer.mll"
          ( NEQ )
-# 280 "lexer.ml"
+# 276 "lexer.ml"
 
   | 8 ->
-# 89 "lexer.mll"
+# 85 "lexer.mll"
          ( LT )
-# 285 "lexer.ml"
+# 281 "lexer.ml"
 
   | 9 ->
-# 90 "lexer.mll"
+# 86 "lexer.mll"
          ( LEQ )
-# 290 "lexer.ml"
+# 286 "lexer.ml"
 
   | 10 ->
-# 91 "lexer.mll"
+# 87 "lexer.mll"
          ( GT )
-# 295 "lexer.ml"
+# 291 "lexer.ml"
 
   | 11 ->
-# 92 "lexer.mll"
+# 88 "lexer.mll"
          ( GEQ )
-# 300 "lexer.ml"
+# 296 "lexer.ml"
 
   | 12 ->
-# 93 "lexer.mll"
+# 89 "lexer.mll"
          ( PLUS )
-# 305 "lexer.ml"
+# 301 "lexer.ml"
 
   | 13 ->
-# 94 "lexer.mll"
+# 90 "lexer.mll"
          ( MINUS )
-# 310 "lexer.ml"
+# 306 "lexer.ml"
 
   | 14 ->
-# 95 "lexer.mll"
+# 91 "lexer.mll"
          ( TIMES )
-# 315 "lexer.ml"
+# 311 "lexer.ml"
 
   | 15 ->
-# 96 "lexer.mll"
+# 92 "lexer.mll"
          ( DIV )
-# 320 "lexer.ml"
+# 316 "lexer.ml"
 
   | 16 ->
-# 97 "lexer.mll"
+# 93 "lexer.mll"
          ( COMMA )
-# 325 "lexer.ml"
+# 321 "lexer.ml"
 
   | 17 ->
-# 98 "lexer.mll"
+# 94 "lexer.mll"
          ( SEMICOLON )
-# 330 "lexer.ml"
+# 326 "lexer.ml"
 
   | 18 ->
-# 99 "lexer.mll"
+# 95 "lexer.mll"
          ( COLON )
-# 335 "lexer.ml"
+# 331 "lexer.ml"
 
   | 19 ->
-# 100 "lexer.mll"
+# 96 "lexer.mll"
          ( AFFECT )
-# 340 "lexer.ml"
+# 336 "lexer.ml"
 
   | 20 ->
-# 101 "lexer.mll"
+# 97 "lexer.mll"
          ( DOT )
-# 345 "lexer.ml"
+# 341 "lexer.ml"
 
   | 21 ->
-# 102 "lexer.mll"
+# 98 "lexer.mll"
          ( DOTDOT )
-# 350 "lexer.ml"
+# 346 "lexer.ml"
 
   | 22 ->
-# 103 "lexer.mll"
+# 99 "lexer.mll"
          ( QUOTE )
-# 355 "lexer.ml"
+# 351 "lexer.ml"
 
   | 23 ->
-# 104 "lexer.mll"
+# 100 "lexer.mll"
          ( LPAREN )
-# 360 "lexer.ml"
+# 356 "lexer.ml"
 
   | 24 ->
-# 105 "lexer.mll"
+# 101 "lexer.mll"
          ( RPAREN )
-# 365 "lexer.ml"
+# 361 "lexer.ml"
 
   | 25 ->
-# 106 "lexer.mll"
+# 102 "lexer.mll"
          ( EOF )
-# 370 "lexer.ml"
+# 366 "lexer.ml"
 
   | 26 ->
 let
-# 107 "lexer.mll"
+# 103 "lexer.mll"
          c
-# 376 "lexer.ml"
+# 372 "lexer.ml"
 = Lexing.sub_lexeme_char lexbuf lexbuf.Lexing.lex_start_pos in
-# 107 "lexer.mll"
-           ( error lexbuf (Format.sprintf "Unknown character %c" c) )
-# 380 "lexer.ml"
+# 103 "lexer.mll"
+           ( error lexbuf (sprintf "Unknown character %c" c) )
+# 376 "lexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; 
       __ocaml_lex_token_rec lexbuf __ocaml_lex_state
@@ -386,22 +382,88 @@ and comment lexbuf =
 and __ocaml_lex_comment_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 110 "lexer.mll"
+# 106 "lexer.mll"
                  ( new_line lexbuf; token lexbuf )
-# 392 "lexer.ml"
+# 388 "lexer.ml"
 
   | 1 ->
-# 111 "lexer.mll"
+# 107 "lexer.mll"
                  ( EOF )
-# 397 "lexer.ml"
+# 393 "lexer.ml"
 
   | 2 ->
-# 112 "lexer.mll"
+# 108 "lexer.mll"
                  ( comment lexbuf )
-# 402 "lexer.ml"
+# 398 "lexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf; 
       __ocaml_lex_comment_rec lexbuf __ocaml_lex_state
 
 ;;
 
+# 111 "lexer.mll"
+ 
+  (** Tokens printer *)
+  
+  let print_token fmt = function
+    | WITH        -> fprintf fmt "WITH"
+    | USE         -> fprintf fmt "USE"
+    | PROC        -> fprintf fmt "PROC"
+    | FUNC        -> fprintf fmt "FUNC"
+    | RETURN      -> fprintf fmt "RETURN"
+    | IS          -> fprintf fmt "IS"
+    | BEGIN       -> fprintf fmt "BEGIN"
+    | END         -> fprintf fmt "END"
+    | TYPE        -> fprintf fmt "TYPE"
+    | ACCESS      -> fprintf fmt "ACCESS"
+    | RECORD      -> fprintf fmt "RECORD"
+    | ALL         -> fprintf fmt "ALL"
+    | INT n       -> fprintf fmt "@[INT %d@]" n
+    | CHAR c      -> fprintf fmt "@[CHAR %c@]" c
+    | BOOL b      -> fprintf fmt "@[BOOL %b@]" b
+    | NULL        -> fprintf fmt "NULL"
+    | IDENT s     -> fprintf fmt "%s" s
+    | OR          -> fprintf fmt "OR"
+    | OR_ELSE     -> fprintf fmt "OR_ELSE"
+    | AND         -> fprintf fmt "AND"
+    | AND_THEN    -> fprintf fmt "AND_THEN"
+    | NOT         -> fprintf fmt "NOT"
+    | EQ          -> fprintf fmt "="
+    | NEQ         -> fprintf fmt "/="
+    | GT          -> fprintf fmt ">"
+    | GEQ         -> fprintf fmt ">="
+    | LT          -> fprintf fmt "<"
+    | LEQ         -> fprintf fmt "<="
+    | PLUS        -> fprintf fmt "+"
+    | MINUS       -> fprintf fmt "-"
+    | TIMES       -> fprintf fmt "*"
+    | DIV         -> fprintf fmt "/"
+    | REM         -> fprintf fmt "%%"
+    | UNARY_MINUS -> fprintf fmt "-"
+    | NEW         -> fprintf fmt "NEW"
+    | IF          -> fprintf fmt "IF"
+    | THEN        -> fprintf fmt "THEN"
+    | ELSIF       -> fprintf fmt "ELSIF"
+    | ELSE        -> fprintf fmt "ELSE"
+    | WHILE       -> fprintf fmt "WHILE"
+    | FOR         -> fprintf fmt "FOR"
+    | REVERSE     -> fprintf fmt "REVERSE"
+    | LOOP        -> fprintf fmt "LOOP"
+    | COMMA       -> fprintf fmt ","
+    | SEMICOLON   -> fprintf fmt ";"
+    | COLON       -> fprintf fmt ":"
+    | AFFECT      -> fprintf fmt ":="
+    | DOT         -> fprintf fmt "."
+    | DOTDOT      -> fprintf fmt ".."
+    | QUOTE       -> fprintf fmt "'"
+    | LPAREN      -> fprintf fmt "("
+    | RPAREN      -> fprintf fmt ")"
+    | IN          -> fprintf fmt "IN"
+    | OUT         -> fprintf fmt "OUT"
+    | EOF         -> fprintf fmt "EOF"
+                       
+  let print_token_list fmt l =
+    print_list (print_sep " ") print_token fmt l;
+    pp_print_flush fmt ()
+
+# 470 "lexer.ml"

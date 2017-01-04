@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGcolorful{k+kd}{procedure} \PYGcolorful{n+nf}{P} \PYGcolorful{k+kr}{is}
+  \PYGcolorful{k+kd}{type} \PYGcolorful{k+kt}{R} \PYGcolorful{k+kr}{is} \PYGcolorful{k+kr}{record} \PYGcolorful{n}{A}\PYGcolorful{p}{:} \PYGcolorful{k+kt}{Character}\PYGcolorful{p}{;} \PYGcolorful{k+kr}{end record}\PYGcolorful{p}{;}
+  \PYGcolorful{k+kd}{procedure} \PYGcolorful{n+nf}{Q} \PYGcolorful{k+kr}{is}
+    \PYGcolorful{k+kd}{type} \PYGcolorful{k+kt}{Character} \PYGcolorful{k+kr}{is} \PYGcolorful{k+kr}{access} \PYGcolorful{n}{R}\PYGcolorful{p}{;}
+    \PYGcolorful{n}{X} \PYGcolorful{p}{:} \PYGcolorful{n}{R}\PYGcolorful{p}{;}
+  \PYGcolorful{k+kr}{begin}
+    \PYGcolorful{n}{X}\PYGcolorful{p}{.}\PYGcolorful{n}{A} \PYGcolorful{p}{:=} \PYGcolorful{p}{\PYGcolorfulZsq{}}\PYGcolorful{n+na}{c}\PYGcolorful{p}{\PYGcolorfulZsq{};}
+  \PYGcolorful{k+kr}{end}\PYGcolorful{p}{;}
+\end{Verbatim}

@@ -10,7 +10,7 @@
 
 %token WITH USE
 %token PROC FUNC RETURN IS BEGIN END
-%token TYPE ACCESS RECORD
+%token TYPE ACCESS RECORD ALL
 
 %token <int>  INT
 %token <char> CHAR
@@ -43,8 +43,8 @@
 %nonassoc GT GEQ LT LEQ
 
 %left     PLUS MINUS
-%left     TIMES DIV REM
 %nonassoc UNARY_MINUS
+%left     TIMES DIV REM
 
 %left     DOT
 
@@ -68,7 +68,8 @@ file:
     then error "Main procedure can't take any parameters" $startpos $endpos;
     p }
     
-    
+
+(* Rule modifier to decorate a production *)
 %inline decorated(X):
 | x = X; { decorate x ($startpos, $endpos) }
 
@@ -109,26 +110,28 @@ proc_or_func:
           $startpos $endpos;
       { name;
         params = to_some [] ps;
-        return = rt;
+        return = to_some { typ_ident = decorate_dummy_loc ""; is_access = false } rt;
         decls;
         stmt } }
 
 proc:
-  | p = proc_or_func; { if p.return <> None
+  | p = proc_or_func; { if p.return.typ_ident.desc <> ""
                         then error "A procedure cannot have a return type"
                              $startpos $endpos;
                         p }
 func:
-  | f = proc_or_func; { match f.return with
-                        | Some _ -> f
-                        | None ->
-                           error "A function must have an annotated return type"
-                           $startpos $endpos }
+  | f = proc_or_func; { if f.return.typ_ident.desc = ""
+                        then error "A function must have an annotated return type"
+                             $startpos $endpos;
+                        f }
 
 
 decl:
-  | TYPE; id = ident; typ = option(preceded(IS, typ_annot)); SEMICOLON;
-    { [Dtype_decl (id, typ)] }
+  | TYPE; id = ident; SEMICOLON; { [Dtype_decl (id, None)] }
+  | TYPE; id = ident; IS; ACCESS; ta = ident; SEMICOLON;
+    { [Dtype_decl (id, Some { typ_ident = ta; is_access = true })] }
+  | TYPE; id = ident; IS; NEW; ta = ident; SEMICOLON;
+    { [Dtype_decl (id, Some { typ_ident = ta; is_access = false })] }
   | TYPE; id = ident; IS; RECORD; r = nonempty_list(fields); END; RECORD; SEMICOLON;
     { [Drecord_def (id, List.flatten r)] }
   | lv_list = separated_nonempty_list(COMMA, ident); COLON; typ = typ_annot;
@@ -148,8 +151,9 @@ const:
   | NULL;     { Cnull }
 
 %inline left_val:
-  | id = ident; { Lident id } (* Can be a function !! *)
+  | id = ident; { Lident id } (* Can be a function!! *)
   | e = expr; DOT; field = ident; { Lmember (e, field) }
+  | e = expr; DOT; ALL; { Lmember (e, decorate_dummy_loc "all") }
 
 
 expr_desc:
@@ -159,22 +163,22 @@ expr_desc:
   | NOT; e = expr; { Enot e }
   | MINUS; e = expr; { Ebinop (decorate_dummy_loc (Econst (Cint 0)),
                               Bminus, e) } %prec UNARY_MINUS
-  | e1 = expr; EQ; e2 = expr { Ebinop (e1, Beq, e2) }
-  | e1 = expr; NEQ; e2 = expr { Ebinop (e1, Bneq, e2) }
-  | e1 = expr; LT; e2 = expr { Ebinop (e1, Blt, e2) }
-  | e1 = expr; LEQ; e2 = expr { Ebinop (e1, Bleq, e2) }
-  | e1 = expr; GT; e2 = expr { Ebinop (e1, Bgt, e2) }
-  | e1 = expr; GEQ; e2 = expr { Ebinop (e1, Bgeq, e2) }
-  | e1 = expr; PLUS; e2 = expr { Ebinop (e1, Bplus, e2) }
-  | e1 = expr; MINUS; e2 = expr { Ebinop (e1, Bminus, e2) }
-  | e1 = expr; TIMES; e2 = expr { Ebinop (e1, Btimes, e2) }
-  | e1 = expr; DIV; e2 = expr { Ebinop (e1, Bdiv, e2) }
-  | e1 = expr; REM; e2 = expr { Ebinop (e1, Brem, e2) }
-  | e1 = expr; AND; e2 = expr { Ebinop (e1, Band, e2) }
-  | e1 = expr; AND; THEN; e2 = expr { Ebinop (e1, Band_then, e2) } %prec AND_THEN
-  | e1 = expr; OR; e2 = expr { Ebinop (e1, Bor, e2) }
-  | e1 = expr; OR; ELSE; e2 = expr { Ebinop (e1, Bor_else, e2) } %prec OR_ELSE
-  | NEW; id = ident { Enew id }
+  | e1 = expr; EQ; e2 = expr; { Ebinop (e1, Beq, e2) }
+  | e1 = expr; NEQ; e2 = expr; { Ebinop (e1, Bneq, e2) }
+  | e1 = expr; LT; e2 = expr; { Ebinop (e1, Blt, e2) }
+  | e1 = expr; LEQ; e2 = expr; { Ebinop (e1, Bleq, e2) }
+  | e1 = expr; GT; e2 = expr; { Ebinop (e1, Bgt, e2) }
+  | e1 = expr; GEQ; e2 = expr; { Ebinop (e1, Bgeq, e2) }
+  | e1 = expr; PLUS; e2 = expr; { Ebinop (e1, Bplus, e2) }
+  | e1 = expr; MINUS; e2 = expr; { Ebinop (e1, Bminus, e2) }
+  | e1 = expr; TIMES; e2 = expr; { Ebinop (e1, Btimes, e2) }
+  | e1 = expr; DIV; e2 = expr; { Ebinop (e1, Bdiv, e2) }
+  | e1 = expr; REM; e2 = expr; { Ebinop (e1, Brem, e2) }
+  | e1 = expr; AND; e2 = expr; { Ebinop (e1, Band, e2) }
+  | e1 = expr; AND; THEN; e2 = expr; { Ebinop (e1, Band_then, e2) } %prec AND_THEN
+  | e1 = expr; OR; e2 = expr; { Ebinop (e1, Bor, e2) }
+  | e1 = expr; OR; ELSE; e2 = expr; { Ebinop (e1, Bor_else, e2) } %prec OR_ELSE
+  | NEW; id = ident; { Enew id }
   | f = ident; LPAREN; ps = separated_nonempty_list(COMMA, expr); RPAREN;
     { Eapp_func (f, ps) }
   | char = ident; QUOTE; v = ident; LPAREN; e = expr; RPAREN;

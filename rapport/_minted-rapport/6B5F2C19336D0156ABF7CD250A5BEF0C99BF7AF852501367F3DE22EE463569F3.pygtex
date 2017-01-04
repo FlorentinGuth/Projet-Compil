@@ -1,0 +1,352 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGcolorful{k}{open} \PYGcolorful{n+nc}{Format}
+\PYGcolorful{k}{open} \PYGcolorful{n+nc}{Printer}
+
+
+\PYGcolorful{c}{(** Types independant of decoration outside to allow conversion, and printers *)}
+
+\PYGcolorful{k}{type} \PYGcolorful{n}{ident\PYGcolorfulZus{}desc} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{string} \PYGcolorful{c}{(* only lowercase letters, can be \PYGcolorfulZdq{}put\PYGcolorfulZdq{}, \PYGcolorfulZdq{}new\PYGcolorfulZus{}line\PYGcolorfulZdq{}, }
+\PYGcolorful{c}{                            \PYGcolorfulZdq{}character\PYGcolorfulZsq{}val\PYGcolorfulZdq{}... *)}
+
+\PYGcolorful{k}{type} \PYGcolorful{n}{binop} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Beq} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bneq}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Blt} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bleq} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bgt} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bgeq}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bplus} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bminus} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Btimes} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bdiv} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Brem}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Band} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Band\PYGcolorfulZus{}then} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bor} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bor\PYGcolorfulZus{}else}
+
+\PYGcolorful{k}{type} \PYGcolorful{n}{const} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Cint}  \PYGcolorful{k}{of} \PYGcolorful{k+kt}{int}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Cchar} \PYGcolorful{k}{of} \PYGcolorful{k+kt}{char}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Cbool} \PYGcolorful{k}{of} \PYGcolorful{k+kt}{bool}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Cnull}
+
+\PYGcolorful{k}{type} \PYGcolorful{n}{mode} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{In} \PYGcolorful{o}{|} \PYGcolorful{n+nc}{InOut}
+
+
+\PYGcolorful{k}{type} \PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{ident} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot} \PYGcolorful{o}{=} \PYGcolorful{c}{(* Type annotated by the user *)}
+  \PYGcolorful{o}{\PYGcolorfulZob{}}
+    \PYGcolorful{n}{typ\PYGcolorfulZus{}ident} \PYGcolorful{o}{:} \PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{ident}\PYGcolorful{o}{;}
+    \PYGcolorful{n}{is\PYGcolorfulZus{}access} \PYGcolorful{o}{:} \PYGcolorful{k+kt}{bool}\PYGcolorful{o}{;}
+  \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\PYGcolorful{k}{type} \PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{ident} \PYGcolorful{n}{annotated} \PYGcolorful{o}{=}
+  \PYGcolorful{o}{\PYGcolorfulZob{}}
+    \PYGcolorful{n}{ident} \PYGcolorful{o}{:} \PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{ident}\PYGcolorful{o}{;}
+    \PYGcolorful{n}{ta}    \PYGcolorful{o}{:} \PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{ident} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot}\PYGcolorful{o}{;}
+  \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{k}{let} \PYGcolorful{n}{map\PYGcolorfulZus{}ta} \PYGcolorful{n}{f} \PYGcolorful{n}{ta} \PYGcolorful{o}{=}
+  \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{ta} \PYGcolorful{k}{with} \PYGcolorful{n}{typ\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{f} \PYGcolorful{n}{ta}\PYGcolorful{o}{.}\PYGcolorful{n}{typ\PYGcolorfulZus{}ident} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\PYGcolorful{k}{let} \PYGcolorful{n}{map\PYGcolorfulZus{}a} \PYGcolorful{n}{f} \PYGcolorful{n}{a} \PYGcolorful{o}{=}
+  \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{ident} \PYGcolorful{o}{=} \PYGcolorful{n}{f} \PYGcolorful{n}{a}\PYGcolorful{o}{.}\PYGcolorful{n}{ident}\PYGcolorful{o}{;} \PYGcolorful{n}{ta} \PYGcolorful{o}{=} \PYGcolorful{n}{map\PYGcolorfulZus{}ta} \PYGcolorful{n}{f} \PYGcolorful{n}{a}\PYGcolorful{o}{.}\PYGcolorful{n}{ta} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+
+\PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}ident\PYGcolorfulZus{}desc} \PYGcolorful{n}{fmt} \PYGcolorful{o}{(}\PYGcolorful{n}{id} \PYGcolorful{o}{:} \PYGcolorful{n}{ident\PYGcolorfulZus{}desc}\PYGcolorful{o}{)} \PYGcolorful{o}{=}
+  \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}s\PYGcolorfulZdq{}} \PYGcolorful{n}{id}
+
+\PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}binop} \PYGcolorful{n}{fmt} \PYGcolorful{n}{b} \PYGcolorful{o}{=}
+  \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{o}{(}\PYGcolorful{k}{match} \PYGcolorful{n}{b} \PYGcolorful{k}{with}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Beq}       \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}=\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bneq}      \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}/=\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Blt}       \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZlt{}\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bleq}      \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZlt{}=\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bgt}       \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZgt{}\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bgeq}      \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZgt{}=\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bplus}     \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}+\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bminus}    \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZhy{}\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Btimes}    \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}*\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bdiv}      \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}/\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Brem}      \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}rem\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Band}      \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}and\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Band\PYGcolorfulZus{}then} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}and then\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bor}       \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}or\PYGcolorfulZdq{}}
+                \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Bor\PYGcolorfulZus{}else}  \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}or else\PYGcolorfulZdq{}}
+              \PYGcolorful{o}{)}
+
+\PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}const} \PYGcolorful{n}{fmt} \PYGcolorful{o}{=} \PYGcolorful{k}{function}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Cint}  \PYGcolorful{n}{n} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}d\PYGcolorfulZdq{}} \PYGcolorful{n}{n}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Cchar} \PYGcolorful{n}{c} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}c\PYGcolorfulZdq{}} \PYGcolorful{n}{c}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Cbool} \PYGcolorful{n}{b} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}b\PYGcolorfulZdq{}} \PYGcolorful{n}{b}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Cnull}   \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}null\PYGcolorfulZdq{}}
+
+\PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}mode} \PYGcolorful{n}{fmt} \PYGcolorful{o}{=} \PYGcolorful{k}{function}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{In}    \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}in\PYGcolorfulZdq{}}
+  \PYGcolorful{o}{|} \PYGcolorful{n+nc}{InOut} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[in@ out@]\PYGcolorfulZdq{}}
+
+
+\PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}annot} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ta} \PYGcolorful{o}{=}
+  \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a\PYGcolorfulZpc{}s@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}if} \PYGcolorful{o}{(}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}access \PYGcolorfulZdq{}}\PYGcolorful{o}{,} \PYGcolorful{n}{ta}\PYGcolorful{o}{.}\PYGcolorful{n}{is\PYGcolorfulZus{}access}\PYGcolorful{o}{)} \PYGcolorful{n}{ta}\PYGcolorful{o}{.}\PYGcolorful{n}{typ\PYGcolorfulZus{}ident}
+
+\PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}annotated} \PYGcolorful{n}{fmt} \PYGcolorful{n}{a} \PYGcolorful{o}{=}
+  \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}s: \PYGcolorfulZpc{}a@]\PYGcolorfulZdq{}} \PYGcolorful{n}{a}\PYGcolorful{o}{.}\PYGcolorful{n}{ident} \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}annot} \PYGcolorful{n}{a}\PYGcolorful{o}{.}\PYGcolorful{n}{ta}
+
+
+\PYGcolorful{c}{(** The type of a decorated type *)}
+\PYGcolorful{k}{type} \PYGcolorful{o}{(}\PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{desc}\PYGcolorful{o}{,} \PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{deco}\PYGcolorful{o}{)} \PYGcolorful{n}{node} \PYGcolorful{o}{=}
+  \PYGcolorful{o}{\PYGcolorfulZob{}}
+    \PYGcolorful{n}{desc} \PYGcolorful{o}{:} \PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{desc}\PYGcolorful{o}{;}
+    \PYGcolorful{n}{deco} \PYGcolorful{o}{:} \PYGcolorful{k}{\PYGcolorfulZsq{}}\PYGcolorful{n}{deco}\PYGcolorful{o}{;}
+  \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+\PYGcolorful{k}{let} \PYGcolorful{n}{decorate} \PYGcolorful{n}{desc} \PYGcolorful{n}{deco} \PYGcolorful{o}{=} 
+  \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{desc}\PYGcolorful{o}{;} \PYGcolorful{n}{deco} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+\PYGcolorful{k}{let} \PYGcolorful{n}{replace\PYGcolorfulZus{}deco} \PYGcolorful{n}{node} \PYGcolorful{n}{deco} \PYGcolorful{o}{=}
+  \PYGcolorful{n}{decorate} \PYGcolorful{n}{node}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{n}{deco}
+\PYGcolorful{k}{let} \PYGcolorful{n}{decorate\PYGcolorfulZus{}dummy\PYGcolorfulZus{}loc} \PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{n}{decorate} \PYGcolorful{n}{desc} \PYGcolorful{o}{(}\PYGcolorful{n+nn}{Lexing}\PYGcolorful{p}{.}\PYGcolorful{n}{dummy\PYGcolorfulZus{}pos}\PYGcolorful{o}{,} \PYGcolorful{n+nn}{Lexing}\PYGcolorful{p}{.}\PYGcolorful{n}{dummy\PYGcolorfulZus{}pos}\PYGcolorful{o}{)}
+\PYGcolorful{k}{let} \PYGcolorful{n}{strip\PYGcolorfulZus{}deco} \PYGcolorful{n}{n} \PYGcolorful{o}{=} \PYGcolorful{n}{n}\PYGcolorful{o}{.}\PYGcolorful{n}{desc}
+
+
+\PYGcolorful{c}{(** The signature used to decorate an AST with *)}
+\PYGcolorful{k}{module} \PYGcolorful{k}{type} \PYGcolorful{n+nc}{DECO} \PYGcolorful{o}{=}
+\PYGcolorful{k}{sig}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ident\PYGcolorfulZus{}deco}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl\PYGcolorfulZus{}deco}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{expr\PYGcolorfulZus{}deco}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{stmt\PYGcolorfulZus{}deco}
+\PYGcolorful{k}{end}
+
+
+\PYGcolorful{c}{(** Functor producing an AST decorated with the given module *)}
+\PYGcolorful{k}{module} \PYGcolorful{n+nc}{DecoratedAST} \PYGcolorful{o}{(}\PYGcolorful{n+nc}{D} \PYGcolorful{o}{:} \PYGcolorful{n+nc}{DECO}\PYGcolorful{o}{)} \PYGcolorful{o}{=}
+\PYGcolorful{k}{struct}
+  \PYGcolorful{c}{(** The types of the AST *)}
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ident} \PYGcolorful{o}{=} \PYGcolorful{o}{(}\PYGcolorful{n}{ident\PYGcolorfulZus{}desc}\PYGcolorful{o}{,} \PYGcolorful{n+nn}{D}\PYGcolorful{p}{.}\PYGcolorful{n}{ident\PYGcolorfulZus{}deco}\PYGcolorful{o}{)} \PYGcolorful{n}{node}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl} \PYGcolorful{o}{=} \PYGcolorful{o}{(}\PYGcolorful{n}{ident\PYGcolorfulZus{}desc}\PYGcolorful{o}{,} \PYGcolorful{n+nn}{D}\PYGcolorful{p}{.}\PYGcolorful{n}{ident\PYGcolorfulZus{}decl\PYGcolorfulZus{}deco}\PYGcolorful{o}{)} \PYGcolorful{n}{node}
+  \PYGcolorful{c}{(* Not same types because it makes sense to decorate with loc but not with a type *)}
+
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{expr\PYGcolorfulZus{}desc} \PYGcolorful{o}{=} 
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Econst}    \PYGcolorful{k}{of} \PYGcolorful{n}{const}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Eleft\PYGcolorfulZus{}val} \PYGcolorful{k}{of} \PYGcolorful{n}{left\PYGcolorfulZus{}val}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Ebinop}    \PYGcolorful{k}{of} \PYGcolorful{n}{expr} \PYGcolorful{o}{*} \PYGcolorful{n}{binop} \PYGcolorful{o}{*} \PYGcolorful{n}{expr}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Enot}      \PYGcolorful{k}{of} \PYGcolorful{n}{expr}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Enew}      \PYGcolorful{k}{of} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Eapp\PYGcolorfulZus{}func} \PYGcolorful{k}{of} \PYGcolorful{n}{ident} \PYGcolorful{o}{*} \PYGcolorful{o}{(}\PYGcolorful{n}{expr} \PYGcolorful{k+kt}{list}\PYGcolorful{o}{)} \PYGcolorful{c}{(* list is non\PYGcolorfulZhy{}empty *)}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{expr} \PYGcolorful{o}{=} \PYGcolorful{o}{(}\PYGcolorful{n}{expr\PYGcolorfulZus{}desc}\PYGcolorful{o}{,} \PYGcolorful{n+nn}{D}\PYGcolorful{p}{.}\PYGcolorful{n}{expr\PYGcolorfulZus{}deco}\PYGcolorful{o}{)} \PYGcolorful{n}{node}
+
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{left\PYGcolorfulZus{}val} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Lident}  \PYGcolorful{k}{of} \PYGcolorful{n}{ident}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Lmember} \PYGcolorful{k}{of} \PYGcolorful{n}{expr} \PYGcolorful{o}{*} \PYGcolorful{n}{ident}
+
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{nonrec} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot} \PYGcolorful{o}{=} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{nonrec} \PYGcolorful{n}{annotated} \PYGcolorful{o}{=} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl} \PYGcolorful{n}{annotated}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{param} \PYGcolorful{o}{=} \PYGcolorful{n}{annotated} \PYGcolorful{o}{*} \PYGcolorful{n}{mode} \PYGcolorful{c}{(* Can come from multiple params declared }
+\PYGcolorful{c}{                                   with same type, and default mode is In *)}
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{stmt\PYGcolorfulZus{}desc} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Saffect}    \PYGcolorful{k}{of} \PYGcolorful{n}{left\PYGcolorfulZus{}val} \PYGcolorful{o}{*} \PYGcolorful{n}{expr}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Scall\PYGcolorfulZus{}proc} \PYGcolorful{k}{of} \PYGcolorful{n}{ident} \PYGcolorful{o}{*} \PYGcolorful{o}{(}\PYGcolorful{n}{expr} \PYGcolorful{k+kt}{list}\PYGcolorful{o}{)} \PYGcolorful{c}{(* includes empty list *)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Sreturn}    \PYGcolorful{k}{of} \PYGcolorful{n}{expr} \PYGcolorful{c}{(* includes return without expression *)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Sblock}     \PYGcolorful{k}{of} \PYGcolorful{n}{stmt} \PYGcolorful{k+kt}{list} \PYGcolorful{c}{(* includes empty list *)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Scond}      \PYGcolorful{k}{of} \PYGcolorful{n}{expr} \PYGcolorful{o}{*} \PYGcolorful{n}{stmt} \PYGcolorful{o}{*} \PYGcolorful{n}{stmt}
+    \PYGcolorful{c}{(* includes no else and multiple statements *)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Swhile}     \PYGcolorful{k}{of} \PYGcolorful{n}{expr} \PYGcolorful{o}{*} \PYGcolorful{n}{stmt}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Sfor}       \PYGcolorful{k}{of} \PYGcolorful{n}{ident} \PYGcolorful{o}{*} \PYGcolorful{k+kt}{bool} \PYGcolorful{o}{*} \PYGcolorful{n}{expr} \PYGcolorful{o}{*} \PYGcolorful{n}{expr} \PYGcolorful{o}{*} \PYGcolorful{n}{stmt}
+    \PYGcolorful{c}{(* counter, reverse, lower\PYGcolorfulZus{}bound, upper\PYGcolorfulZus{}bound, instructions }
+\PYGcolorful{c}{       Really tempting to convert in while loop, but would need a new variable, and}
+\PYGcolorful{c}{       the declarations aren\PYGcolorfulZsq{}t available during parsing... *)}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{stmt} \PYGcolorful{o}{=} \PYGcolorful{o}{(}\PYGcolorful{n}{stmt\PYGcolorfulZus{}desc}\PYGcolorful{o}{,} \PYGcolorful{n+nn}{D}\PYGcolorful{p}{.}\PYGcolorful{n}{stmt\PYGcolorfulZus{}deco}\PYGcolorful{o}{)} \PYGcolorful{n}{node}
+
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{decl} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Dtype\PYGcolorfulZus{}decl}  \PYGcolorful{k}{of} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl} \PYGcolorful{o}{*} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot} \PYGcolorful{k+kt}{option}
+    \PYGcolorful{c}{(* Allows aliasing of types *)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Drecord\PYGcolorfulZus{}def} \PYGcolorful{k}{of} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl} \PYGcolorful{o}{*} \PYGcolorful{n}{annotated} \PYGcolorful{k+kt}{list}
+    \PYGcolorful{c}{(* list must be non\PYGcolorfulZhy{}empty, multiple fields could have been declared }
+\PYGcolorful{c}{       simultaneously *)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Dvar\PYGcolorfulZus{}decl}   \PYGcolorful{k}{of} \PYGcolorful{n}{annotated} \PYGcolorful{o}{*} \PYGcolorful{n}{expr} \PYGcolorful{k+kt}{option}
+    \PYGcolorful{c}{(* Can come from a declaration of multiple vars with the same value *)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Dproc\PYGcolorfulZus{}func}  \PYGcolorful{k}{of} \PYGcolorful{n}{proc\PYGcolorfulZus{}func}
+
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{proc\PYGcolorfulZus{}func} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{\PYGcolorfulZob{}}
+      \PYGcolorful{n}{name}   \PYGcolorful{o}{:} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl}\PYGcolorful{o}{;}
+      \PYGcolorful{n}{params} \PYGcolorful{o}{:} \PYGcolorful{n}{param} \PYGcolorful{k+kt}{list}\PYGcolorful{o}{;}
+      \PYGcolorful{n}{return} \PYGcolorful{o}{:} \PYGcolorful{n}{typ\PYGcolorfulZus{}annot}\PYGcolorful{o}{;} \PYGcolorful{c}{(* being null (empty typ\PYGcolorfulZus{}ident) for a procedure *)}
+      \PYGcolorful{n}{decls}  \PYGcolorful{o}{:} \PYGcolorful{n}{decl} \PYGcolorful{k+kt}{list}\PYGcolorful{o}{;}
+      \PYGcolorful{n}{stmt}   \PYGcolorful{o}{:} \PYGcolorful{n}{stmt}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ast} \PYGcolorful{o}{=} \PYGcolorful{n}{proc\PYGcolorfulZus{}func}
+
+
+  \PYGcolorful{c}{(** AST Printers *)}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{fmt} \PYGcolorful{n}{id} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}s\PYGcolorfulZdq{}} \PYGcolorful{n}{id}\PYGcolorful{o}{.}\PYGcolorful{n}{desc}
+
+
+  \PYGcolorful{k}{let} \PYGcolorful{k}{rec} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{fmt} \PYGcolorful{n}{e} \PYGcolorful{o}{=}
+    \PYGcolorful{k}{match} \PYGcolorful{n}{e}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{k}{with}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Econst} \PYGcolorful{n}{c} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}a\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}const} \PYGcolorful{n}{c}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Eleft\PYGcolorfulZus{}val} \PYGcolorful{n}{lv} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}a\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}left\PYGcolorfulZus{}val} \PYGcolorful{n}{lv}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Enot} \PYGcolorful{n}{e} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[not (\PYGcolorfulZpc{}a)@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{e}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Ebinop} \PYGcolorful{o}{(}\PYGcolorful{n}{e1}\PYGcolorful{o}{,} \PYGcolorful{n}{b}\PYGcolorful{o}{,} \PYGcolorful{n}{e2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[(\PYGcolorfulZpc{}a@ \PYGcolorfulZpc{}a@ \PYGcolorfulZpc{}a)@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{e1}
+                              \PYGcolorful{n}{print\PYGcolorfulZus{}binop} \PYGcolorful{n}{b} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{e2}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Enew} \PYGcolorful{n}{id} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[new@ \PYGcolorfulZpc{}a@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{id}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Eapp\PYGcolorfulZus{}func} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n}{ps}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a(\PYGcolorfulZpc{}a)@]\PYGcolorfulZdq{}}
+                              \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{id} \PYGcolorful{n}{print\PYGcolorfulZus{}expr\PYGcolorfulZus{}list} \PYGcolorful{n}{ps}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{print\PYGcolorfulZus{}left\PYGcolorfulZus{}val} \PYGcolorful{n}{fmt} \PYGcolorful{o}{=} \PYGcolorful{k}{function}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Lident} \PYGcolorful{n}{id} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}a\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{id}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Lmember} \PYGcolorful{o}{(}\PYGcolorful{n}{e}\PYGcolorful{o}{,} \PYGcolorful{n}{id}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a.\PYGcolorfulZpc{}a@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{e} \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{id}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{print\PYGcolorfulZus{}expr\PYGcolorfulZus{}list} \PYGcolorful{n}{fmt} \PYGcolorful{n}{es} \PYGcolorful{o}{=} \PYGcolorful{n}{print\PYGcolorfulZus{}list} \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}sep} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{},@ \PYGcolorfulZdq{}}\PYGcolorful{o}{)} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{fmt} \PYGcolorful{n}{es}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}annot} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ta} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}annot} \PYGcolorful{n}{fmt} \PYGcolorful{o}{(}\PYGcolorful{n}{map\PYGcolorfulZus{}ta} \PYGcolorful{n}{strip\PYGcolorfulZus{}deco} \PYGcolorful{n}{ta}\PYGcolorful{o}{)}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}annotated} \PYGcolorful{n}{fmt} \PYGcolorful{n}{a} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{print\PYGcolorfulZus{}annotated} \PYGcolorful{n}{fmt} \PYGcolorful{o}{(}\PYGcolorful{n}{map\PYGcolorfulZus{}a} \PYGcolorful{n}{strip\PYGcolorfulZus{}deco} \PYGcolorful{n}{a}\PYGcolorful{o}{)}
+
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}param} \PYGcolorful{n}{fmt} \PYGcolorful{o}{((}\PYGcolorful{n}{a}\PYGcolorful{o}{,} \PYGcolorful{n}{m}\PYGcolorful{o}{)} \PYGcolorful{o}{:} \PYGcolorful{n}{param}\PYGcolorful{o}{)} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a@ :@ \PYGcolorfulZpc{}a@ \PYGcolorfulZpc{}a@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{a}\PYGcolorful{o}{.}\PYGcolorful{n}{ident} \PYGcolorful{n}{print\PYGcolorfulZus{}mode} \PYGcolorful{n}{m}
+      \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}annot} \PYGcolorful{n}{a}\PYGcolorful{o}{.}\PYGcolorful{n}{ta}
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}param\PYGcolorfulZus{}list} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ps} \PYGcolorful{o}{=} \PYGcolorful{n}{print\PYGcolorfulZus{}list} \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}sep} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}, \PYGcolorfulZdq{}}\PYGcolorful{o}{)} \PYGcolorful{n}{print\PYGcolorfulZus{}param} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ps}
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}fields} \PYGcolorful{n}{fmt} \PYGcolorful{n}{fs} \PYGcolorful{o}{=} \PYGcolorful{n}{print\PYGcolorfulZus{}list} \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}sep} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}; \PYGcolorfulZdq{}}\PYGcolorful{o}{)} \PYGcolorful{n}{print\PYGcolorfulZus{}annotated} \PYGcolorful{n}{fmt} \PYGcolorful{n}{fs}
+
+  \PYGcolorful{k}{let} \PYGcolorful{k}{rec} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt} \PYGcolorful{n}{fmt} \PYGcolorful{n}{s} \PYGcolorful{o}{=}
+    \PYGcolorful{k}{match} \PYGcolorful{n}{s}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{k}{with}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Saffect} \PYGcolorful{o}{(}\PYGcolorful{n}{lv}\PYGcolorful{o}{,} \PYGcolorful{n}{e}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a@ :=@ \PYGcolorfulZpc{}a;@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}left\PYGcolorfulZus{}val} \PYGcolorful{n}{lv} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{e}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Scall\PYGcolorfulZus{}proc} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n}{ps}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a(\PYGcolorfulZpc{}a);@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{id}
+                               \PYGcolorful{n}{print\PYGcolorfulZus{}expr\PYGcolorfulZus{}list} \PYGcolorful{n}{ps}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Sreturn} \PYGcolorful{n}{e} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[return@ \PYGcolorfulZpc{}a;@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{e}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Sblock} \PYGcolorful{n}{s} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[begin}\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}n}\PYGcolorful{l+s+s2}{\PYGcolorfulZpc{}a}\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}n}\PYGcolorful{l+s+s2}{end;@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt\PYGcolorfulZus{}list} \PYGcolorful{n}{s}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Scond} \PYGcolorful{o}{(}\PYGcolorful{n}{e}\PYGcolorful{o}{,} \PYGcolorful{n}{s1}\PYGcolorful{o}{,} \PYGcolorful{n}{s2}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[if@ \PYGcolorfulZpc{}a@ then@ \PYGcolorfulZpc{}a@ else@ \PYGcolorfulZpc{}a@ end@ if;@]\PYGcolorfulZdq{}}
+                             \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{e} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt} \PYGcolorful{n}{s1} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt} \PYGcolorful{n}{s2}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Swhile} \PYGcolorful{o}{(}\PYGcolorful{n}{e}\PYGcolorful{o}{,} \PYGcolorful{n}{s}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[while@ \PYGcolorfulZpc{}a@ loop@ \PYGcolorfulZpc{}a@ end@ loop;@]\PYGcolorfulZdq{}}
+                         \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{e} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt} \PYGcolorful{n}{s}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Sfor} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n}{b}\PYGcolorful{o}{,} \PYGcolorful{n}{el}\PYGcolorful{o}{,} \PYGcolorful{n}{eu}\PYGcolorful{o}{,} \PYGcolorful{n}{s}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}}
+      \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[for@ \PYGcolorfulZpc{}a@ in@ \PYGcolorfulZpc{}a\PYGcolorfulZpc{}a@ ..@ \PYGcolorfulZpc{}a@ loop@ \PYGcolorfulZpc{}a@ end@ loop;@]\PYGcolorfulZdq{}}
+        \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{id} \PYGcolorful{o}{(}\PYGcolorful{k}{fun} \PYGcolorful{n}{fmt} \PYGcolorful{n}{b} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{k}{if} \PYGcolorful{n}{b} \PYGcolorful{k}{then} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}reverse@ \PYGcolorfulZdq{}} \PYGcolorful{k}{else} \PYGcolorful{n+nb+bp}{()}\PYGcolorful{o}{)} \PYGcolorful{n}{b}
+        \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{el} \PYGcolorful{n}{print\PYGcolorfulZus{}expr} \PYGcolorful{n}{eu} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt} \PYGcolorful{n}{s}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt\PYGcolorfulZus{}list} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ss} \PYGcolorful{o}{=} \PYGcolorful{n}{print\PYGcolorfulZus{}list} \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}sep} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}}\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}n}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}}\PYGcolorful{o}{)} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ss}
+
+  \PYGcolorful{k}{let} \PYGcolorful{k}{rec} \PYGcolorful{n}{print\PYGcolorfulZus{}decl} \PYGcolorful{n}{fmt} \PYGcolorful{o}{=} \PYGcolorful{k}{function}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Dtype\PYGcolorfulZus{}decl} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n}{ta\PYGcolorfulZus{}opt}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[type@ \PYGcolorfulZpc{}a\PYGcolorfulZpc{}a;@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{id}
+                              \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}option} \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}annot}\PYGcolorful{o}{)} \PYGcolorful{o}{(}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{} is \PYGcolorfulZdq{}}\PYGcolorful{o}{,} \PYGcolorful{n}{ta\PYGcolorfulZus{}opt}\PYGcolorful{o}{)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Drecord\PYGcolorfulZus{}def} \PYGcolorful{o}{(}\PYGcolorful{n}{id}\PYGcolorful{o}{,} \PYGcolorful{n}{fs}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt}
+                                 \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[type@ \PYGcolorfulZpc{}a@ is@ @[record@ \PYGcolorfulZpc{}a@ end@ record@];@]\PYGcolorfulZdq{}}
+                                 \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{id} \PYGcolorful{n}{print\PYGcolorfulZus{}fields} \PYGcolorful{n}{fs}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Dvar\PYGcolorfulZus{}decl} \PYGcolorful{o}{(}\PYGcolorful{n}{a}\PYGcolorful{o}{,} \PYGcolorful{n}{e\PYGcolorfulZus{}opt}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a@ :=@ \PYGcolorfulZpc{}a;@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}annotated} \PYGcolorful{n}{a}
+                                \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}option} \PYGcolorful{n}{print\PYGcolorfulZus{}expr}\PYGcolorful{o}{)} \PYGcolorful{o}{(}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{} := \PYGcolorfulZdq{}}\PYGcolorful{o}{,} \PYGcolorful{n}{e\PYGcolorfulZus{}opt}\PYGcolorful{o}{)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Dproc\PYGcolorfulZus{}func} \PYGcolorful{n}{pf} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}a\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}proc\PYGcolorfulZus{}func} \PYGcolorful{n}{pf}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{print\PYGcolorfulZus{}proc\PYGcolorfulZus{}func} \PYGcolorful{n}{fmt} \PYGcolorful{n}{pf} \PYGcolorful{o}{=}
+    \PYGcolorful{k}{let} \PYGcolorful{o}{(}\PYGcolorful{n}{name}\PYGcolorful{o}{,} \PYGcolorful{n}{return\PYGcolorfulZus{}printer}\PYGcolorful{o}{)} \PYGcolorful{o}{=}
+      \PYGcolorful{k}{if} \PYGcolorful{n}{pf}\PYGcolorful{o}{.}\PYGcolorful{n}{return}\PYGcolorful{o}{.}\PYGcolorful{n}{typ\PYGcolorfulZus{}ident}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{o}{=} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZdq{}}
+      \PYGcolorful{k}{then} \PYGcolorful{o}{(}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}procedure\PYGcolorfulZdq{}}\PYGcolorful{o}{,} \PYGcolorful{o}{(}\PYGcolorful{k}{fun} \PYGcolorful{o}{\PYGcolorfulZus{}} \PYGcolorful{n+nb+bp}{()} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n+nb+bp}{()}\PYGcolorful{o}{))}
+      \PYGcolorful{k}{else} \PYGcolorful{o}{(}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}function\PYGcolorfulZdq{}}\PYGcolorful{o}{,}  \PYGcolorful{o}{(}\PYGcolorful{k}{fun} \PYGcolorful{n}{fmt} \PYGcolorful{n+nb+bp}{()} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@ return@ \PYGcolorfulZpc{}a\PYGcolorfulZdq{}}
+                                          \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}annot} \PYGcolorful{n}{pf}\PYGcolorful{o}{.}\PYGcolorful{n}{return}\PYGcolorful{o}{))}
+    \PYGcolorful{k}{in}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}s@ \PYGcolorfulZpc{}a(\PYGcolorfulZpc{}a)\PYGcolorfulZpc{}a@ is@ @[\PYGcolorfulZpc{}a@]@ @[\PYGcolorfulZpc{}a@]@]\PYGcolorfulZdq{}}
+      \PYGcolorful{n}{name} \PYGcolorful{n}{print\PYGcolorfulZus{}ident} \PYGcolorful{n}{pf}\PYGcolorful{o}{.}\PYGcolorful{n}{name} \PYGcolorful{n}{print\PYGcolorfulZus{}param\PYGcolorfulZus{}list} \PYGcolorful{n}{pf}\PYGcolorful{o}{.}\PYGcolorful{n}{params} \PYGcolorful{n}{return\PYGcolorfulZus{}printer} \PYGcolorful{n+nb+bp}{()}
+      \PYGcolorful{n}{print\PYGcolorfulZus{}decl\PYGcolorfulZus{}list} \PYGcolorful{n}{pf}\PYGcolorful{o}{.}\PYGcolorful{n}{decls} \PYGcolorful{n}{print\PYGcolorfulZus{}stmt} \PYGcolorful{n}{pf}\PYGcolorful{o}{.}\PYGcolorful{n}{stmt}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{print\PYGcolorfulZus{}decl\PYGcolorfulZus{}list} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ds} \PYGcolorful{o}{=} \PYGcolorful{n}{print\PYGcolorfulZus{}list} \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}sep} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}}\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}n}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}}\PYGcolorful{o}{)} \PYGcolorful{n}{print\PYGcolorfulZus{}decl} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ds}
+
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}ast} \PYGcolorful{n}{fmt} \PYGcolorful{n}{a} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{print\PYGcolorfulZus{}proc\PYGcolorfulZus{}func} \PYGcolorful{n}{fmt} \PYGcolorful{n}{a}\PYGcolorful{o}{;}
+    \PYGcolorful{n}{pp\PYGcolorfulZus{}print\PYGcolorfulZus{}flush} \PYGcolorful{n}{fmt} \PYGcolorful{n+nb+bp}{()}
+\PYGcolorful{k}{end}
+
+
+\PYGcolorful{c}{(** Decoration *)}
+
+\PYGcolorful{k}{module} \PYGcolorful{n+nc}{Loc} \PYGcolorful{o}{=}
+\PYGcolorful{k}{struct}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{pos} \PYGcolorful{o}{=} \PYGcolorful{n+nn}{Lexing}\PYGcolorful{p}{.}\PYGcolorful{n}{position}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{loc} \PYGcolorful{o}{=} \PYGcolorful{n}{pos} \PYGcolorful{o}{*} \PYGcolorful{n}{pos} \PYGcolorful{c}{(* (start, end) *)}
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ident\PYGcolorfulZus{}deco}      \PYGcolorful{o}{=} \PYGcolorful{n}{loc}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl\PYGcolorfulZus{}deco} \PYGcolorful{o}{=} \PYGcolorful{n}{loc}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{expr\PYGcolorfulZus{}deco}       \PYGcolorful{o}{=} \PYGcolorful{n}{loc}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{stmt\PYGcolorfulZus{}deco}       \PYGcolorful{o}{=} \PYGcolorful{n}{loc}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}loc} \PYGcolorful{n}{fmt} \PYGcolorful{o}{((}\PYGcolorful{n}{s}\PYGcolorful{o}{,} \PYGcolorful{n}{e}\PYGcolorful{o}{)} \PYGcolorful{o}{:} \PYGcolorful{n}{loc}\PYGcolorful{o}{)} \PYGcolorful{o}{=}
+    \PYGcolorful{k}{let} \PYGcolorful{k}{open} \PYGcolorful{n+nc}{Lexing} \PYGcolorful{k}{in}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[File@ }\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}\PYGcolorfulZdq{}}\PYGcolorful{l+s+s2}{\PYGcolorfulZpc{}s}\PYGcolorful{l+s+se}{\PYGcolorfulZbs{}\PYGcolorfulZdq{}}\PYGcolorful{l+s+s2}{@, line@ \PYGcolorfulZpc{}d,@ characters \PYGcolorfulZpc{}d\PYGcolorfulZhy{}\PYGcolorfulZpc{}d@]\PYGcolorfulZdq{}}
+      \PYGcolorful{n}{s}\PYGcolorful{o}{.}\PYGcolorful{n}{pos\PYGcolorfulZus{}fname} \PYGcolorful{n}{s}\PYGcolorful{o}{.}\PYGcolorful{n}{pos\PYGcolorfulZus{}lnum} \PYGcolorful{o}{(}\PYGcolorful{n}{s}\PYGcolorful{o}{.}\PYGcolorful{n}{pos\PYGcolorfulZus{}cnum} \PYGcolorful{o}{\PYGcolorfulZhy{}} \PYGcolorful{n}{s}\PYGcolorful{o}{.}\PYGcolorful{n}{pos\PYGcolorfulZus{}bol} \PYGcolorful{o}{+} \PYGcolorful{l+m+mi}{1}\PYGcolorful{o}{)}
+      \PYGcolorful{o}{(}\PYGcolorful{n}{e}\PYGcolorful{o}{.}\PYGcolorful{n}{pos\PYGcolorfulZus{}cnum} \PYGcolorful{o}{\PYGcolorfulZhy{}} \PYGcolorful{n}{s}\PYGcolorful{o}{.}\PYGcolorful{n}{pos\PYGcolorfulZus{}bol} \PYGcolorful{o}{+} \PYGcolorful{l+m+mi}{1}\PYGcolorful{o}{)}
+\PYGcolorful{k}{end}
+
+\PYGcolorful{k}{module} \PYGcolorful{n+nc}{AST} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{DecoratedAST}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{Loc}\PYGcolorful{o}{)}
+
+
+\PYGcolorful{k}{module} \PYGcolorful{n+nc}{Typ} \PYGcolorful{o}{=}
+\PYGcolorful{k}{struct}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{level} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{int}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{o}{(}\PYGcolorful{n}{ident\PYGcolorfulZus{}desc}\PYGcolorful{o}{,} \PYGcolorful{n}{level}\PYGcolorful{o}{)} \PYGcolorful{n}{node}
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{typ\PYGcolorfulZus{}def} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tnull}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tint}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tchar}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tbool}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Trecord} \PYGcolorful{k}{of} \PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{n}{annotated} \PYGcolorful{k+kt}{list} \PYGcolorful{c}{(* list is non\PYGcolorfulZhy{}empty *)}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Taccess} \PYGcolorful{k}{of} \PYGcolorful{n}{t\PYGcolorfulZus{}ident}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tproc\PYGcolorfulZus{}func} \PYGcolorful{k}{of} \PYGcolorful{o}{(}\PYGcolorful{n}{typ} \PYGcolorful{o}{*} \PYGcolorful{n}{mode}\PYGcolorful{o}{)} \PYGcolorful{k+kt}{list} \PYGcolorful{o}{*} \PYGcolorful{n}{typ} \PYGcolorful{c}{(* typ = Tnull for a procedure *)}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{typ} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{\PYGcolorfulZob{}}
+      \PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{o}{:} \PYGcolorful{n}{t\PYGcolorfulZus{}ident}\PYGcolorful{o}{;}
+      \PYGcolorful{n}{def}     \PYGcolorful{o}{:} \PYGcolorful{n}{typ\PYGcolorfulZus{}def}\PYGcolorful{o}{;}
+    \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{null} \PYGcolorful{o}{=} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{decorate} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}typenull\PYGcolorfulZdq{}}  \PYGcolorful{l+m+mi}{0}\PYGcolorful{o}{;} \PYGcolorful{n}{def} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{Tnull} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{k}{let} \PYGcolorful{k+kt}{int}  \PYGcolorful{o}{=} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{decorate} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}integer\PYGcolorfulZdq{}}   \PYGcolorful{l+m+mi}{0}\PYGcolorful{o}{;} \PYGcolorful{n}{def} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{Tint}  \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{k}{let} \PYGcolorful{k+kt}{char} \PYGcolorful{o}{=} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{decorate} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}character\PYGcolorfulZdq{}} \PYGcolorful{l+m+mi}{0}\PYGcolorful{o}{;} \PYGcolorful{n}{def} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{Tchar} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+  \PYGcolorful{k}{let} \PYGcolorful{k+kt}{bool} \PYGcolorful{o}{=} \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{decorate} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}boolean\PYGcolorfulZdq{}}   \PYGcolorful{l+m+mi}{0}\PYGcolorful{o}{;} \PYGcolorful{n}{def} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{Tbool} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{get\PYGcolorfulZus{}level} \PYGcolorful{n}{t} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{t}\PYGcolorful{o}{.}\PYGcolorful{n}{t\PYGcolorfulZus{}ident}\PYGcolorful{o}{.}\PYGcolorful{n}{deco}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{is\PYGcolorfulZus{}access} \PYGcolorful{n}{t} \PYGcolorful{o}{=}
+    \PYGcolorful{k}{match} \PYGcolorful{n}{t}\PYGcolorful{o}{.}\PYGcolorful{n}{def} \PYGcolorful{k}{with}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Taccess} \PYGcolorful{o}{\PYGcolorfulZus{}} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n+nb+bp}{true}
+    \PYGcolorful{o}{|} \PYGcolorful{o}{\PYGcolorfulZus{}} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n+nb+bp}{false}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{to\PYGcolorfulZus{}access} \PYGcolorful{n}{t} \PYGcolorful{o}{=}
+    \PYGcolorful{o}{\PYGcolorfulZob{}} \PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{o}{=} \PYGcolorful{n}{decorate} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZdq{}} \PYGcolorful{n}{t}\PYGcolorful{o}{.}\PYGcolorful{n}{t\PYGcolorfulZus{}ident}\PYGcolorful{o}{.}\PYGcolorful{n}{deco}\PYGcolorful{o}{;} \PYGcolorful{n}{def} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{Taccess} \PYGcolorful{n}{t}\PYGcolorful{o}{.}\PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{o}{\PYGcolorfulZcb{}}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{reduce\PYGcolorfulZus{}pf} \PYGcolorful{n}{t} \PYGcolorful{o}{=}
+    \PYGcolorful{k}{match} \PYGcolorful{n}{t}\PYGcolorful{o}{.}\PYGcolorful{n}{def} \PYGcolorful{k}{with}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tproc\PYGcolorfulZus{}func} \PYGcolorful{o}{(}\PYGcolorful{n+nb+bp}{[]}\PYGcolorful{o}{,} \PYGcolorful{n}{r}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{r}
+    \PYGcolorful{o}{|} \PYGcolorful{o}{\PYGcolorfulZus{}} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{t}
+
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}t\PYGcolorfulZus{}ident} \PYGcolorful{n}{fmt} \PYGcolorful{n}{id} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}s[\PYGcolorfulZpc{}d]\PYGcolorfulZdq{}} \PYGcolorful{n}{id}\PYGcolorful{o}{.}\PYGcolorful{n}{desc} \PYGcolorful{n}{id}\PYGcolorful{o}{.}\PYGcolorful{n}{deco}
+
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}ta} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ta} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a\PYGcolorfulZpc{}a@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}if} \PYGcolorful{o}{(}\PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}access \PYGcolorfulZdq{}}\PYGcolorful{o}{,} \PYGcolorful{n}{ta}\PYGcolorful{o}{.}\PYGcolorful{n}{is\PYGcolorfulZus{}access}\PYGcolorful{o}{)}
+      \PYGcolorful{n}{print\PYGcolorfulZus{}t\PYGcolorfulZus{}ident} \PYGcolorful{n}{ta}\PYGcolorful{o}{.}\PYGcolorful{n}{typ\PYGcolorfulZus{}ident} 
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}a} \PYGcolorful{n}{fmt} \PYGcolorful{n}{a} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[\PYGcolorfulZpc{}a: \PYGcolorfulZpc{}a@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}t\PYGcolorfulZus{}ident} \PYGcolorful{n}{a}\PYGcolorful{o}{.}\PYGcolorful{n}{ident} \PYGcolorful{n}{print\PYGcolorfulZus{}ta} \PYGcolorful{n}{a}\PYGcolorful{o}{.}\PYGcolorful{n}{ta}
+  \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}record} \PYGcolorful{n}{fmt} \PYGcolorful{n}{r} \PYGcolorful{o}{=}
+    \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}fields} \PYGcolorful{n}{fmt} \PYGcolorful{n}{l} \PYGcolorful{o}{=} \PYGcolorful{n}{print\PYGcolorfulZus{}list} \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}sep} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}; \PYGcolorfulZdq{}}\PYGcolorful{o}{)} \PYGcolorful{n}{print\PYGcolorfulZus{}a} \PYGcolorful{n}{fmt} \PYGcolorful{n}{l} \PYGcolorful{k}{in}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[record@ @[\PYGcolorfulZpc{}a@]@ end@ record@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}fields} \PYGcolorful{n}{r}
+
+  \PYGcolorful{k}{let} \PYGcolorful{k}{rec} \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}spec} \PYGcolorful{n}{fmt} \PYGcolorful{n}{t} \PYGcolorful{o}{=}
+    \PYGcolorful{k}{match} \PYGcolorful{n}{t} \PYGcolorful{k}{with}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tnull} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}typenull[0]\PYGcolorfulZdq{}}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tint}  \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}integer[0]\PYGcolorfulZdq{}}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tchar} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}character[0]\PYGcolorfulZdq{}}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tbool} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}boolean[0]\PYGcolorfulZdq{}}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Trecord} \PYGcolorful{n}{r} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{print\PYGcolorfulZus{}record} \PYGcolorful{n}{fmt} \PYGcolorful{n}{r}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Taccess} \PYGcolorful{n}{s} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}@[access@ \PYGcolorfulZpc{}a@]\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}t\PYGcolorfulZus{}ident} \PYGcolorful{n}{s}
+    \PYGcolorful{o}{|} \PYGcolorful{n+nc}{Tproc\PYGcolorfulZus{}func} \PYGcolorful{o}{(}\PYGcolorful{n}{ps}\PYGcolorful{o}{,} \PYGcolorful{n}{r}\PYGcolorful{o}{)} \PYGcolorful{o}{\PYGcolorfulZhy{}\PYGcolorfulZgt{}} \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}param} \PYGcolorful{n}{fmt} \PYGcolorful{o}{(}\PYGcolorful{n}{t}\PYGcolorful{o}{,} \PYGcolorful{o}{\PYGcolorfulZus{})} \PYGcolorful{o}{=} \PYGcolorful{n}{print\PYGcolorfulZus{}typ} \PYGcolorful{n}{fmt} \PYGcolorful{n}{t} \PYGcolorful{k}{in}
+      \PYGcolorful{k}{let} \PYGcolorful{n}{print\PYGcolorfulZus{}params} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ps} \PYGcolorful{o}{=} \PYGcolorful{n}{print\PYGcolorfulZus{}list} \PYGcolorful{o}{(}\PYGcolorful{n}{print\PYGcolorfulZus{}sep} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{} \PYGcolorfulZhy{}\PYGcolorfulZgt{} \PYGcolorfulZdq{}}\PYGcolorful{o}{)} \PYGcolorful{n}{print\PYGcolorfulZus{}param} \PYGcolorful{n}{fmt} \PYGcolorful{n}{ps} \PYGcolorful{k}{in}
+      \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}a \PYGcolorfulZhy{}\PYGcolorfulZgt{} \PYGcolorfulZpc{}a\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}params} \PYGcolorful{n}{ps} \PYGcolorful{n}{print\PYGcolorfulZus{}typ} \PYGcolorful{n}{r}
+  \PYGcolorful{o+ow}{and} \PYGcolorful{n}{print\PYGcolorfulZus{}typ} \PYGcolorful{n}{fmt} \PYGcolorful{n}{t} \PYGcolorful{o}{=}
+    \PYGcolorful{n}{fprintf} \PYGcolorful{n}{fmt} \PYGcolorful{l+s+s2}{\PYGcolorfulZdq{}\PYGcolorfulZpc{}a is \PYGcolorfulZpc{}a\PYGcolorfulZdq{}} \PYGcolorful{n}{print\PYGcolorfulZus{}t\PYGcolorfulZus{}ident} \PYGcolorful{n}{t}\PYGcolorful{o}{.}\PYGcolorful{n}{t\PYGcolorfulZus{}ident} \PYGcolorful{n}{print\PYGcolorfulZus{}typ\PYGcolorfulZus{}spec} \PYGcolorful{n}{t}\PYGcolorful{o}{.}\PYGcolorful{n}{def}
+
+
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ident\PYGcolorfulZus{}deco}      \PYGcolorful{o}{=} \PYGcolorful{n}{typ}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{ident\PYGcolorfulZus{}decl\PYGcolorfulZus{}deco} \PYGcolorful{o}{=} \PYGcolorful{k+kt}{unit}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{expr\PYGcolorfulZus{}deco}       \PYGcolorful{o}{=} \PYGcolorful{n}{typ}
+  \PYGcolorful{k}{type} \PYGcolorful{n}{stmt\PYGcolorfulZus{}deco}       \PYGcolorful{o}{=} \PYGcolorful{k+kt}{unit}
+\PYGcolorful{k}{end}
+
+\PYGcolorful{k}{module} \PYGcolorful{n+nc}{TypedAST} \PYGcolorful{o}{=} \PYGcolorful{n+nc}{DecoratedAST}\PYGcolorful{o}{(}\PYGcolorful{n+nc}{Typ}\PYGcolorful{o}{)}
+\end{Verbatim}

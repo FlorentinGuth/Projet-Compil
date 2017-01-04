@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGcolorful{k+kd}{procedure} \PYGcolorful{n+nf}{P} \PYGcolorful{k+kr}{is}
+  \PYGcolorful{n}{tye} \PYGcolorful{n}{R} \PYGcolorful{k+kr}{is} \PYGcolorful{k+kr}{record} \PYGcolorful{n}{Foo} \PYGcolorful{p}{:} \PYGcolorful{k+kt}{Integer}\PYGcolorful{p}{;} \PYGcolorful{k+kr}{end} \PYGcolorful{k+kr}{record}\PYGcolorful{p}{;}
+  \PYGcolorful{k+kd}{type} \PYGcolorful{k+kt}{T1} \PYGcolorful{k+kr}{is} \PYGcolorful{k+kr}{access} \PYGcolorful{n}{R}\PYGcolorful{p}{;}
+  \PYGcolorful{k+kd}{type} \PYGcolorful{k+kt}{T2} \PYGcolorful{k+kr}{is} \PYGcolorful{k+kr}{access} \PYGcolorful{n}{R}\PYGcolorful{p}{;}
+  \PYGcolorful{n}{x} \PYGcolorful{p}{:} \PYGcolorful{n}{T1} \PYGcolorful{p}{:=} \PYGcolorful{k+kr}{new} \PYGcolorful{n}{R}\PYGcolorful{p}{;}
+  \PYGcolorful{n}{y} \PYGcolorful{p}{:} \PYGcolorful{n}{T2} \PYGcolorful{p}{:=} \PYGcolorful{k+kr}{new} \PYGcolorful{n}{R}\PYGcolorful{p}{;}
+\PYGcolorful{k+kr}{begin}
+  \PYGcolorful{k+kr}{if} \PYGcolorful{n}{x} \PYGcolorful{o}{=} \PYGcolorful{n}{y} \PYGcolorful{c+c1}{\PYGcolorfulZhy{}\PYGcolorfulZhy{}Type error}
+  \PYGcolorful{p}{...}
+\PYGcolorful{k+kr}{end}\PYGcolorful{p}{;}
+\end{Verbatim}

@@ -1,0 +1,338 @@
+\documentclass[a4paper, 10pt, french]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage{lmodern}
+\usepackage[autolanguage]{numprint}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{tabularx} \newcolumntype{C}{>{\centering}X}
+\usepackage{multirow}
+\usepackage{collcell}
+\usepackage{subcaption}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{multicol}
+\usepackage[10pt]{moresize}
+\usepackage{pdflscape}
+
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{amsopn}
+\usepackage{stmaryrd}
+
+\DeclareCaptionLabelFormat{listing}{Listing #2}
+\DeclareCaptionSubType*[arabic]{table}
+\captionsetup[subtable]{labelformat=simple}
+
+\usepackage[langlinenos=true,newfloat=true]{minted}
+\newcommand{\source}[4]{
+  \inputminted[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,firstline=#2,firstnumber=#2,lastline=#3,label={#1[#2--#3]}]{OCaml}{../#1}
+  \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+  \caption{#4}
+}
+\newcommand{\codeAda}[1]{\mintinline[style=colorful,fontfamily=tt]{Ada}{#1}}
+\newcommand{\codeOCaml}[1]{\mintinline[style=colorful,fontfamily=tt]{OCaml}{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+
+
+\title{Compilateur Mini Ada}
+\author{Florentin \bsc{Guth}}
+
+\begin{document}
+
+\maketitle
+
+\begin{table}[h]
+  \parbox{.3\linewidth}{}
+  \hfill
+  \parbox{.7\linewidth}{
+    \begin{flushright}
+      \emph{A new, a vast, and a powerful language is developed for the future use of analysis, in which to wield its truths so that these may become of more speedy and accurate practical application for the purposes of mankind than the means hitherto in our possession have rendered possible.}
+      
+      Ada.
+    \end{flushright}}
+\end{table}
+
+\tableofcontents
+
+
+\clearpage
+\section{Lexer et Parser}
+
+\subsection{Lexer}
+
+On utilise un table de hachage qui associe à une chaîne de caractères en minuscules le \code{token} correspondant au mot-clé en question. Tous les identifiants sont ainsi convertis en minuscules. On ne traite pas \codeAda{Put} et \codeAda{New_Line} comme des mots-clés afin de permettre à l'utilisateur de les redéfinir (ça n'aurait pas beaucoup de sens de devoir connaître les noms de toutes les fonctions d'une bibliothèque que l'on utilise pour ne pas avoir de conflits...). Ils sont donc traités exactement comme des procédures déclarées par l'utilisateur.
+
+\codeAda{Character'Val} n'est pas traité à part non plus : il est converti en la liste de tokens :\\
+\codeOCaml{[IDENT "character"; QUOTE; IDENT "val"]}.
+
+On prend garde de ne reconnaître que les constantes entières de $\llbracket 0, 2^{31} \rrbracket$ et les caractères ASCII 7 bits.
+
+Enfin, on a rajouté le mot-clé \codeAda{all}, qui permet de déréférencer explicitement un type \codeAda{access} (si \codeAda{X} est de type \codeAda{access T}, alors \codeAda{X.all} est de \codeAda{type T}).
+
+
+\subsection{Parser}
+
+On utilise les tokens \og fantômes \fg (i.e. qui ne sont jamais produits par le Lexer) \codeOCaml{OR_ELSE}, \codeOCaml{AND_THEN} et \codeOCaml{UNARY_MINUS} pour gérer les priorités de manière correcte (car \codeOCaml{AND THEN} n'a pas la priorité de \codeOCaml{THEN} comme \code{menhir} l'interprète de manière automatique).
+
+Afin de décorer de manière simple les différents éléments de l'arbre de syntaxe abstraite avec la localisation dans le code (à savoir les identifiants, les expressions et les instructions), on utilise la règle d'ordre supérieur suivante :
+\begin{table}[H]
+  \centering
+  \begin{subtable}[h]{.45\linewidth}
+    \centering
+    \source{parser.mly}{72}{74}{Règle de décoration}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[h]{.45\linewidth}
+    \centering
+    \source{parser.mly}{77}{80}{Décoration des identifiants}
+  \end{subtable}
+  \caption{Décoration des n\oe uds de l'arbre de syntaxe abstraite}
+\end{table}
+
+On fait les simplifications suivantes :
+\begin{itemize}
+  \item On peut lire $\epsilon$ lorsqu'on attend un \mintinline{Ada}{mode} pour ajouter automatiquement \mintinline{Ada}{in}.
+  \item On développe les initialisations ou déclarations simultanées (\mintinline{Ada}{X, Y, Z : Integer := 0;} devient 3 déclarations séparées).
+  \item Les fonctions et procédures ne sont pas distinguées dans l'\code{AST} (à part par la présence ou non de type de retour).
+  \item On remplace le $-x$ unaire par $0 - x$.
+  \item On remplace les \mintinline{Ada}{elsif} par des \mintinline{Ada}{if then else} imbriqués.
+\end{itemize}
+
+On déplore le fait de ne pas pouvoir séparer les produtions associées aux opérateurs binaires de celles associées aux expressions, car \code{menhir} refuse le mot-clé \code{\%prec} (pour indiquer une priorité particulière) dans une règle déclarée avec \code{\%inline} (pour garder les bonnes priorités).
+
+On vérifie enfin que le fichier commence bien par les \codeAda{with} et \codeAda{use}, et que l'identifiant optionnel suivant un \codeAda{end} d'une procédure est bien le même que celui de la procédure en question.
+
+On traite le cas de \codeAda{all} exactement comme l'accès à un champ d'un record nommé \code{all}, la différence se fera au typage.
+
+Enfin, en ce qui concerne la gestion des erreurs, j'ai généré le fichier \code{parser.messages} mais ai renoncé à écrire 150 messages d'erreurs pour expliquer que \codeAda{while} n'était pas un début de fichier valable, ni \codeAda{with =}\ldots
+
+
+\clearpage
+\section{Arbre de syntaxe abstraite}
+
+\subsection{Foncteur}
+
+Comme on considère deux arbres (avant et après le typage) décorés avec des informations différentes (la position dans le code source et les types, respectivement), et afin de bénéficier d'un maximum de modularité, on utilise un foncteur. Celui-ci prend un entrée un module contenant les types avec lesquels l'\codeOCaml{AST} va être décoré, à l'aide du \codeOCaml{type node}.
+
+\begin{table}[H]
+  \centering
+  \begin{subtable}[h]{.5\linewidth}
+    \centering
+    \source{ast.ml}{98}{105}{Signature du module de décoration}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[h]{.45\linewidth}
+    \centering
+    \source{ast.ml}{83}{88}{Type des éléments décorés}
+  \end{subtable}
+  \caption{Structure du module \code{AST}}
+\end{table}
+
+Cette manière de procéder permet de garder les mêmes noms de constructeurs pour les arbres en entrée et sortie du typage, de minimiser le copier-coller de code, de ne pas avoir à mettre des types en paramètre partout et de pouvoir changer la décoration en une ligne. On donne un exemple d'utilisation avec le type des expressions.
+
+\begin{table}[H]
+  \source{ast.ml}{118}{125}{Type des expressions}
+\end{table}
+
+\subsection{Liste des types présents dans l'\codeOCaml{AST}}
+
+On donne premièrement les types qui sont indépendants de la décoration (ou qui contiennent celle-ci en paramètre) qui permettent de n'avoir aucune conversion à faire.
+\begin{description}
+  \item[\code{ident\_desc} :] le type des identifiants, à savoir une chaîne de caractères.
+  \item[\code{binop} :] simple type somme pour les différentes opérations possibles.
+  \item[\code{const} :] les différentes constantes possibles.
+  \item[\code{typ\_annot} :] un type annoté par l'utilisateur.
+  \item[\code{annotated} :] un identifiant dont le type a été annoté par l'utilisateur.
+\end{description}
+
+Ci-dessous la liste des types présents dans le \codeOCaml{module AST} :
+\begin{description}
+  \item[\code{ident} :] un identifiant représentant une variable, une procédure ou une fonction (dans une expression ou une instruction).
+  \item[\code{ident\_decl} :] un identifiant dans une déclaration. Distinct du précédent car ne sera pas annoté par un type lors du typage.
+  \item[\code{expr} :] représente une expression. On a supprimé le $-$ unaire et inclus l'appel à \code{character'val} dans les appels de fonction.
+  \item[\code{left\_val} :] valeur gauche, qui est soit un identifiant (qui peut être un appel de fonction à 0 paramètres) soit l'accès à un champ d'un \code{record}.
+  \item[\code{param} :] paramètre de fonction, contient le mode (qui est \code{in} par défaut).
+  \item[\code{stmt} :] instructions. On a inclus les appels à \code{new\_line} et \code{put} dans les appels de procédure, remplacé les listes d'instructions par un unique bloc, et remplacé les \code{elsif} par des \code{if then else} imbriqués.
+  \item[\code{decl} :] déclarations, les déclarations de plusieurs variables avec le même type ont été développées en plusieurs déclarations (on ne cherche pas l'efficacité, car on pourrait alors refaire le même calcul d'initialisation plusieurs fois).
+  \item[\code{proc\_func} :] procédure ou fonction, distinguées par la présence d'un type de retour annoté (nom du type vide ou non).
+\end{description}
+
+\subsection{Décoration}
+
+Dans le cas d'un arbre en entrée du typage (tout frais sortit du \codeOCaml{Parser}), on décore les \code{ident}, \code{ident\_decl}, \code{expr} et \code{stmt} avec une localisation, qui correspond à un couple (positions de début et de fin) de \codeOCaml{Lexing.position}.
+
+En sortie du typage, on ne décore plus que les \code{ident} et \code{expr} avec leur type, puisque le type d'une déclaration de variable ou d'une affectation n'a pas beaucoup de sens.
+
+
+\clearpage
+\section{Représentation des types}
+
+\subsection{Structure}
+
+Un type est représenté de la manière suivante :
+\begin{table}[H]
+  \source{ast.ml}{278}{298}{Représentation des types du Mini Ada}
+\end{table}
+
+L'annotation par des \codeOCaml{level} permet de savoir à quel niveau l'identifiant en question fait référence. Cette structure permet de traiter les cas comme :
+
+\begin{table}[H]
+  \centering
+  \begin{subtable}[h]{.35\linewidth}
+    \centering
+    \begin{minted}[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,label={Exemple 1}]{Ada}
+      procedure P is
+        tye R is record Foo : Integer; end record;
+        type T1 is access R;
+        type T2 is access R;
+        x : T1 := new R;
+        y : T2 := new R;
+      begin
+        if x = y --Type error
+        ...
+      end;
+    \end{minted}
+    \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+    \caption{Access nommés}
+  \end{subtable}
+  \hfill
+  \begin{subtable}[h]{.55\linewidth}
+    \centering
+    \begin{minted}[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,label={Exemple 2}]{Ada}
+      procedure P is
+        type R is record A: Character; end record;
+        procedure Q is
+          type Character is access R;
+          X : R;
+        begin
+          X.A := 'c';
+        end;
+    \end{minted}
+    \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+    \caption{Shadowing}
+  \end{subtable}
+  \caption{Exemples de déclarations de type en Mini Ada}
+\end{table}
+
+
+\subsection{Possibilités supplémentaires}
+
+En plus des constructions du Mini Ada, on autorise la création de type \codeAda{access} sur n'importe quel type (sauf \codeAda{type A is access A}), ainsi que la copie de types (\codeAda{type T is new Integer}), ce qui a pour effet de pouvoir transformer une valeur de type \codeAda{Integer} en une valeur de \codeAda{type T} sans que l'inverse soit possible.
+
+
+\clearpage
+\section{Typage de l'arbre de syntaxe abstraite}
+
+\subsection{Description de l'environnement}
+
+On utilise lors du typage un \codeOCaml{module Env} qui encapsule presque toute la logique du typage, à savoir : 
+\begin{itemize}
+  \item connaître le type d'un identifiant ou la définition d'un type à un niveau de déclaration donné,
+  \item détecter la présence de deux identifiants identiques à un même niveau,
+  \item connaître les variables qui ne peuvent être modifiées,
+  \item déterminer si \codeAda{type T2} est un sous-type de \codeAda{type T1} (i.e. avec \codeAda{new} ou avec un \codeAda{access} anonyme par exemple),
+  \item vérifier que tous les types ont été déclarés avant un changement de niveau.
+\end{itemize}
+
+Ainsi, le \codeOCaml{module Env} a la signature suivante :
+\begin{table}[H]
+  \source{typer.ml}{32}{64}{Signature de l'environnement}
+\end{table}
+
+
+Le type d'un environnement (qui est caché en-dehors du module \code{Env} pour plus de modularité) est le suivant :
+\begin{table}[H]
+  \source{typer.ml}{65}{83}{Type de l'environnement}
+\end{table}
+
+L'environnement est initialisé avec les \code{builtins}, comme les opérateurs (qui sont typés comme des fonctions), \codeAda{Put}, \codeAda{New_Line}, \codeAda{Character'Val}, et les types primitifs, qui sont tous traités comme des déclarations de niveau 0. La procédure principale du programme est donc de niveau 1, et ses déclarations de niveau 2.
+
+\subsection{Gestion des sous-types}
+
+En ce qui concerne les sous-types, on traite cela d'une manière pour le moins dénuée de finesse : on représente les relations $T_2 \subseteq T_1$ ($T_2$ est un sous-type de $T_1$) par un ensemble de couples $(T_1, T_2)$. Afin d'assurer la transitivité, on effectue les ajouts suivants lors de l'ajout de $(T_1, T_2)$ :
+\begin{align*}
+ \forall T_3,&\ T_1 \subseteq T_3 \Rightarrow T_2 \subseteq T_3 \\
+ \forall T_4,&\ T_4 \subseteq T_2 \Rightarrow T_4 \subseteq T_1
+\end{align*}
+
+\subsection{\emph{Shadowing everywhere}}
+
+On applique les règles suivantes (qui sont toutes tirées du fonctionnement de \code{gnat}) :
+\begin{itemize}
+  \item la variable d'une boucle \codeAda{for} \emph{shadow} dès l'évaluation des bornes, et remplace tout objet déjà présent (même s'il était déclaré au même niveau),
+  \item une variable déclarée \emph{shadow} son initialisation (i.e. on interdit \codeAda{X : Integer := X + 1;} même si \codeAda{X} était déclaré un niveau plus haut),
+  \item la déclaration d'un \codeAda{type record} \emph{shadow} ses champs, même si un \codeAda{type R} d'un niveau précédent était bien formé,
+  \item les paramètres d'une fonction ou procédure sont au même niveau que ses déclarations,
+  \item une fonction ou une procédure est \emph{shadow} par ses arguments.
+\end{itemize}
+
+
+\subsection{Vérifications supplémentaires}
+
+Les vérifications restantes sont les valeurs gauches (traitées comme dans le sujet) et la présence de \codeAda{return} dans le corps d'une fonction (avec \emph{warning} en cas de code situé après un \codeAda{return}), qui sont traitées à part sans grandes difficultés.
+
+On vérifie de plus que la forme \codeAda{(new R).X} n'apparaît jamais (ni en tant que valeur gauche, ni en tant que valeur droite) car soit il s'agit de le lecture d'un champ qui n'est pas initialisé (de manière certaine), soit il s'agit de la modification d'un champ qui n'est plus accessible dès la fin de l'instruction.
+
+Enfin, quand on type la déclaration d'une variable \codeAda{X}, on prend garde d'enlever un éventuel \codeAda{X} de l'environnement marqué comme constant (car le nouveau \codeAda{X} \emph{shadow} l'ancien et a donc le droit d'être modifié). Pour les autres vérifications de non-modification, quand on type l'affection d'une valeur gauche, on remonte récursivement les champs, et l'on s'arrête lorsqu'on tombe sur une expression de type \codeAda{e.f} avec \codeAda{e} de type \codeAda{access R} (puisqu'on ne modifie pas \code{e} mais la valeur sur laquelle elle pointe).
+
+
+\subsection{Cas du \codeAda{.all}}
+
+Lors du typage de \codeAda{e.f}, on teste premièrement si \codeAda{f} est \codeAda{all}. Dans ce cas, on vérifie que \codeAda{e} est de type \codeAda{access T} et on type \codeAda{e.f} avec \codeAda{type T}. Ceci permet d'avoir des valeurs gauches assez intéressantes :
+\begin{table}[H]
+  \centering
+  \begin{minted}[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,label={Exemple 3}]{Ada}
+      procedure P is
+        type R is record X : Integer; end record;
+        X : access R := new R;
+        function F return access R is
+        begin
+          return X;
+       end;
+       Y : R;
+    begin
+       F.all := Y;
+    end;
+    \end{minted}
+    \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+    \caption{Fonctions comme valeurs gauches (à peu de choses près)}
+\end{table}
+
+
+
+\clearpage
+\section{Annexe : rôle de chaque fichier}
+
+\begin{table}[h]
+  \centering
+  \begin{tabularx}{\linewidth}{|C|C|}
+    \hline
+    Nom du fichier & Contenu \tabularnewline
+    \hline
+    \code{ast.ml} & Types associé à l'arbre de syntaxe abstraite et au typage, fonctions d'affichage associées \tabularnewline
+    \hline
+    \code{lexer.mll} & Lexer \tabularnewline
+    \hline
+    \code{main.ml} & Parsing de la ligne de commande et compilation du fichier \tabularnewline
+    \hline
+    \code{parser.mly} & Parser \tabularnewline
+    \hline
+    \code{printer.ml} & Fonctions générales de pretty-printing \tabularnewline
+    \hline
+    \code{typer.ml} & Typage d'un arbre de syntaxe abstraite et décoration \tabularnewline
+    \hline
+    \code{utils.ml} & Fonctions usuelles utiles dans tout le projet \tabularnewline
+    \hline
+  \end{tabularx}
+  \caption{Liste des fichiers}
+\end{table}
+
+
+\end{document}
