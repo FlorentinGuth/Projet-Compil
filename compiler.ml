@@ -135,17 +135,21 @@ let rec compile_stmt env s =
     label l_cond ++ compile_expr env loop ++ popq rax ++
     testq (reg rax) (reg rax) ++ jne l_loop
 
-  | Sfor (i, rev, lb, ub, s) ->(*
+  | Sfor (i, rev, lb, ub, s) -> (* lb | ub | i <- rsp *)
     let l_cond = get_unique_label () in
     let l_loop = get_unique_label () in
-    let (init, test, update) = if rev
-      then (ub, cmpq (imm lb) truc, decq)
-      else (lb, cmpq truc (imm ub), incq)
+    let lb_adr = ind ~ofs:16 rsp in
+    let ub_adr = ind ~ofs:8  rsp in
+    let i_adr  = ind         rsp in
+    let (test, update) = if rev
+      then (movq i_adr (reg rdi) ++ cmpq ub_adr (reg rdi), decq)
+      else (movq i_adr (reg rdi) ++ cmpq (reg rdi) ub_adr, incq)
     in
-    let env' = in
-    jmp l_cond ++ label l_loop ++ compile_stmt env' s ++
-    label l_cond ++ test ++ *)
-    failwith "Not implemented"
+    let (_, last) = Smap.min_binding env in
+    let env' = Smap.add i.desc (last - 24) env in (* because of lb and ub *)
+    compile_expr env lb ++ compile_expr env ub ++ pushq (ind ~ofs:8 rsp) ++
+    jmp l_cond ++ label l_loop ++ compile_stmt env' s ++ update i_adr ++
+    label l_cond ++ test ++ jge l_loop ++ popn 24
 
 
 let rec compile_decl env next (codefun, codemain) = function
