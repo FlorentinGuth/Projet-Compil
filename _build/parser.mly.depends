@@ -1,2 +1,2 @@
-parser.ml: AST Ast Format Lexing List Utils
+parser.ml: Ast Ast_common Format Lexing List Utils
 parser.mli: Ast Lexing

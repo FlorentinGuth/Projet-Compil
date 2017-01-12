@@ -1,7 +1,7 @@
 %{
     open Utils
+    open Ast_common
     open Ast
-    open AST
            
     let error m s e = raise (Parsing_error (m, (s, e)))
 %}
@@ -51,7 +51,7 @@
 
 (** Entry point *)
 
-%start <Ast.AST.ast> file
+%start <Ast.ast> file
 
 
 %% (** Beginning of rules *)

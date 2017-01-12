@@ -1,1 +1,1 @@
-parser.ml: AST Ast Format Lexing List Obj Pervasives Printf Utils
+parser.ml: Ast Ast_common Format Lexing List Obj Pervasives Printf Utils

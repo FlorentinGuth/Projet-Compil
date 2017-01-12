@@ -9,12 +9,11 @@ let compile file =
       while true do
         print_endline (input_line ch)
       done;
-    with End_of_file -> print_string "\n\n"; close_in ch
+    with End_of_file -> close_in ch
   in
   
-  (*
   let out = Format.std_formatter in
-     
+  (*   
   let rec token_list () =
     match Lexer.token buf with
     | Parser.EOF -> []
@@ -31,8 +30,13 @@ let compile file =
     print_endline "AST:";
     Printer.print_ast out a;
     print_string "\n\n"
+  in*)
+
+  let print_ast_typed ta =
+    print_endline "Typed AST:";
+    Ast_typed.print_ast out ta;
+    print_string "\n\n\n"
   in
-  *)
 
   let ch = open_in file in
   let buf = Lexing.from_channel ch in
@@ -40,7 +44,7 @@ let compile file =
   buf.Lexing.lex_curr_p  <- { buf.Lexing.lex_curr_p  with Lexing.pos_fname = file };
   
   try
-    print_string "Original Ada file:\n\n";
+    print_endline "Original Ada file:";
     print_file file;
     (*print_tokens ();*)
     
@@ -49,11 +53,12 @@ let compile file =
     
     if not !parse_only then begin
       let ta = Typer.type_ast a in
+      print_ast_typed ta;
       if not !type_only then begin
         let output = (Filename.chop_suffix file ".exp") ^ ".s" in
         Compiler.compile_program ta output;
 
-        print_string "Compiled x86-64 file:\n\n";
+        print_string "Compiled x86-64 file:\n";
         print_file output;
       end;
     end;

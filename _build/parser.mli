@@ -64,4 +64,4 @@ exception Error
 
 (* The monolithic API. *)
 
-val file: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.AST.ast)
+val file: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.ast)

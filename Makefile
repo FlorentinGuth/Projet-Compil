@@ -1,12 +1,13 @@
 FLAGS = -I _build/ -verbose 1 -use-menhir -yaccflags -v -lflags -g -cflags -g,-w,+A-4-50-52
 
 TESTDIR = ./tests/perso/
+TARGET = test2
 
 all: test
 
 test: main.byte
-	./adac $(TESTDIR)test.adb
-	gcc -g $(TESTDIR)test.s -o $(TESTDIR)a.out
+	./adac $(TESTDIR)$(TARGET).adb
+	gcc -g $(TESTDIR)$(TARGET).s -o $(TESTDIR)a.out
 	./$(TESTDIR)a.out
 
 .PHONY: main.byte regen_msg update_msg clean
