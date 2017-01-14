@@ -16,26 +16,14 @@ Passage par référence (in out) : on empile l'adresse
 
 Affectation : suivre lvl - l fois puis offset connu dans l'ident
 
-
-Ajouter une expression de type Eaddr ? quand passage par référence ? peut avoir l'adresse d'une variable passée elle-même par référence ?
-
-
-Attention : main, malloc,print_int reserved -> changer les noms des fonctions -> primitives s'appellent plus pareil
-
 offs dans Lmember : par rapport à rsp (inversé)
 Checker les déclarations d'access
-Fonction qui renvoie un record ? ...
-Fonctions/proc allouent la frame sinon ça va pas le faire + quand l'appel est terminé faire attention à la size des arguments
-Option de ne pas compter l'offset lorsqu'on déclare le type d'une fonction
-On peut peut-être enlever size de compile_left_val (mais faire attention avec les access...)
 Fonction main déclarée de niveau 0 comme les builtins : on peut pas l'appeler put, new_line, integer...
-.all doit marcher même si c'est pas un record
 Set_param : doit ajuster la taille aussi si c'est inout (transformer en genre d'access?)
 Vérifier que l'ordre des arguments est correct
-Checker and then, or else, égalité sur des records (contenant des access, etc...)
+Tester des access d'acess d'access avec .all
 
 
 Refactor:
 typer.ml call_proc and app_func
 ast_typed.ml two levels (find better names)
-Laddress inutile

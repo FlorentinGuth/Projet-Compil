@@ -249,6 +249,44 @@ percent=`expr 100 \* $score_test / $max`;
 echo "Comportement du code : $score_test/$max : $percent%";}
 
 
+
+
+
+# partie p : tests persos
+
+partiep () {
+echo
+echo "Partie p"
+echo "-----------------"
+
+# timeout="why3-cpulimit 30 0 -h"
+
+for f in perso/*.adb; do
+    echo -n "."
+    asm=perso/`basename $f .adb`.s
+    rm -f $asm
+    if compile $f; then
+	rm -f out
+	if gcc $asm && ./a.out > out; then
+	    echo
+	else
+		echo
+		echo "ECHEC du code produit pour $f"
+	fi
+    else
+	echo
+	echo "ECHEC de la compilation sur $f (devrait réussir)"
+    fi
+done
+echo
+}
+
+
+
+
+
+
+
 case $option in
     "-1" )
         partie1;;
@@ -269,6 +307,9 @@ case $option in
         cd opt/
         compilo="../"$compilo
         partie2;;
+    "-p" )
+        verbose=0;
+        partiep;;
     "-all" )
     	partie1;
     	partie2;
@@ -285,6 +326,7 @@ case $option in
         echo "-v2     : tester la partie 2 (verbose)"
         echo "-v3     : tester la partie 3 (verbose)"
         echo "-o2     : tester la partie 2 (optionnel)"
+        echo "-p      : tester la partie perso"
         echo "-gnat   : vérifier que gnat a le bon comportement"
         echo "-all    : tout tester";;
 

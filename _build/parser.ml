@@ -2782,8 +2782,10 @@ and _menhir_goto_expr_desc : _menhir_env -> 'ttv_tail -> Lexing.position -> _men
             let _1 = () in
             let _startpos = _startpos__1_ in
             let _endpos = _endpos_e_ in
-            let _v : (Ast.expr_desc) =                      ( Ebinop (decorate_dummy_loc (Econst (Cint 0)),
-                              Bminus, e) ) in
+            let _v : (Ast.expr_desc) =                      ( match e.desc with
+                       | Econst (Cint n) -> Econst (Cint (-n))
+                       | _ -> Ebinop (decorate_dummy_loc (Econst (Cint 0)),
+                                      Bminus, e) ) in
             _menhir_goto_expr_desc _menhir_env _menhir_stack _endpos _menhir_s _v _startpos
         | _ ->
             assert (not _menhir_env._menhir_error);

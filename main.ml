@@ -44,8 +44,8 @@ let compile file =
   buf.Lexing.lex_curr_p  <- { buf.Lexing.lex_curr_p  with Lexing.pos_fname = file };
   
   try
-    print_endline "Original Ada file:";
-    print_file file;
+    (*print_endline "Original Ada file:";*)
+    (*print_file file;*)
     (*print_tokens ();*)
     
     let a = Parser.file Lexer.token buf in
@@ -53,13 +53,13 @@ let compile file =
     
     if not !parse_only then begin
       let ta = Typer.type_ast a in
-      print_ast_typed ta;
+      (*print_ast_typed ta;*)
       if not !type_only then begin
         let output = (Filename.chop_suffix file ".exp") ^ ".s" in
         Compiler.compile_program ta output;
 
-        print_string "Compiled x86-64 file:\n";
-        print_file output;
+        (*print_string "Compiled x86-64 file:\n";
+          print_file output;*)
       end;
     end;
     close_in ch

@@ -4,15 +4,20 @@ open Ast_typed
 open X86_64
 
 
+let () = allow_comments false
+
 let get_unique_label =
   let id = ref 0 in
-  (fun () -> let l = Format.sprintf "_L_%n" !id in
+  (fun () -> let l = Format.sprintf "L_%n" !id in
     incr id;
     l)
 
-
-let pushn n = if n = 0 then nop else subq (imm (8*n)) (reg rsp)
-let popn  n = if n = 0 then nop else addq (imm (8*n)) (reg rsp)
+let imm_8   n = imm (8*n)
+let ind_8 ?(ofs) reg = ind ?ofs:(match ofs with
+                                | None -> None
+                                | Some ofs -> Some (8*ofs)) reg
+let pushn n = if n = 0 then nop else subq (imm_8 n) (reg rsp)
+let popn  n = if n = 0 then nop else addq (imm_8 n) (reg rsp)
 
 let rec iter n code =
   if n = 0 then nop else code ++ (iter (n - 1) code)
@@ -20,15 +25,14 @@ let rec iter n code =
 let copy from_addr to_addr size =
   let rec aux ofs acc =
     if ofs = -1 then acc else
-      let code = movq (ind ~ofs:(8*ofs) from_addr) (reg r15) ++
-        movq (reg r15) (ind ~ofs:(8*ofs) to_addr) in
+      let code = movq (ind_8 ~ofs from_addr) (reg r15) ++
+        movq (reg r15) (ind_8 ~ofs to_addr) in
       aux (ofs - 1) (acc ++ code)
   in
-  comment "copy" ++ aux (size - 1) nop ++ comment "end copy"
+  aux (size - 1) nop
 
 let follow_rbp n =
-  comment "follow rbp" ++ movq (reg rbp) (reg rsi) ++
-  iter n (movq (ind ~ofs:16 rsi) (reg rsi)) ++ comment "end follow rbp"
+  movq (reg rbp) (reg rsi) ++ iter n (movq (ind_8 ~ofs:2 rsi) (reg rsi))
                        
 
 let compile_const c =
@@ -40,22 +44,34 @@ let compile_const c =
   in
   pushq (imm n)
 
-let rec compile_expr ?(push = true) e =
+let rec compile_expr_no_comment ~push e =
   match e.desc with
   (* Result pushed on the top of the stack
      if push = false, the address of the left_value is stored in %rsi *)
   | Econst c ->
-    compile_const c
+    assert push; compile_const c
       
-  | Eleft_val lv ->
-    let (code, size) = compile_left_val ~push lv in
-    if push then code ++ comment "push left_val" ++
-                 pushn size ++ copy rsi rsp size ++ comment "end lv"
-    else code
-      
+  | Eident id ->
+    follow_rbp id.level ++ addq (imm_8 id.offset) (reg rsi) ++
+    (if id.is_reference then movq (ind_8 rsi) (reg rsi) else nop) ++
+    (if push then pushn id.size ++ copy rsi rsp id.size else nop)
+    
+  | Ederef er ->
+    compile_expr ~push:false er ++ movq (ind_8 rsi) (reg rsi) ++
+    (if push then pushn e.deco ++ copy rsi rsp e.deco else nop)
+
+  | Emember (ef, offs) ->
+    if not push then
+      compile_expr ~push:false ef ++ addq (imm_8 offs) (reg rsi)
+    else compile_expr ~push:true ef ++
+         popn offs ++ movq (reg rsp) (reg rsi) ++
+         addq (imm_8 (ef.deco - offs - e.deco)) (reg rsi) ++ copy rsp rsi e.deco ++
+         popn (ef.deco - offs - e.deco)
+    
   | Ebinop (e1, o, e2) ->
-    let c1 = compile_expr e1 in
-    let c2 = compile_expr e2 in
+    assert push;
+    let c1 = compile_expr ~push:true e1 in
+    let c2 = compile_expr ~push:true e2 in
     let ce = c1 ++ c2 ++ popq rbx ++ popq rax in
     
     let comparator_code jmp_op =
@@ -70,8 +86,8 @@ let rec compile_expr ?(push = true) e =
       let size = e1.deco in
       let rec compare i acc =
         if i = -1 then acc
-        else let code = movq (ind ~ofs:(8*i) rsp) (reg rax) ++
-                        movq (ind ~ofs:(8*(i + size)) rsp) (reg rbx) ++
+        else let code = movq (ind_8 ~ofs:i rsp) (reg rax) ++
+                        movq (ind_8 ~ofs:(i + size) rsp) (reg rbx) ++
                         cmpq (reg rbx) (reg rax) ++ jmp_if_not l in
           compare (i - 1) (code ++ acc)
       in
@@ -81,17 +97,19 @@ let rec compile_expr ?(push = true) e =
     
     let lazy_code default jmp_op =
       let l = get_unique_label () in
-      c1 ++ popq rax ++ movq (imm default) (reg rcx) ++ testq (reg rax) (reg rax) ++
+      c1 ++ popq rax ++ movq (imm default) (reg rcx) ++
+      testq (reg rax) (reg rax) ++
       jmp_op l ++ c2 ++ popq rcx ++ label l ++ pushq (reg rcx)
     in
     
     let arith_code arith_op =
       (* performs e1 op e2 *)
-      ce ++ arith_op (reg rbx) (reg rax) ++ pushq (reg rax)
+      ce ++ arith_op (reg ebx) (reg eax) ++ movslq (reg eax) rax ++
+      pushq (reg rax)
     in
     let div_code want_rem =
-      let r = if want_rem then rdx else rax in
-      ce ++ cqto ++ idivq (reg rbx) ++ pushq (reg r)
+      let (r, rl) = if want_rem then (rdx, edx) else (rax, eax) in
+      ce ++ cltd ++ idivl (reg ebx) ++ movslq (reg rl) r ++ pushq (reg r)
     in
     
     begin match o with
@@ -102,121 +120,99 @@ let rec compile_expr ?(push = true) e =
       | Bgt  -> comparator_code jg
       | Bgeq -> comparator_code jge
                   
-      | Bplus  -> arith_code addq
-      | Bminus -> arith_code subq
-      | Btimes -> arith_code imulq
+      | Bplus  -> arith_code addl
+      | Bminus -> arith_code subl
+      | Btimes -> arith_code imull
       | Bdiv   -> div_code false
       | Brem   -> div_code true
                     
-      | Band -> arith_code andq
-      | Bor  -> arith_code orq
+      | Band -> arith_code andl
+      | Bor  -> arith_code orl
                   
       | Band_then -> lazy_code 0 je
       | Bor_else  -> lazy_code 1 jne
     end
     
   | Enot e -> (* not x = 1 - x since x is 0 or 1 *)
-    compile_expr e ++ popq rax ++ negq (reg rax) ++ incq (reg rax)
+    assert push;
+    compile_expr ~push:true e ++ popq rax ++ negq (reg rax) ++ incq (reg rax)
                                                           
   | Enew size ->
-    movq (imm (8 * size)) (reg rdi) ++ call "malloc" ++ pushq (reg rax)
+    assert push;
+    movq (imm_8 size) (reg rdi) ++ call "malloc" ++ pushq (reg rax)
                                                           
   | Eapp_func (f, args) ->
-    compile_call f args
-                                                          
-and compile_left_val ?(push = true) lv =
-  (** put address in rsi and returns size of object pointed by the given address *)
-  match lv with
-  | Lident id | Laccess id ->
-    let code = follow_rbp id.level ++ addq (imm (8*id.offset)) (reg rsi) ++
-              if id.is_reference then movq (ind rsi) (reg rsi) else nop in
-    (comment "Lident" ++ code ++ comment "end Lindent", id.size)
-      (*
-  | Laccess id ->
-    let code = follow_rbp id.level ++ movq (ind ~ofs:(8*id.offset) rsi) (reg rsi) ++
-               if id.is_reference then movq (ind rsi) (reg rsi) else nop in
-    (comment "Laccess" ++ code ++ comment "end Laccess", id.size)
-      *)
-  | Lmember (e, is_ac, offs, size) ->
-    let code = if not push then
-        compile_expr ~push:false e ++
-        (if is_ac then movq (ind rsi) (reg rsi) else nop) ++
-        addq (imm (8*offs)) (reg rsi)
-      else compile_expr e ++
-           (if is_ac then popq rsi ++ movq (ind rsi) (reg rsi) ++ pushn size
-            else popn offs ++ movq (reg rsp) (reg rsi)) ++
-           addq (imm (8*(e.deco - offs - size))) (reg rsi) ++ copy rsp rsi size ++
-           (if is_ac then popn (e.deco - offs - size) else nop)
-    in
-    (comment "Lmember" ++ code ++ comment "end Lmember", size)
+    compile_call f args ++ (if push then nop else (* TODO memory leak *)
+                              movq (reg rsp) (reg rsi) ++ popn 1)
+
+and compile_expr ~push e =
+  let s = (Printer.print_to_string print_expr e) ^
+          (if push then " (PUSH)" else " (RDI)") in
+  comment s ++ compile_expr_no_comment ~push e ++ comment ("end " ^ s)
+
 
 and compile_call p args =
   let (args_code, size) =
     List.fold_left2 (fun (c, s) m e -> match m with
-                      | In -> (c ++ compile_expr e, s + e.deco)
-                      | InOut -> (c ++ compile_expr ~push:false e ++
-                                  pushq (reg rsi), s + 1))
+                      | In -> (compile_expr ~push:true e ++ c, s + e.deco)
+                      | InOut -> (compile_expr ~push:false e ++
+                                  pushq (reg rsi) ++ c, s + 1))
       (nop, 0) p.modes args in
-  comment "ret space" ++ pushn p.size_ret ++
-  comment "pushing args" ++ args_code ++
-  comment "pushing rbp father" ++ follow_rbp p.level ++ pushq (reg rsi) ++
+  pushn p.size_ret ++ args_code ++ follow_rbp p.level ++ pushq (reg rsi) ++
   call p.name ++ popn (1 + size)
+
+
+type return =
+  | Ret_space of int
+  | Rax
       
 
-let rec compile_stmt ret_type s =
+let rec compile_stmt_no_comment ret_type s =
   match s with
   | Saffect (lv, e) ->    
-    let (code, size) = compile_left_val ~push:false lv in
-    comment "Saffect" ++ code ++ pushq (reg rsi) ++ compile_expr e ++
-    movq (ind ~ofs:(8*e.deco) rsp) (reg rsi) ++ copy rsp rsi size ++
+    let code = compile_expr ~push:false lv in
+    code ++ pushq (reg rsi) ++ compile_expr ~push:true e ++
+    movq (ind_8 ~ofs:e.deco rsp) (reg rsi) ++ copy rsp rsi e.deco ++
     popn (1 + e.deco)
                                      
   | Scall_proc (p, args) ->
     compile_call p args
 
   | Sreturn e ->
-    comment "return" ++
+    compile_expr ~push:true e ++
     (match ret_type with
-     | Null -> xorq (reg rax) (reg rax)
-     | Rax -> compile_expr e ++ popq rax
-     | Ret_space ret_ofs -> compile_expr e ++
-                            movq (reg rbp) (reg rsi) ++
-                            addq (imm (8*ret_ofs)) (reg rsi) ++
-                            copy rsp rsi e.deco) ++
+     | Rax ->
+       popq rax
+         
+     | Ret_space ret_ofs ->
+       movq (reg rbp) (reg rsi) ++ addq (imm_8 ret_ofs) (reg rsi) ++
+       copy rsp rsi e.deco) ++
     movq (reg rbp) (reg rsp) ++ popq rbp ++ ret
 
   | Sblock b ->
-    List.fold_left (fun c s -> c ++ compile_stmt ret_type s) nop b
+    assert false
 
   | Scond (cond, s1, s2) ->
     let l_else = get_unique_label () in
     let l_end = get_unique_label () in
-    compile_expr cond ++ popq rax ++ testq (reg rax) (reg rax) ++ je l_else ++
-    compile_stmt ret_type s1 ++ jmp l_end ++
+    compile_expr ~push:true cond ++ popq rax ++ testq (reg rax) (reg rax) ++
+    je l_else ++ compile_stmt ret_type s1 ++ jmp l_end ++
     label l_else ++ compile_stmt ret_type s2 ++ label l_end
 
   | Swhile (loop, s) ->
     let l_cond = get_unique_label () in
     let l_loop = get_unique_label () in
     jmp l_cond ++ label l_loop ++ compile_stmt ret_type s ++
-    label l_cond ++ compile_expr loop ++ popq rax ++
+    label l_cond ++ compile_expr ~push:true loop ++ popq rax ++
     testq (reg rax) (reg rax) ++ jne l_loop
-(*
-  | Sfor (i, rev, lb, ub, s) -> (* lb | ub | i <- rsp *)
-    let l_cond = get_unique_label () in
-    let l_loop = get_unique_label () in
-    let lb_adr = ind ~ofs:16 rsp in
-    let ub_adr = ind ~ofs:8  rsp in
-    let i_adr  = ind         rsp in
-    let (test, update) = if rev
-      then (movq i_adr (reg rdi) ++ cmpq ub_adr (reg rdi), decq)
-      else (movq i_adr (reg rdi) ++ cmpq (reg rdi) ub_adr, incq)
-    in
-    let (_, last) = Smap.min_binding in
-    let env' = Smap.add i.desc (last - 24) in (* because of lb and ub *)
-    compile_expr lb ++ compile_expr ub ++ pushq (ind ~ofs:8 rsp) ++
-    jmp l_cond ++ label l_loop ++ compile_stmt env' s ++ update i_adr ++
-    label l_cond ++ test ++ jge l_loop ++ popn 24*)
+
+and compile_stmt ret_type = function
+  | Sblock b ->
+    List.fold_left (fun c s -> c ++ compile_stmt ret_type s) nop b
+
+  | s ->
+    let c = Printer.print_to_string print_stmt s in
+    comment c ++ compile_stmt_no_comment ret_type s ++ comment ("end " ^ c)
 
 
 let rec compile_decl (codefun, codemain) = function
@@ -227,14 +223,16 @@ let rec compile_decl (codefun, codemain) = function
      failwith "Not implemented"
   *)
   | Dvar_decl (offset, e) ->
-    let lv = Lident { is_reference = false; size = e.deco; level = 0; offset } in
-    (codefun, codemain ++ compile_stmt Null (Saffect (lv, e))) (* TODO access? *)
+    let lv = Eident { is_reference = false; size = e.deco; level = 0; offset } in
+    (codefun, codemain ++
+              compile_stmt Rax (Saffect (decorate lv e.deco, e)))
 
   | Dproc_func pf ->
     let (cf, cm) = compile_decls pf.decls in
+    let ret_type = if pf.ret = 0 then Rax else Ret_space pf.ret in
     let code = label pf.pf_sig.name ++ pushq (reg rbp) ++ movq (reg rsp) (reg rbp) ++
                pushn pf.frame ++ comment "decls" ++ cm ++
-               comment "stmts" ++ compile_stmt pf.ret pf.stmt in
+               comment "stmts" ++ compile_stmt ret_type pf.stmt in
     (codefun ++ code ++ cf, codemain)
 
 and compile_decls ds =
@@ -249,21 +247,21 @@ let compile_program p file =
 
                 codemain ++ codefun ++
 
-                label "_f_put_0" ++
-                movslq (ind ~ofs:16 rsp) rsi ++
+                label "put" ++
+                movslq (ind_8 ~ofs:2 rsp) rsi ++
                 movq (ilab ".Sput") (reg rdi) ++
                 xorq (reg rax) (reg rax) ++
                 call "printf" ++
                 ret ++
 
-                label "_f_new_line_0" ++
+                label "new_line" ++
                 movq (ilab ".Snew_line") (reg rdi) ++
                 xorq (reg rax) (reg rax) ++
                 call "printf" ++
                 ret ++
 
-                label "_f_character'val_0" ++
-                movslq (ind ~ofs:16 rsp) rax ++
+                label "character'val" ++
+                movslq (ind_8 ~ofs:2 rsp) rax ++ movq (reg rax) (ind_8 ~ofs:3 rsp) ++
                 ret;
               data =
                 label ".Sput" ++

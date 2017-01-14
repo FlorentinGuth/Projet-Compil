@@ -1,9 +1,12 @@
 FLAGS = -I _build/ -verbose 1 -use-menhir -yaccflags -v -lflags -g -cflags -g,-w,+A-4-50-52
 
-TESTDIR = ./tests/perso/
-TARGET = test
+TESTDIR = ./tests/exec/
+TARGET = nathanael-quine
 
 all: test
+
+test_perso: main.byte
+	./test.sh -p adac
 
 test: main.byte
 	./adac $(TESTDIR)$(TARGET).adb

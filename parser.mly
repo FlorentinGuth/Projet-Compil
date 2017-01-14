@@ -161,8 +161,10 @@ expr_desc:
   | LPAREN; e = expr; RPAREN; { e.desc }
   | lv = left_val; { Eleft_val lv }
   | NOT; e = expr; { Enot e }
-  | MINUS; e = expr; { Ebinop (decorate_dummy_loc (Econst (Cint 0)),
-                              Bminus, e) } %prec UNARY_MINUS
+  | MINUS; e = expr; { match e.desc with
+                       | Econst (Cint n) -> Econst (Cint (-n))
+                       | _ -> Ebinop (decorate_dummy_loc (Econst (Cint 0)),
+                                      Bminus, e) } %prec UNARY_MINUS
   | e1 = expr; EQ; e2 = expr; { Ebinop (e1, Beq, e2) }
   | e1 = expr; NEQ; e2 = expr; { Ebinop (e1, Bneq, e2) }
   | e1 = expr; LT; e2 = expr; { Ebinop (e1, Blt, e2) }

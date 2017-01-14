@@ -211,6 +211,9 @@ val imulq: [`Q] operand -> [`Q] operand -> text
 val idivq: [`Q] operand -> text
 val cqto: text
 
+val idivl: [`L] operand -> text
+val cltd: text
+
 (** {2 Opérations logiques } *)
 
 val notb: [`B] operand -> text
@@ -329,6 +332,9 @@ val label : label -> [> ] asm
 val glabel : label -> [> ] asm
   (** même chose, avec une déclaration .globl (pour main, typiquement) *)
 
+val allow_comments : bool -> unit
+  (** active ou non les commentaires dans le code produit *)
+  
 val comment : string -> [> ] asm
   (** place un commentaire dans le code généré. Peut se retrouver dans
       du text ou du data *)

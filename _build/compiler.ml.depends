@@ -1,1 +1,1 @@
-compiler.ml: Ast_common Ast_typed Char Format List Utils X86_64
+compiler.ml: Ast_common Ast_typed Char Format List Printer Utils X86_64

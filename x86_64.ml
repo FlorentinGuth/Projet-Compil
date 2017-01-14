@@ -186,6 +186,9 @@ let imulq a b = ins "imulq %a, %a" a () b ()
 let idivq a = ins "idivq %a" a ()
 let cqto = S "\tcqto\n"
 
+let idivl a = ins "idivl %a" a ()
+let cltd = S "\tcltd\n"
+
 let notb a = ins "notb %a" a ()
 let notw a = ins "notw %a" a ()
 let notl a = ins "notl %a" a ()
@@ -270,7 +273,17 @@ let setbe a = ins "setbe %a" a ()
 let label (s : label) = S (s ^ ":\n")
 let glabel (s: label) = S ("\t.globl\t" ^ s ^ "\n" ^ s ^ ":\n")
 
-let comment s = S ("#" ^ s ^ "\n")
+let comments_allowed = ref true
+let allow_comments b =
+  comments_allowed := b
+
+let comment s =
+  if !comments_allowed then
+    let lines = String.split_on_char '\n' s in
+    let s' = List.fold_left (fun comm line -> comm ^ "#" ^ line ^ "\n")
+               "" lines in
+    S s'
+  else S ""
 
 let align n = ins ".align %i" n
 

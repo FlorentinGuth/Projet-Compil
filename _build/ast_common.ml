@@ -67,4 +67,4 @@ let print_const fmt = function
 
 let print_mode fmt = function
   | In    -> fprintf fmt "in"
-  | InOut -> fprintf fmt "@[in@ out@]"
+  | InOut -> fprintf fmt "in out"
