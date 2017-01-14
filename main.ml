@@ -33,7 +33,7 @@ let compile file =
   in*)
 
   let print_ast_typed ta =
-    print_endline "Typed AST:";
+    print_endline "\n\nTyped AST:";
     Ast_typed.print_ast out ta;
     print_string "\n\n\n"
   in

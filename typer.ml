@@ -44,7 +44,8 @@ module Env : sig
   val get_typ_annot_type : t -> ?lvl:int -> A.typ_annot -> T.typ
   (** Takes into account whether typ_annot is an access or not *)
 
-  val set_id_type : t -> ?lvl:int -> ?force:bool -> A.ident -> T.typ -> t * int
+  val set_id_type : t -> ?lvl:int -> ?force:bool -> ?param:bool ->
+    A.ident -> T.typ -> t * int
   (** Sets the type of an identifier (variable or procedure/function), at the given
       level, and force (defaults to false) prevents the env to check for multiple 
       definitions of the same variable (useful for for-loop-counter-variables).
@@ -64,6 +65,7 @@ module Env : sig
   val deco_level : t -> ident_desc -> T.t_ident
   (** Decorates the given identifier with the current level *)
   val get_frame_size : t -> int
+  val get_ret_ofs : t -> int
 end = struct
   type constr =
     | Ta (* type_annot *)
@@ -81,8 +83,9 @@ end = struct
       notdef  : Sset.t; (* Set of types that haven't been defined yet *)
       byref   : Sset.t; (* Set of variables that have been passed by reference *)
       subtypes: Tset.t; (* Contains (t1, t2) pairs where t2 is a subtype of t1 *)
-      current_level : int;
-      current_offset: int;
+      current_level: int;
+      offset_params: int;
+      offset_vars:   int;
     }
 
   (* Functions to perform checks on objects, when they are expected to be an ident
@@ -133,7 +136,8 @@ end = struct
                   byref  = Sset.empty;
                   subtypes = Tset.empty;
                   current_level = 0; (* TODO change? *)
-                  current_offset = 0;
+                  offset_params = 3;
+                  offset_vars   = 0;
                 }
 
 
@@ -169,18 +173,23 @@ end = struct
     else get_typ_ident_type env ~lvl ta.typ_ident
 
 
-  let set_id_type env ?(lvl = env.current_level) ?(force = false) id typ =
+  let set_id_type env ?(lvl = env.current_level) ?(force = false) ?(param = false)
+        id typ =
     let l = try Smap.find id.desc env.objs with Not_found -> [] in
     let lvl' = try snd (List.find (fun o -> snd o <= lvl) l)
       with Not_found -> -1 in
     if lvl' = lvl && not force
     then error (Format.sprintf "%s is already defined at this level" id.desc) id.deco;
-    let offs = env.current_offset - 1 in
+    let (offs, new_ofs_vars, new_ofs_p) = if param
+      then (env.offset_params, env.offset_vars, env.offset_params + typ.T.t_size)
+      else let ofs' = env.offset_vars - typ.T.t_size in
+        (ofs', ofs', env.offset_params) in
     let l' = (to_id (typ, offs), lvl) :: l in
     let l'' = List.stable_sort (fun o o' -> compare (snd o') (snd o)) l' in
     ({ env with objs = Smap.add id.desc l'' env.objs;
                 notdef = Sset.remove id.desc env.notdef;
-                current_offset = offs }, offs)
+                offset_vars = new_ofs_vars;
+                offset_params = new_ofs_p }, offs)
 
   let set_typ_ident_type env ?(force = false) ta typ =
     let l = try Smap.find ta.desc env.objs with Not_found -> [] in
@@ -196,7 +205,7 @@ end = struct
 
   let set_param env ?force (a, m) =
     let t = get_typ_annot_type env a.ta in
-    let (env', ofs) = set_id_type env ?force a.ident t in
+    let (env', ofs) = set_id_type env ?force ~param:true a.ident t in
     let (consts', byref') = match m with
       | InOut -> (env.consts, Sset.add a.ident.desc env.byref)
       | In    -> if T.is_access t then (env.consts, env.byref)
@@ -249,13 +258,18 @@ end = struct
     env.current_level
 
   let incr_level env =
-    { env with current_level = env.current_level + 1 }
+    { env with current_level = env.current_level + 1;
+               offset_vars = 0;
+               offset_params = 3 }
 
   let deco_level env s =
     decorate s env.current_level
 
   let get_frame_size env =
-    -env.current_offset
+    -env.offset_vars
+
+  let get_ret_ofs env =
+    env.offset_params
 end
 
 
@@ -295,6 +309,8 @@ let type_field env id fields (f : A.ident_decl) =
 let deco_expr e t =
   ((decorate e t.T.t_size : T.expr), t)
 
+exception Function of A.ident
+
 (** Mutually recursive functions getting to the leftmost ident to verify he shouldn't
     be modified *)
 let rec lv_ensure_not_modified env lv =
@@ -312,8 +328,12 @@ and expr_ensure_not_modified env e =
 and type_expr ?(ensure_lv = false) ?(ensure_not_new = false) env expr =
   match expr.desc with
   | A.Eleft_val lv ->
-    let (lv', t) = type_left_val ~ensure_lv env lv in
-    deco_expr (T.Eleft_val lv') t
+    begin try
+        let (lv', t) = type_left_val ~ensure_lv env lv in
+        deco_expr (T.Eleft_val lv') t
+      with Function id -> type_expr env
+                            (decorate (A.Eapp_func (id, [])) id.deco)
+    end
       
   | e ->
     if ensure_lv then error "This expression should be a left value" expr.deco
@@ -362,7 +382,8 @@ and type_expr ?(ensure_lv = false) ?(ensure_not_new = false) env expr =
         let (params', t, modes, lvl) = type_proc_func env f params in
         let pf_sig = T.{ name = (Format.sprintf "_f_%s_%d" f.desc lvl);
                          modes;
-                         level = Env.level env - lvl } in
+                         level = Env.level env - lvl;
+                         size_ret = t.t_size } in
         deco_expr (T.Eapp_func (pf_sig, params')) t
           
       | A.Eleft_val _ ->
@@ -376,25 +397,26 @@ and type_left_val ?(ensure_lv = false) env lv =
   | A.Lident id ->
     let (id', t) = Env.get_id_type env id in
     let t = match t.T.def with
-      | T.Tproc_func ([], r) -> if ensure_lv then not_left_val id.deco else r
+      | T.Tproc_func ([], _r) -> if ensure_lv then not_left_val id.deco
+        else raise (Function id)
       | _ -> t in
     if T.is_access t then (T.Laccess id', t) else (T.Lident id', t)
     
   | A.Lmember (e, f) ->
     begin
       let (e', t) = type_expr env ~ensure_not_new:true e in
-      let (r, id_r) = match t.T.def with
-        | T.Trecord r -> (r, t.T.t_ident)
+      let (r, id_r, is_ac) = match t.T.def with
+        | T.Trecord r -> (r, t.T.t_ident, false)
         | T.Taccess r -> let typ = Env.get_typ_ident_type env ~lvl:r.deco
                                      (replace_deco r e.deco) in
-          (ensure_record typ.T.def e.deco, typ.T.t_ident)
+          (ensure_record typ.T.def e.deco, typ.T.t_ident, true)
         | _ -> error (Format.sprintf "This expression should be a record or an \
                                       access on a record") e.deco
       in
       let (t_field, offs) = type_field env id_r r f in
       if ensure_lv && not (T.is_access t)
       then ignore (type_expr ~ensure_lv:true env e); (* ineffective, but simpler *)
-      (T.Lmember (e', offs, t_field.T.t_size), t_field)
+      (T.Lmember (e', is_ac, offs, t_field.T.t_size), t_field)
     end
            
 
@@ -437,35 +459,39 @@ let rec type_stmt env return_type stmt =
     lv_ensure_not_modified env lv;
     let (e', te) = type_expr env e in
     Env.ensure_subtype env t te e.deco;
-    T.Saffect (lv', e')
+    (T.Saffect (lv', e'), 0)
       
   | A.Scall_proc (p, params) ->
     let (params', _t, modes, lvl) = type_proc_func ~expr:false env p params in
     let pf_sig = T.{ name = Format.sprintf "_f_%s_%d" p.desc lvl;
                      modes;
-                     level = Env.level env - lvl } in
-    T.Scall_proc (pf_sig, params')
+                     level = Env.level env - lvl;
+                     size_ret = 0 } in
+    (T.Scall_proc (pf_sig, params'), 0)
       
   | A.Sreturn e ->
     let (e', t) = type_expr env e in
     Env.ensure_subtype env return_type t e.deco;
-    T.Sreturn e'
+    (T.Sreturn e', 0)
       
   | A.Sblock l ->
-    T.Sblock (List.map (type_stmt env return_type) l)
+    let (l', n) = List.fold_left (fun (l, n) s ->
+                                   let (s, v) = type_stmt env return_type s in
+                                   (s :: l, max n v)) ([], 0) l in
+    (T.Sblock (List.rev l'), n)
                     
   | A.Scond (e, s1, s2) ->
     let (e', t) = type_expr env e in
     Env.ensure_subtype env T.bool t e.deco;
-    let s1' = type_stmt env return_type s1 in
-    let s2' = type_stmt env return_type s2 in
-    T.Scond (e', s1', s2')
+    let (s1', n1) = type_stmt env return_type s1 in
+    let (s2', n2) = type_stmt env return_type s2 in
+    (T.Scond (e', s1', s2'), max n1 n2)
       
   | A.Swhile (e, s) ->
     let (e', t) = type_expr env e in
     Env.ensure_subtype env T.bool t e.deco;
-    let s' = type_stmt env return_type s in
-    T.Swhile (e', s')
+    let (s', n) = type_stmt env return_type s in
+    (T.Swhile (e', s'), n)
       
   | A.Sfor (id, rev, lb, ub, s) -> 
     let env = Env.set_undefined env ~force:true id in
@@ -483,20 +509,22 @@ let rec type_stmt env return_type stmt =
                              ta = { typ_ident = decorate "integer" id.deco;
                                     is_access  = false } }, In) in
     let id_i = dummy_ident ofs_i in
-    let s' = type_stmt env' return_type s in
-    let (start_expr, test_op, test_id, incr_op) =
-      if rev then (ub', Bgeq, id_lb, Bminus)
-      else (lb', Bleq, id_ub, Bplus) in
+    let (s', n) = type_stmt env' return_type s in
+    let (start_id, test_op, test_id, incr_op) =
+      if rev then (id_ub, Bgeq, id_lb, Bminus)
+      else (id_lb, Bleq, id_ub, Bplus) in
     let open T in
+    let to_expr id = decorate (Eleft_val (Lident id)) 1 in
     let lid_i = Lident id_i in
-    let expr_i = decorate (Eleft_val lid_i) 1 in
-    let expr_test_id = decorate (Eleft_val (Lident test_id)) 1 in
+    let expr_i = to_expr id_i in
+    let expr_test_id = to_expr test_id in
     let expr_1 = decorate (Econst (Cint 1)) 1 in
     let expr_incr = decorate (Ebinop (expr_i, incr_op, expr_1)) 1 in
-    let start = Saffect (lid_i, start_expr) in
+    let start = Saffect (lid_i, to_expr start_id) in
     let test = Ebinop (expr_i, test_op, expr_test_id) in
     let incr = Saffect (lid_i, expr_incr) in
-    T.Sblock T.[start; Swhile (decorate test 1, Sblock [s'; incr])]
+    (T.Sblock T.[Saffect (Lident id_lb, lb'); Saffect (Lident id_ub, ub'); start;
+                 Swhile (decorate test 1, Sblock [s'; incr])], n + 3)
 
 
 (** Typing of declarations *)
@@ -550,7 +578,7 @@ let rec type_decl env d =
     let size = ref 0 in (* ugly... *)
     let fields_t = List.map (fun a ->
                               let t = Env.get_typ_annot_type env_with_r a.ta in
-                              size := !size + t.T.t_ident.deco;
+                              size := !size + t.T.t_size;
                               map_a (fun id -> replace_deco id (T.get_level t)) a)
                      fields in
     let env' = Env.set_typ_ident_type env id
@@ -581,8 +609,8 @@ let rec type_decl env d =
     
   | A.Dproc_func pf ->
     Env.ensure_all_def env pf.A.name.deco;
-    let return' = if pf.A.return.typ_ident.desc = ""
-      then T.null else begin
+    let is_proc = pf.A.return.typ_ident.desc = "" in
+    let return' = if is_proc then T.null else begin
         ensure_return pf.A.name.desc pf.A.name.deco [pf.A.stmt];
         Env.get_typ_annot_type env pf.A.return
       end in
@@ -591,20 +619,25 @@ let rec type_decl env d =
     let add_pf env2 = fst (Env.set_id_type env2 ~lvl:(Env.level env) pf.A.name
                              T.{ t_ident = to_t_id pf.A.name;
                                  def = Tproc_func (params', return');
-                                 t_size = -1 }) in
+                                 t_size = 0 }) in
     let env' = List.fold_left (fun env p -> fst (Env.set_param env p))
                  (Env.incr_level env) pf.A.params in
     (* Adding pf after params and return, thanks to the absurd shadowing rules *)
     let (decls', env'') = type_decls (add_pf env') pf.A.stmt.deco pf.A.decls in
-    let stmt' = type_stmt env'' return' pf.A.stmt in
+    let (stmt', n_for) = type_stmt env'' return' pf.A.stmt in
     let stmt'' = T.(Sblock [stmt'; Sreturn (decorate (Econst Cnull) 1)]) in
     let pf_sig = T.{ name = Format.sprintf "_f_%s_%d" pf.A.name.desc (Env.level env);
                      modes = List.map snd params';
-                     level = Env.level env } in
+                     level = Env.level env;
+                     size_ret = if is_proc then 0 else return'.t_size } in
+    let ret = if is_proc then T.Null
+      else if return'.T.t_size = 1 then T.Rax
+      else T.Ret_space (Env.get_ret_ofs env'') in
     let pf' = T.{ pf_sig;
-                  frame = Env.get_frame_size env'';
+                  frame = n_for + Env.get_frame_size env'';
+                  ret;
                   decls = decls';
-                  stmt = stmt'' } in
+                  stmt = if is_proc then stmt'' else stmt' } in
     (Some (T.Dproc_func pf'), add_pf env)
 
 and type_decls env loc_after decls =

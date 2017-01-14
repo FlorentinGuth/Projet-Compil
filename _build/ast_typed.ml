@@ -68,7 +68,8 @@ type pf_sig =
   {
     name:  ident_desc;
     modes: mode list;
-    level: int;
+    level:    int;
+    size_ret: int;
   }
 
 type expr_desc = 
@@ -83,7 +84,8 @@ and expr = (expr_desc, int) node (* decorated with size *)
 and left_val =
   | Lident  of ident
   | Laccess of ident
-  | Lmember of expr * int (* address of field *) * int (* size *)
+  | Lmember of expr * bool (* is_access *) *
+               int (* address of field *) * int (* size *)
 
 
 
@@ -101,6 +103,11 @@ type stmt =
      the declarations aren't available during parsing... *)*)
 
 
+type return =
+  | Null
+  | Rax
+  | Ret_space of int
+      
 type decl =(*
   | Dtype_decl  of ident_decl * typ_annot option
   (* Allows aliasing of types *)
@@ -112,10 +119,11 @@ type decl =(*
 
 and proc_func =
   {
-    pf_sig: pf_sig;
-    frame:  int;
-    decls:  decl list;
-    stmt:   stmt;
+    pf_sig:  pf_sig;
+    frame:   int;
+    ret:     return;
+    decls:   decl list;
+    stmt:    stmt;
   }
 
 
@@ -162,14 +170,14 @@ let print_ident_decl fmt id =
 
 let print_pf_sig fmt pf_sig =
   let print_modes = print_list (print_sep ", ") print_mode in
-  fprintf fmt "%a[%d] (%a)"
-    print_ident_decl pf_sig.name pf_sig.level print_modes pf_sig.modes
+  fprintf fmt "%a[%d] (%a) RETURNS{%d}" print_ident_decl pf_sig.name
+    pf_sig.level print_modes pf_sig.modes pf_sig.size_ret
 
 
 let rec print_expr_desc fmt = function
   | Econst c -> fprintf fmt "C%a" print_const c
   | Eleft_val lv -> print_left_val fmt lv
-  | Ebinop (e1, b, e2) -> fprintf fmt "%a %a %a)" print_expr e1 print_binop b
+  | Ebinop (e1, b, e2) -> fprintf fmt "%a %a %a" print_expr e1 print_binop b
                             print_expr e2
   | Enot e -> fprintf fmt "NOT (%a)" print_expr e
   | Enew n -> fprintf fmt "NEW (%d)" n
@@ -182,7 +190,8 @@ and print_exprs fmt = print_list (print_sep ", ") print_expr fmt
 and print_left_val fmt = function
   | Lident id -> print_ident fmt id
   | Laccess id -> fprintf fmt "&%a" print_ident id
-  | Lmember (e, o, s) -> fprintf fmt "%a.(%d){%d}" print_expr e o s
+  | Lmember (e, is_ac, o, s) -> fprintf fmt "%a%a.(%d){%d}"
+                                  print_if ("&", is_ac) print_expr e o s
 
 
 let rec print_stmt fmt = function
@@ -196,13 +205,18 @@ let rec print_stmt fmt = function
   | Swhile (e, s) -> fprintf fmt "WHILE %a LOOP %a END LOOP;"
                        print_expr e print_stmt s
 
+let print_return fmt = function
+  | Null -> fprintf fmt "NULL"
+  | Rax -> fprintf fmt "RAX"
+  | Ret_space n -> fprintf fmt "%d(RBP)" n
+
 let rec print_decl fmt = function
   | Dvar_decl (n, e) -> fprintf fmt "%d(RBP) := %a;" n print_expr e
   | Dproc_func pf -> print_proc_func fmt pf
 
 and print_proc_func fmt pf =
   let print_decls = print_list (print_sep "\n") print_decl in
-  fprintf fmt "FUNCTION %a{%d}\n@[%a@]%a" print_pf_sig pf.pf_sig pf.frame
-    print_decls pf.decls print_stmt pf.stmt
+  fprintf fmt "FUNCTION %a FRAME{%d} RET_TYPE %a\n%a%a" print_pf_sig pf.pf_sig
+    pf.frame print_return pf.ret print_decls pf.decls print_stmt pf.stmt
 
 let print_ast = print_proc_func
