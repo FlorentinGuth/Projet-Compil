@@ -359,14 +359,9 @@ and expr_ensure_not_modified env e =
 
 and type_expr ?(ensure_lv = false) ?(ensure_not_new = false) env expr =
   match expr.desc with
-  | A.Eleft_val lv -> type_left_val ~ensure_lv env lv (*
-    begin try
-        let (lv', t) = type_left_val ~ensure_lv env lv in
-        deco_expr (T.Eleft_val lv') t
-      with Function id -> type_expr env
-                            (decorate (A.Eapp_func (id, [])) id.deco)
-    end
-      *)
+  | A.Eleft_val lv ->
+    type_left_val ~ensure_lv env lv
+                        
   | e ->
     if ensure_lv then error "This expression should be a left value" expr.deco
     else begin

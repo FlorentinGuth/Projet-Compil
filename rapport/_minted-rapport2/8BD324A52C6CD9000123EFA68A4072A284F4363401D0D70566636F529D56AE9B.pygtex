@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGcolorful{k}{let} \PYGcolorful{n+nb+bp}{()} \PYGcolorful{o}{=} \PYGcolorful{n}{allow\PYGcolorfulZus{}comments} \PYGcolorful{n+nb+bp}{true}
+\end{Verbatim}

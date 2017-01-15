@@ -54,19 +54,10 @@ type ident =
     level:  int;     (* directly difference from current lvl to ident lvl *)
     offset: int;     (* offset according to %rbp *)
   }
-type ident_decl = ident_desc
-(* Not same types because it makes sense to decorate with loc but not with a type *)
-
-
-(*type nonrec typ_annot = ident_decl typ_annot
-  type nonrec annotated = ident_decl annotated
-
-type param = annotated * mode (* Can come from multiple params declared 
-                                 with same type, and default mode is In *)*)
 
 type pf_sig =
   {
-    name:  ident_desc;
+    name: ident_desc;
     modes: mode list;
     level:    int;
     size_ret: int;
@@ -90,20 +81,10 @@ type stmt =
   | Scall_proc of pf_sig * (expr list) (* includes empty list *)
   | Sreturn    of expr (* includes return without expression *)
   | Sblock     of stmt list (* includes empty list *)
-  | Scond      of expr * stmt * stmt
-  (* includes no else and multiple statements *)
+  | Scond      of expr * stmt * stmt (* includes no else and multiple statements *)
   | Swhile     of expr * stmt
-  (*| Sfor       of ident * bool * expr * expr * stmt
-  (* counter, reverse, lower_bound, upper_bound, instructions 
-     Really tempting to convert in while loop, but would need a new variable, and
-     the declarations aren't available during parsing... *)*)
 
-type decl =(*
-  | Dtype_decl  of ident_decl * typ_annot option
-  (* Allows aliasing of types *)
-  | Drecord_def of ident_decl * annotated list
-  (* list must be non-empty, multiple fields could have been declared 
-     simultaneously *)*)
+type decl =
   | Dvar_decl   of int (* offset *) * expr
   | Dproc_func  of proc_func
 

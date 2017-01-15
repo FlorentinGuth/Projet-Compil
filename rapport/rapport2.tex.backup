@@ -1,0 +1,237 @@
+\documentclass[a4paper, 10pt, french]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage{lmodern}
+\usepackage[autolanguage]{numprint}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{tabularx} \newcolumntype{C}{>{\centering}X}
+\usepackage{multirow}
+\usepackage{collcell}
+\usepackage{subcaption}
+\usepackage[stable]{footmisc}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{multicol}
+\usepackage[10pt]{moresize}
+\usepackage{pdflscape}
+
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{amsopn}
+\usepackage{stmaryrd}
+
+\DeclareCaptionLabelFormat{listing}{Listing #2}
+\DeclareCaptionSubType*[arabic]{table}
+\captionsetup[subtable]{labelformat=simple}
+
+\usepackage[langlinenos=true,newfloat=true]{minted}
+\newcommand{\source}[4]{
+  \inputminted[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,firstline=#2,firstnumber=#2,lastline=#3,label={#1[#2--#3]}]{OCaml}{../#1}
+  \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+  \caption{#4}
+}
+\newcommand{\codeAda}[1]{\mintinline[style=colorful,fontfamily=tt]{Ada}{#1}}
+\newcommand{\codeOCaml}[1]{\mintinline[style=colorful,fontfamily=tt]{OCaml}{#1}}
+\newcommand{\codeASM}[1]{\mintinline[style=colorful,fontfamily=tt]{nasm}{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\foreign}{\emph}
+
+
+
+\title{Compilateur  \foreign{Mini Ada}}
+\author{Florentin \bsc{Guth}}
+
+\begin{document}
+
+\maketitle
+
+\begin{table}[h]
+  \parbox{.3\linewidth}{}
+  \hfill
+  \parbox{.7\linewidth}{
+    \begin{flushright}
+      \emph{A new, a vast, and a powerful language is developed for the future use of analysis, in which to wield its truths so that these may become of more speedy and accurate practical application for the purposes of mankind than the means hitherto in our possession have rendered possible.}
+      
+      Ada.
+    \end{flushright}}
+\end{table}
+
+\tableofcontents
+
+\clearpage
+\section{Arbre de syntaxe abstraite}
+
+\subsection{R.I.P. (et pas \codeASM{rip}\footnote{où je déplore que \code{\textbackslash mintinline} ne fonctionne pas avec \%}) foncteur}
+
+Finalement, c'était une mauvaise idée (vous nous l'aviez dit après tout\ldots). 
+
+On utilise donc deux \foreign{AST} différents, afin de permettre plus de flexibilité lors du passage du typage à la production de code.
+
+
+\subsection{Type des identifiants}
+
+On conserve la taille de chaque type (bien que ceux-ci n'apparaissent pas en sortie) afin de faciliter le remplissage des champs du nouveau type des identifiants :
+\begin{table}[H]
+ \inputminted[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,firstline=50,firstnumber=50,lastline=56,label={ast\_typed.ml[50--56]}]{OCaml}{../ast_typed.ml}
+  \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+  \caption{Type des identifiants}
+\end{table}
+
+\subsection{Type des expressions}
+
+On a rassemblé les valeurs gauches dans les expressions pour simplifier (il n'est plus nécessaire de faire la différence, on sait que l'on a une valeur gauche où il faut grâce au typage). On ne conserve pas les types des expressions mais seulement leur taille (essentiellement pour la compilation du test d'égalité).
+
+On a également rajouté la construction \codeOCaml{Ederef} qui correspond à la construction \codeAda{.all} (qui peut être implicite comme dans l'accès à un champ d'un \codeAda{access R}. De plus, pour l'accès à un champ on a besoin de connaître uniquement le décalage par rapport à \codeASM{rbp}.
+
+\begin{table}[H]
+ \inputminted[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,firstline=66,firstnumber=66,lastline=75,label={ast\_typed.ml[66--75]}]{OCaml}{../ast_typed.ml}
+  \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+  \caption{Type des expressions}
+\end{table}
+
+\begin{table}[H]
+ \inputminted[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,firstline=58,firstnumber=58,lastline=64,label={ast\_typed.ml[58--64]}]{OCaml}{../ast_typed.ml}
+  \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+  \caption{Type des appels de fonctions ou procédures}
+\end{table}
+
+Le \codeOCaml{type pf_sig} contient le nom de la fonction en question (modifié par le typage pour être unique), le mode de passage des paramètres, son niveau (ou plutôt la différence de niveau entre le niveau courant et celui de la fonction) pour calculer le \codeASM{rbp} du père et la taille du type de retour. En effet, il se produit deux cas :
+\begin{itemize}
+ \item Soit celui-ci vaut zéro (cas d'une procédure) et alors la valeur de retour (nécessairement \codeAda{null}, i.e. 0) est renvoyée dans \codeASM{rax} (utile uniquement pour le code d'erreur de la procédure principale),
+ \item Soit il est strictement positif, et alors l'appelant va allouer la taille correspondante sur la pile (avant d'empiler les paramètres), espace dans lequel la fonction appelée copiera sa valeur de retour (et ainsi lorsqu'on dépilera les paramètres, la valeur de retour sera directement sur le sommet de la pile).
+\end{itemize}
+
+On obtient donc le tableau d'activation suivant :
+\begin{table}[H]
+ \centering
+ \begin{subtable}[h]{.45\linewidth}
+ \centering
+ \begin{tabular}{|c|}
+ \hline
+ $\vdots$ \\
+ Espace de retour \\
+ \hline
+ Argument $n$ \\
+ \hline
+ $\vdots$ \\
+ \hline
+ Argument $1$ \\
+ \hline
+ \codeASM{rbp} père \\
+ \hline \hline
+ Adresse de retour \\
+ \hline
+ \codeASM{rbp} appelant \\
+ \hline
+ Variable locale $1$ \\
+ \hline
+ $\vdots$ \\
+ \hline
+ Variable locale $m$ \\
+ \hline
+\end{tabular}
+\caption{Tableau d'activation}
+\end{subtable}
+\begin{subtable}[h]{.45\linewidth}
+ \centering
+ \begin{tabular}{|c|}
+  \hline
+  $\vdots$ \\
+  Champ $r$ \\
+  \hline
+  $\vdots$ \\
+  \hline
+  $\vdots$ \\
+  Champ $1$\\
+  \hline
+ \end{tabular}
+
+ \caption{Représentation en mémoire des registres}
+\end{subtable}
+\caption{Tableaux pas très jolis avec \code{\textbackslash tabular}, parce que je n'ai pas le temps pour Ti\emph{k}Z}
+\end{table}
+
+Dernière modification en ce qui concerne les expressions : lors du \foreign{parsing}, lorsqu'on rencontre un moins unaire et que l'expression qui suit est une constante \codeOCaml{Econst (Cint n)}, on produit \codeOCaml{Econst (Cint (-n))} afin de compiler correctement $-2^{31}$. On rejette la constante $2^{31}$ lors du typage.
+
+
+\subsection{Type des instructions}
+
+Le seul fait notable est que les boucle \codeAda{for} ont disparues : elles sont transformées en boucle \codeAda{while} lors du typage. Celui-ci s'occupe de rajouter trois variables : une pour le compteur et une pour chaque borne (afin de ne les calculer qu'une fois) et donc de leur allouer la place nécessaire dans le tableau d'activation.
+
+
+\subsection{Type des déclarations}
+
+On ne garde que les initialisations de variables et les déclarations de fonctions. Dans le cas de ces dernières, on conserve leur signature, la taille du tableau d'activation (pour l'allouer en une seule fois), le décalage par rapport à \codeASM{rbp} de l'espace de retour en plus du code.
+
+\begin{table}[H]
+ \inputminted[frame=lines,linenos,style=colorful,fontfamily=tt,breaklines,autogobble,firstline=91,firstnumber=91,lastline=98,label={ast\_typed.ml[91--98]}]{OCaml}{../ast_typed.ml}
+  \captionsetup{name=Listing,labelformat=listing,labelsep=endash,labelfont={sc}}
+  \caption{Type des déclarations de fonctions ou procédures}
+\end{table}
+
+
+
+\clearpage
+\section{Changements dans le typeur}
+
+\subsection{Nouvel environnement}
+
+L'environnement a été modifié pour être capable de générer des identifiants uniques pour la production de code, et de calculer les différents décalages pour les paramètres et les variables locales. Il atteint désormais le nombre effrayant de 9 champs :
+ \begin{table}[H]
+  \source{typer.ml}{82}{93}{Type de l'environnement}
+ \end{table}
+Certains champs pourraient (devraient\ldots) sûrement être regroupés. De plus, je me rends compte que la structure choisie pour représenter les variables déclarées \codeAda{in}\footnote{étrange, pas de coloration\ldots}, \codeAda{in out}\footnote{le mystère s'épaissit\ldots} ou les types non encore déclarés reposent uniquement sur le nom donné par l'utilisateur. Cela pourrait poser problème si une nouvelle variable \foreign{shadow} un paramètre passé $in$ à un niveau de déclaration supérieur\ldots (mais restructurer une $n\text{ème}$ fois l'environnement quelques heures avant de rendre le projet n'est pas une bonne idée).
+
+\subsection{Autres}
+
+Le typeur produit désormais un \foreign{AST} correct même dans le cas des fonctions sans paramètres (elles étaient correctement typées mais pas correctement représentées).
+
+Le déréférencement est explicité lorsque c'est nécessaire.
+
+Les boucles \codeAda{for} sont remplacées en boucles \codeAda{while}.
+
+On rajoute automatiquement une instruction \codeAda{return null;} dans le corps des procédures.
+
+
+\clearpage
+\section{Production de code}
+
+On a rajouté la possibilité d'écrire en commentaires les opérations de l'arbre de syntaxe abstraite correspondant aux instructions de l'assembleur produit, afin de faciliter le débogage (remplacer la ligne 7 de \code{compiler.ml} par \codeOCaml{let () = allow_comments true}).
+
+\subsection{Fonctions auxiliaires}
+
+Conventions : toutes les tailles et décalages sont en \foreign{quads} et doivent donc être multipliés par huit lorsque c'est nécessaire. Tous les pointeurs sur un objet pointe au bas de la zone correspondante (i.e. la zone d'adresse la plus petite).
+
+On dispose d'une fonction \codeOCaml{copy} permettant de recopier une zone de la mémoire de taille quelconque à un autre endroit, ainsi que d'une fonction \codeOCaml{follow_rbp} permettant de mettre la valeur du \codeASM{rbp} père dans \codeASM{rsi}.
+
+\subsection{Compilation des expressions}
+
+Un paramètre \codeOCaml{~push} permet d'indiquer si le résultat doit être empilé ou si son adresse doit être mise dans \codeASM{rsi} (possible lorsque c'est nécessaire d'après le typage).
+
+Lorsqu'on compile \codeAda{R.field}, on fait attention de recopier le champ au dessus de la pile et d'écraser le reste en manipulant correctement \codeASM{rsp}.
+
+Les opérations arithmétiques sont effectuées sur 32 bits avec extension de signe. Les tests d'égalité sont fait \foreign{quad} par \foreign{quad} avec un \codeASM{jmp} dès que le test n'est plus vérifié. Les opérateurs paresseux sont compilés correctement avec une valeur par défaut dans le registre contenant le résultat, qui est modifiée ou non suivant le test de la première opérande (avec éventuellement un \codeASM{jmp}).
+
+Les registres allouées avec \codeAda{new} sont sauvegardés sur le tas. On initialise la mémoire avec des 0 afin qu'un test du type \codeAda{L.Next = null} fonctionne correctement pour une liste chaînée \codeAda{L}.
+
+Lors d'un appel de fonction, on alloue éventuellement l'espace de retour, et on empile ou bien la valeur du paramètre ou son adresse suivant son mode de passage (cette information ayant été répercutée dans les décalages lors du typage). On empile ensuite la valeur du \codeASM{rbp} père.
+
+\subsection{Compilation des instructions}
+
+On ne compile les boucles \codeAda{while} qu'avec un seul saut au lieu de 2.
+
+Pour l'instruction \codeAda{return}, on met soit le résultat de l'expression (ici toujours 0, mais on pourrait imaginer que ce soit également le cas si la taille de la valeur de retour est 1) dans \codeASM{rax}, soit on copie son résultat dans l'espace de retour. On libère ensuite le tableau d'activation, restaure \codeASM{rbp} puis \codeASM{ret}.
+
+\subsection{Compilation des déclarations}
+
+Pour une déclaration de fonction, on sauvegarde le \codeASM{rbp} de l'appelant, et alloue le tableau d'activation en l'initialisant avec des 0. On effectue ensuite les différentes initialisations des variables locales puis exécute le corps de la fonction.
+
+
+
+\end{document}

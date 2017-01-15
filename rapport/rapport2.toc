@@ -1,0 +1,20 @@
+\select@language {french}
+\select@language {french}
+\contentsline {section}{\numberline {1}Arbre de syntaxe abstraite}{2}
+\contentsline {subsection}{\numberline {1.1}R.I.P. (et pas \mintinline [style=colorful,fontfamily=tt]{nasm}{rip}\FN@sf@gobble@opt {o\IeC {\`u} je d\IeC {\'e}plore que \texttt {\textbackslash mintinline} ne fonctionne pas avec \%}) foncteur}{2}
+\contentsline {subsection}{\numberline {1.2}Type des identifiants}{2}
+\contentsline {subsection}{\numberline {1.3}Type des expressions}{2}
+\contentsline {subsection}{\numberline {1.4}Type des instructions}{3}
+\contentsline {subsection}{\numberline {1.5}Type des d\IeC {\'e}clarations}{3}
+\contentsline {section}{\numberline {2}Changements dans le typeur}{4}
+\contentsline {subsection}{\numberline {2.1}Nouvel environnement}{4}
+\contentsline {subsection}{\numberline {2.2}Autres}{4}
+\contentsline {section}{\numberline {3}Production de code}{5}
+\contentsline {subsection}{\numberline {3.1}Commentaires}{5}
+\contentsline {subsection}{\numberline {3.2}Fonctions auxiliaires}{5}
+\contentsline {subsection}{\numberline {3.3}Compilation des expressions}{5}
+\contentsline {subsection}{\numberline {3.4}Compilation des instructions}{5}
+\contentsline {subsection}{\numberline {3.5}Compilation des d\IeC {\'e}clarations}{5}
+\contentsline {section}{\numberline {4}\emph {Bugs}}{6}
+\contentsline {subsection}{\numberline {4.1}\texttt {nathanael-pi.adb} (si c'est bien un test officiel, sinon tout marche tr\IeC {\`e}s bien ;) )}{6}
+\contentsline {subsection}{\numberline {4.2}\texttt {queens.adb}}{6}
