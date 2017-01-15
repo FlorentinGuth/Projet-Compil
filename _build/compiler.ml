@@ -12,7 +12,7 @@ let get_unique_label =
     incr id;
     l)
 
-let imm_8   n = imm (8*n)
+let imm_8 n = imm (8*n)
 let ind_8 ?(ofs) reg = ind ?ofs:(match ofs with
                                 | None -> None
                                 | Some ofs -> Some (8*ofs)) reg
@@ -139,7 +139,16 @@ let rec compile_expr_no_comment ~push e =
                                                           
   | Enew size ->
     assert push;
-    movq (imm_8 size) (reg rdi) ++ call "malloc" ++ pushq (reg rax)
+    movq (imm_8 size) (reg rdi) ++ call "malloc" ++
+    (*subq (imm_8 (size-1)) (reg rax) ++*)
+    (* because of convention to point from bottom *)
+    (* initialization with 0s *)
+    (let rec aux ofs acc = 
+       if ofs = -1 then acc else
+         let code = movq (imm 0) (ind_8 ~ofs rax) in
+         aux (ofs - 1) (acc ++ code)
+     in
+     aux (size - 1) nop) ++  pushq (reg rax)
                                                           
   | Eapp_func (f, args) ->
     compile_call f args ++ (if push then nop else (* TODO memory leak *)
@@ -186,10 +195,10 @@ let rec compile_stmt_no_comment ret_type s =
          
      | Ret_space ret_ofs ->
        movq (reg rbp) (reg rsi) ++ addq (imm_8 ret_ofs) (reg rsi) ++
-       copy rsp rsi e.deco) ++
-    movq (reg rbp) (reg rsp) ++ popq rbp ++ ret
+       copy rsp rsi e.deco)
+    ++ movq (reg rbp) (reg rsp) ++ popq rbp ++ ret
 
-  | Sblock b ->
+  | Sblock _ ->
     assert false
 
   | Scond (cond, s1, s2) ->
@@ -216,12 +225,6 @@ and compile_stmt ret_type = function
 
 
 let rec compile_decl (codefun, codemain) = function
-  (* | Dtype_decl (t, ta_opt) ->
-     failwith "Not implemented"
-
-     | Drecord_def (r, fs) ->
-     failwith "Not implemented"
-  *)
   | Dvar_decl (offset, e) ->
     let lv = Eident { is_reference = false; size = e.deco; level = 0; offset } in
     (codefun, codemain ++
@@ -231,7 +234,8 @@ let rec compile_decl (codefun, codemain) = function
     let (cf, cm) = compile_decls pf.decls in
     let ret_type = if pf.ret = 0 then Rax else Ret_space pf.ret in
     let code = label pf.pf_sig.name ++ pushq (reg rbp) ++ movq (reg rsp) (reg rbp) ++
-               pushn pf.frame ++ comment "decls" ++ cm ++
+               (if true then iter pf.frame (pushq (imm 0)) else pushn pf.frame) ++
+               comment "decls" ++ cm ++
                comment "stmts" ++ compile_stmt ret_type pf.stmt in
     (codefun ++ code ++ cf, codemain)
 
@@ -261,7 +265,8 @@ let compile_program p file =
                 ret ++
 
                 label "character'val" ++
-                movslq (ind_8 ~ofs:2 rsp) rax ++ movq (reg rax) (ind_8 ~ofs:3 rsp) ++
+                movq (ind_8 ~ofs:2 rsp) (reg rax) ++
+                movq (reg rax) (ind_8 ~ofs:3 rsp) ++
                 ret;
               data =
                 label ".Sput" ++

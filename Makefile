@@ -1,7 +1,7 @@
 FLAGS = -I _build/ -verbose 1 -use-menhir -yaccflags -v -lflags -g -cflags -g,-w,+A-4-50-52
 
-TESTDIR = ./tests/exec/
-TARGET = nathanael-quine
+TESTDIR = ./tests/perso/
+TARGET = queens
 
 all: test
 

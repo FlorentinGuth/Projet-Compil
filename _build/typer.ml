@@ -188,14 +188,14 @@ end = struct
       with Not_found -> -1 in
     if lvl' = lvl && not force
     then error (Format.sprintf "%s is already defined at this level" id.desc) id.deco;
-    let (offs, new_ofs_vars, new_ofs_p) = match mode with
-      | Some In -> (env.offset_params,
-                    env.offset_vars,
-                    env.offset_params + typ.T.t_size)
-      | Some InOut -> (env.offset_params,
-                       env.offset_vars,
-                       env.offset_params + 1)
-      | None -> let ofs' = env.offset_vars - typ.T.t_size in
+    let (offs, new_ofs_vars, new_ofs_p) = match (mode, force) with
+      | (Some In, false) -> (env.offset_params,
+                             env.offset_vars,
+                             env.offset_params + typ.T.t_size)
+      | (Some InOut, false) -> (env.offset_params,
+                                env.offset_vars,
+                                env.offset_params + 1)
+      | _ -> let ofs' = env.offset_vars - typ.T.t_size in
         (ofs', ofs', env.offset_params)
     in
     let l' = (to_id (typ, offs), lvl) :: l in
@@ -219,13 +219,12 @@ end = struct
 
   let set_param env ?force (a, m) =
     let t = get_typ_annot_type env a.ta in
-    let (env', ofs) = set_id_type env ?force ~mode:m a.ident t in
+    let (env, ofs) = set_id_type env ?force ~mode:m a.ident t in
     let (consts', byref') = match m with
       | InOut -> (env.consts, Sset.add a.ident.desc env.byref)
-      | In    -> if T.is_access t then (env.consts, env.byref)
-        else (Sset.add a.ident.desc env.consts, env.byref)
+      | In    -> (Sset.add a.ident.desc env.consts, env.byref)
     in
-    ({ env' with consts = consts'; byref = byref' }, ofs)
+    ({ env with consts = consts'; byref = byref' }, ofs)
 
   let set_not_const env id =
     { env with consts = Sset.remove id env.consts }

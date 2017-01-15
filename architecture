@@ -5,24 +5,8 @@ addresse de retour
 rbp appelant       <-- rbp
 variables locales  <-- rsp au sommet
 
-Records : recopiés sur la pile (besoin de connaitre taille)
-access R : pointeur sur le tas (géré avec Eaddr)
-
-Quand on voit un ident, on doit connaître son level et l'offset par rapport à rbp pour aller le chercher (suivre différence des levels fois) + savoir si à l'offset de rbp il y a son adresse ou sa valeur (bool by_reference)
-
-Appel de proc de niveau l : pour avoir le rbp père, suivre lvl - l fois le rbp père, call puis dépiler le rbp père
-Passage par valeur : nouvelle variable (recopier la valeur)
-Passage par référence (in out) : on empile l'adresse
-
-Affectation : suivre lvl - l fois puis offset connu dans l'ident
-
-offs dans Lmember : par rapport à rsp (inversé)
-Checker les déclarations d'access
 Fonction main déclarée de niveau 0 comme les builtins : on peut pas l'appeler put, new_line, integer...
-Set_param : doit ajuster la taille aussi si c'est inout (transformer en genre d'access?)
-Vérifier que l'ordre des arguments est correct
-Tester des access d'acess d'access avec .all
-
+Un acess in a l'air de pouvoir être modifié : on peut pas faire X := new R mais on peut faire X.truc = machin
 
 Refactor:
 typer.ml call_proc and app_func
